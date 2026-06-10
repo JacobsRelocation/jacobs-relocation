@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Vendor & Partner CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --ink: #0f0f1a; --ink2: #1a1a2e; --gold: #c9a84c; --gold2: #e8c96a;
+  --cream: #faf8f3; --muted: #8888a0; --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06); --card: #16162a; --card2: #1e1e35;
+  --success: #10b981; --danger: #ef4444; --warn: #f59e0b;
+}
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: stretch; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
+.brand-mark {
+  width: 36px; height: 36px;
+  background: var(--gold); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; color: var(--ink);
+}
+.brand-text .name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #fff; display: block; line-height: 1; }
+.brand-text .sub { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-top: 3px; display: block; }
+
+.header-stats { display: flex; align-items: center; gap: 0; }
+.hstat { padding: 0 1.5rem; border-left: 1px solid var(--border2); display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.hstat-val { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); line-height: 1; }
+.hstat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+
+.sync-status { display: flex; align-items: center; padding: 1rem 0 1rem 1.5rem; border-left: 1px solid var(--border2); }
+.sync-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.sync-pill.connected { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.sync-pill.disconnected { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; }
+.sync-pill.syncing { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sync-dot.pulsing { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.setup-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(8px); }
+.setup-modal { background: var(--card); border: 1px solid var(--border); border-radius: 14px; max-width: 540px; width: 100%; }
+.setup-header { padding: 1.5rem; border-bottom: 1px solid var(--border2); text-align: center; }
+.setup-icon { width: 50px; height: 50px; background: rgba(201,168,76,0.15); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 10px; }
+.setup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; }
+.setup-sub { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+.setup-body { padding: 1.5rem; }
+.setup-url-input { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--cream); outline: none; margin-bottom: 8px; }
+.setup-url-input:focus { border-color: var(--gold); }
+.setup-buttons { display: flex; gap: 8px; justify-content: space-between; margin-top: 12px; }
+.btn-cloud { background: var(--gold); color: var(--ink); border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-cloud:hover { background: var(--gold2); }
+.btn-skip { background: transparent; color: var(--muted); border: 1px solid var(--border2); padding: 10px 20px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.test-result { margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 12px; display: none; }
+.test-result.success { display: block; background: rgba(16,185,129,0.1); color: #34d399; }
+.test-result.error { display: block; background: rgba(239,68,68,0.1); color: #f87171; }
+
+.toolbar { background: var(--ink2); border-bottom: 1px solid var(--border2); padding: 0.75rem 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; pointer-events: none; }
+.search { width: 100%; background: var(--card); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 12px 7px 32px; color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; }
+.search:focus { border-color: var(--gold); }
+.search::placeholder { color: var(--muted); }
+
+.filter-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.fbtn { font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+.fbtn:hover { border-color: var(--border); color: var(--cream); }
+.fbtn.on { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+
+.add-btn { display: flex; align-items: center; gap: 6px; background: var(--gold); color: var(--ink); border: none; padding: 7px 16px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; margin-left: auto; }
+.add-btn:hover { background: var(--gold2); }
+
+.main { padding: 1.5rem 2rem; max-width: 1440px; margin: 0 auto; }
+
+.rev-panel { background: var(--card2); border: 1px solid var(--border2); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.rev-item .rev-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.rev-item .rev-val { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold); }
+.rev-item .rev-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.vendor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.vendor-card { background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.15s; }
+.vendor-card:hover { border-color: var(--border); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+
+.vc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.vc-logo { width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+.vc-name { font-size: 15px; font-weight: 600; color: #fff; }
+.vc-category { font-size: 11px; color: var(--muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+
+.vc-status { font-size: 10px; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-left: auto; }
+.vs-active { background: rgba(16,185,129,0.15); color: #34d399; }
+.vs-pending { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.vs-dormant { background: rgba(107,114,128,0.15); color: #9ca3af; }
+.vs-prospect { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+.vc-body { font-size: 12px; color: var(--cream); line-height: 1.6; margin-bottom: 10px; }
+.vc-contact { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.vc-contact strong { color: var(--cream); font-weight: 500; }
+
+.vc-revenue { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; background: var(--card2); border-radius: 6px; margin-top: 8px; }
+.vc-rev-block { text-align: center; }
+.vc-rev-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.vc-rev-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gold); font-weight: 600; margin-top: 2px; }
+
+.vc-tags { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+.vc-tag { font-size: 9px; padding: 2px 7px; border-radius: 8px; background: rgba(201,168,76,0.1); color: var(--gold); }
+
+.vc-followup { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 6px; padding: 8px 10px; margin-top: 8px; font-size: 11px; color: #fbbf24; display: flex; align-items: center; gap: 6px; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.empty-icon { font-size: 40px; opacity: 0.4; margin-bottom: 12px; }
+.empty-text { font-size: 14px; line-height: 1.6; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--card); border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 780px; max-height: 90vh; overflow-y: auto; }
+.modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border2); display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; background: var(--card); z-index: 10; }
+.modal-logo { width: 52px; height: 52px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; font-family: 'Playfair Display', serif; }
+.modal-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; }
+.modal-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.modal-close { margin-left: auto; width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.modal-close:hover { background: var(--card2); color: var(--cream); }
+
+.modal-body { padding: 1.5rem; }
+.modal-section { margin-bottom: 1.5rem; }
+.modal-section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.field-block label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.field-input, .field-select, .field-textarea { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 6px; padding: 8px 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--cream); outline: none; }
+.field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--gold); }
+.field-select { appearance: none; cursor: pointer; }
+.field-textarea { resize: vertical; min-height: 70px; }
+.field-block.span-2 { grid-column: 1 / -1; }
+
+.modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border2); display: flex; gap: 8px; justify-content: flex-end; position: sticky; bottom: 0; background: var(--card); }
+.btn-primary { background: var(--gold); color: var(--ink); border: none; padding: 9px 20px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-primary:hover { background: var(--gold2); }
+.btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border2); padding: 9px 20px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+.btn-secondary:hover { background: var(--card2); color: var(--cream); }
+.btn-danger { background: transparent; color: #f87171; border: 1px solid rgba(239,68,68,0.2); padding: 9px 20px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; margin-right: auto; }
+.btn-danger:hover { background: rgba(239,68,68,0.1); }
+
+.referral-list { background: var(--ink2); border-radius: 8px; padding: 1rem; border: 1px solid var(--border2); max-height: 240px; overflow-y: auto; font-size: 12px; color: var(--cream); }
+.referral-entry { padding: 8px 0; border-bottom: 1px solid var(--border2); display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; }
+.referral-entry:last-child { border-bottom: none; }
+.re-name { color: var(--cream); font-weight: 500; }
+.re-date { font-size: 10px; color: var(--gold); }
+.re-amount { font-family: 'DM Mono', monospace; color: var(--gold); font-weight: 600; }
+.re-status { font-size: 9px; padding: 2px 7px; border-radius: 8px; text-transform: uppercase; font-weight: 600; }
+.rs-paid { background: rgba(16,185,129,0.15); color: #34d399; }
+.rs-pending { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.rs-overdue { background: rgba(239,68,68,0.15); color: #f87171; }
+
+.add-referral-row { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 6px; margin-top: 8px; }
+
+.notes-log { background: var(--ink2); border-radius: 8px; padding: 1rem; border: 1px solid var(--border2); max-height: 200px; overflow-y: auto; font-size: 12px; line-height: 1.7; color: var(--cream); font-family: 'DM Mono', monospace; }
+.notes-log p { margin-bottom: 0.5rem; }
+.notes-log .note-date { color: var(--gold); font-size: 10px; }
+
+@media(max-width:768px){ .header,.toolbar,.main{padding-left:1rem;padding-right:1rem} .add-btn { margin-left: 0; } .vendor-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="setup-overlay" id="setupOverlay" style="display:none;">
+  <div class="setup-modal">
+    <div class="setup-header">
+      <div class="setup-icon">☁️</div>
+      <div class="setup-title">Connect to your cloud sync</div>
+      <div class="setup-sub">Paste the same Web App URL you used for your CRM.</div>
+    </div>
+    <div class="setup-body">
+      <input type="text" class="setup-url-input" id="webAppUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+      <div class="test-result" id="testResult"></div>
+      <div class="setup-buttons">
+        <button class="btn-skip" onclick="closeSetup(true)">Skip</button>
+        <button class="btn-cloud" onclick="connectCloud()" id="connectBtn">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">J</div>
+    <div class="brand-text">
+      <span class="name">Jacobs Relocation</span>
+      <span class="sub">Partner CRM</span>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><span class="hstat-val" id="h-total">0</span><span class="hstat-label">Partners</span></div>
+    <div class="hstat"><span class="hstat-val" id="h-pipeline">$0</span><span class="hstat-label">Revenue (YTD)</span></div>
+    <div class="hstat"><span class="hstat-val" id="h-owed">$0</span><span class="hstat-label">Owed to us</span></div>
+    <div class="sync-status"><div id="syncIndicator"></div></div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search" id="searchInput" placeholder="Search partners, contact, category…" oninput="renderAll()">
+  </div>
+  <div class="filter-group">
+    <button class="fbtn on" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" onclick="setFilter('removal',this)">📦 Movers</button>
+    <button class="fbtn" onclick="setFilter('mortgage',this)">🏦 Mortgage</button>
+    <button class="fbtn" onclick="setFilter('legal',this)">⚖️ Legal</button>
+    <button class="fbtn" onclick="setFilter('tax',this)">💼 Tax</button>
+    <button class="fbtn" onclick="setFilter('agent',this)">🏠 Agents</button>
+    <button class="fbtn" onclick="setFilter('currency',this)">💱 FX</button>
+    <button class="fbtn" onclick="setFilter('schools',this)">🎓 Schools</button>
+    <button class="fbtn" onclick="setFilter('owed',this)">💰 Owed</button>
+  </div>
+  <button class="add-btn" onclick="openModal(null)">+ Add partner</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="rev-panel" id="revPanel"></div>
+  <div id="vendorGrid" class="vendor-grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-logo" id="mLogo"></div>
+      <div>
+        <div class="modal-name" id="mName">New partner</div>
+        <div class="modal-sub" id="mSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">Partner details</div>
+        <div class="fields-grid">
+          <div class="field-block span-2"><label>Company / partner name</label><input class="field-input" id="f-name" oninput="updateModalHeader()"></div>
+          <div class="field-block"><label>Category</label>
+            <select class="field-select" id="f-category" onchange="updateModalHeader()">
+              <option value="removal">📦 Removal / Shipping</option>
+              <option value="mortgage">🏦 Mortgage broker</option>
+              <option value="legal">⚖️ Immigration / Legal</option>
+              <option value="tax">💼 Tax advisor / Accountant</option>
+              <option value="agent">🏠 Realtor / Agent</option>
+              <option value="currency">💱 FX / Currency</option>
+              <option value="schools">🎓 School consultant</option>
+              <option value="insurance">🛡️ Insurance</option>
+              <option value="propertymanagement">🔧 Property management</option>
+              <option value="pets">🐾 Pet relocation</option>
+              <option value="other">📋 Other</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Status</label>
+            <select class="field-select" id="f-status">
+              <option value="active">🟢 Active partner</option>
+              <option value="pending">🟡 Onboarding / pending</option>
+              <option value="prospect">🔵 Prospect — not yet partnered</option>
+              <option value="dormant">⚪ Dormant</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Primary contact</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Contact name</label><input class="field-input" id="f-contact"></div>
+          <div class="field-block"><label>Title / role</label><input class="field-input" id="f-title" placeholder="e.g. Director, Senior Broker"></div>
+          <div class="field-block"><label>Email</label><input class="field-input" id="f-email" type="email"></div>
+          <div class="field-block"><label>Phone</label><input class="field-input" id="f-phone"></div>
+          <div class="field-block"><label>Website</label><input class="field-input" id="f-website"></div>
+          <div class="field-block"><label>Location / region</label><input class="field-input" id="f-location" placeholder="e.g. London, UK"></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Commercial terms</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Commission / referral structure</label><input class="field-input" id="f-commission" placeholder="e.g. 25% of fee, $500 flat"></div>
+          <div class="field-block"><label>Reciprocal terms</label><input class="field-input" id="f-reciprocal" placeholder="e.g. They refer to us at 25%"></div>
+          <div class="field-block"><label>Agreement on file</label>
+            <select class="field-select" id="f-agreement">
+              <option value="no">No formal agreement</option>
+              <option value="email">Email agreement</option>
+              <option value="signed">Signed contract</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Specialism / niche</label><input class="field-input" id="f-specialism" placeholder="e.g. UK→US, HNW only"></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Referral tracking</div>
+        <div id="referralList" class="referral-list"></div>
+        <div class="add-referral-row">
+          <input class="field-input" id="r-client" placeholder="Client name or transaction">
+          <input class="field-input" id="r-amount" placeholder="Amount ($)">
+          <select class="field-select" id="r-status">
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+            <option value="overdue">Overdue</option>
+          </select>
+          <button class="btn-primary" onclick="addReferral()">+ Log</button>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Follow-ups</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Next follow-up date</label><input class="field-input" id="f-followup" type="date"></div>
+          <div class="field-block"><label>Follow-up action</label><input class="field-input" id="f-followup-action" placeholder="e.g. Check in on Daniel Silver shipment"></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Notes & call log</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <input class="field-input" id="f-newnote" placeholder="Log a call, meeting, update…" style="flex:1">
+          <button class="btn-primary" onclick="addNote()">+ Log</button>
+        </div>
+        <div class="notes-log" id="notesLog"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">General notes</div>
+        <textarea class="field-textarea" id="f-notes" rows="4" placeholder="Free-form notes, context, history…"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="deleteBtn" onclick="deleteVendor()">Delete</button>
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveVendor()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── INITIAL DATA — seeded with what we know from conversation history ──────
+
+const INITIAL_VENDORS = [
+  {
+    id: 1, name: 'Coldwell Banker — Veronica Hidalgo', category: 'agent', status: 'active',
+    contact: 'Veronica Hidalgo', title: 'Realtor', email: '', phone: '', website: '', location: 'California',
+    commission: 'Referral fee owed for Nancy Huseby CA home sale', reciprocal: '', agreement: 'no',
+    specialism: 'California real estate',
+    referrals: [
+      { client: 'Nancy Huseby — CA home sale', amount: 'TBC', status: 'pending', date: '13 May 2026' }
+    ],
+    followup: '', followupAction: 'CHASE referral fee for Nancy Huseby',
+    notes: 'Referred Nancy Huseby to her for the sale of her California home. Referral fee owed to Jacobs Relocation.',
+    callLog: []
+  }
+];
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+
+let vendors = JSON.parse(localStorage.getItem('jr_vendors') || 'null') || INITIAL_VENDORS;
+let currentFilter = 'all';
+let editingId = null;
+
+let cloudUrl = localStorage.getItem('jr_cloud_url') || '';
+let cloudConnected = !!cloudUrl;
+let syncTimeout = null;
+
+// ── CLOUD ───────────────────────────────────────────────────────────────────
+
+async function cloudRead(table) {
+  if (!cloudUrl) return null;
+  try {
+    const res = await fetch(cloudUrl + '?action=read&table=' + table);
+    const data = await res.json();
+    return data.ok ? data.data : null;
+  } catch (err) { return null; }
+}
+async function cloudWrite(table, data) {
+  if (!cloudUrl) return false;
+  try {
+    updateSyncIndicator('syncing');
+    const res = await fetch(cloudUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'write', table, data })
+    });
+    const result = await res.json();
+    if (result.ok) { updateSyncIndicator('connected'); return true; }
+    throw new Error(result.error);
+  } catch (err) { updateSyncIndicator('error'); return false; }
+}
+
+function save() {
+  localStorage.setItem('jr_vendors', JSON.stringify(vendors));
+  if (cloudConnected) {
+    if (syncTimeout) clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(() => cloudWrite('vendors', vendors), 800);
+  }
+}
+
+function updateSyncIndicator(state) {
+  const el = document.getElementById('syncIndicator');
+  if (!cloudConnected) { el.innerHTML = `<div class="sync-pill disconnected" onclick="openSetup()"><span class="sync-dot"></span>Local only</div>`; return; }
+  if (state === 'syncing') { el.innerHTML = `<div class="sync-pill syncing"><span class="sync-dot pulsing"></span>Syncing…</div>`; return; }
+  if (state === 'error') { el.innerHTML = `<div class="sync-pill disconnected"><span class="sync-dot"></span>Sync failed</div>`; return; }
+  el.innerHTML = `<div class="sync-pill connected"><span class="sync-dot"></span>Cloud synced</div>`;
+}
+
+function openSetup() {
+  document.getElementById('webAppUrl').value = cloudUrl;
+  document.getElementById('setupOverlay').style.display = 'flex';
+}
+function closeSetup(skip) {
+  document.getElementById('setupOverlay').style.display = 'none';
+  if (skip) localStorage.setItem('jr_setup_skipped', '1');
+}
+async function connectCloud() {
+  const url = document.getElementById('webAppUrl').value.trim();
+  const result = document.getElementById('testResult');
+  const btn = document.getElementById('connectBtn');
+  if (!url || !url.startsWith('https://script.google.com/')) { result.className = 'test-result error'; result.textContent = '⚠️ Invalid URL'; return; }
+  btn.disabled = true; btn.textContent = 'Testing...';
+  try {
+    const testRes = await fetch(url + '?action=read&table=vendors');
+    const testData = await testRes.json();
+    if (!testData.ok && testData.error) throw new Error(testData.error);
+    cloudUrl = url; cloudConnected = true;
+    localStorage.setItem('jr_cloud_url', url);
+    if (testData.data && testData.data.length) {
+      vendors = testData.data;
+      localStorage.setItem('jr_vendors', JSON.stringify(vendors));
+    } else {
+      await cloudWrite('vendors', vendors);
+    }
+    result.className = 'test-result success'; result.textContent = '✓ Connected.';
+    setTimeout(() => { closeSetup(false); updateSyncIndicator('connected'); renderAll(); }, 1000);
+  } catch (err) {
+    result.className = 'test-result error'; result.textContent = '✗ Failed: ' + err.message;
+    btn.disabled = false; btn.textContent = 'Connect';
+  }
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+
+const PALETTE = ['#c9a84c','#3b82f6','#8b5cf6','#10b981','#ef4444','#f59e0b','#06b6d4','#ec4899'];
+function avatarColor(name) { let h = 0; for(let c of name) h = (h*31+c.charCodeAt(0))%PALETTE.length; return PALETTE[h]; }
+function initials(name) { return name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase(); }
+
+const CATEGORY_MAP = {
+  removal: { icon: '📦', label: 'Removal / Shipping' },
+  mortgage: { icon: '🏦', label: 'Mortgage broker' },
+  legal: { icon: '⚖️', label: 'Immigration / Legal' },
+  tax: { icon: '💼', label: 'Tax advisor' },
+  agent: { icon: '🏠', label: 'Realtor / Agent' },
+  currency: { icon: '💱', label: 'FX / Currency' },
+  schools: { icon: '🎓', label: 'School consultant' },
+  insurance: { icon: '🛡️', label: 'Insurance' },
+  propertymanagement: { icon: '🔧', label: 'Property management' },
+  pets: { icon: '🐾', label: 'Pet relocation' },
+  other: { icon: '📋', label: 'Other' }
+};
+
+const STATUS_MAP = {
+  active: { cls: 'vs-active', label: 'Active' },
+  pending: { cls: 'vs-pending', label: 'Onboarding' },
+  prospect: { cls: 'vs-prospect', label: 'Prospect' },
+  dormant: { cls: 'vs-dormant', label: 'Dormant' }
+};
+
+// ── FILTER & RENDER ────────────────────────────────────────────────────────
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAll();
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return vendors.filter(v => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'owed') return v.referrals && v.referrals.some(r => r.status === 'pending' || r.status === 'overdue');
+    return v.category === currentFilter;
+  }).filter(v => {
+    if (!q) return true;
+    return [v.name, v.contact, v.email, v.specialism, v.notes].join(' ').toLowerCase().includes(q);
+  });
+}
+
+function calculateRevenue() {
+  let totalPaid = 0, totalOwed = 0, owedCount = 0;
+  vendors.forEach(v => {
+    (v.referrals || []).forEach(r => {
+      const amt = parseFloat(String(r.amount).replace(/[$,]/g,'')) || 0;
+      if (r.status === 'paid') totalPaid += amt;
+      else if (r.status === 'pending' || r.status === 'overdue') {
+        totalOwed += amt;
+        owedCount++;
+      }
+    });
+  });
+  return { totalPaid, totalOwed, owedCount };
+}
+
+function formatMoney(n) {
+  if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'k';
+  return '$' + Math.round(n);
+}
+
+function renderStats() {
+  const r = calculateRevenue();
+  document.getElementById('h-total').textContent = vendors.length;
+  document.getElementById('h-pipeline').textContent = formatMoney(r.totalPaid);
+  document.getElementById('h-owed').textContent = formatMoney(r.totalOwed);
+}
+
+function renderRevPanel() {
+  const r = calculateRevenue();
+  const byCategory = {};
+  vendors.forEach(v => {
+    byCategory[v.category] = (byCategory[v.category] || 0) + 1;
+  });
+  const active = vendors.filter(v => v.status === 'active').length;
+  const prospects = vendors.filter(v => v.status === 'prospect').length;
+  const followups = vendors.filter(v => v.followup && new Date(v.followup) <= new Date(Date.now() + 7*24*60*60*1000)).length;
+
+  document.getElementById('revPanel').innerHTML = `
+    <div class="rev-item"><div class="rev-label">Active partnerships</div><div class="rev-val">${active}</div><div class="rev-sub">Producing relationships</div></div>
+    <div class="rev-item"><div class="rev-label">Prospects in pipeline</div><div class="rev-val">${prospects}</div><div class="rev-sub">Not yet partnered</div></div>
+    <div class="rev-item"><div class="rev-label">Revenue collected</div><div class="rev-val">${formatMoney(r.totalPaid)}</div><div class="rev-sub">Referrals paid out</div></div>
+    <div class="rev-item"><div class="rev-label">Owed to Jacobs</div><div class="rev-val">${formatMoney(r.totalOwed)}</div><div class="rev-sub">${r.owedCount} outstanding ${r.owedCount === 1 ? 'fee' : 'fees'}</div></div>
+    <div class="rev-item"><div class="rev-label">Due follow-ups</div><div class="rev-val">${followups}</div><div class="rev-sub">Next 7 days</div></div>
+  `;
+}
+
+function renderAll() {
+  renderStats();
+  renderRevPanel();
+  const filtered = getFiltered();
+  const grid = document.getElementById('vendorGrid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🤝</div><div class="empty-text">No partners yet. Click "+ Add partner" to start building your network.</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(v => {
+    const col = avatarColor(v.name);
+    const cat = CATEGORY_MAP[v.category] || CATEGORY_MAP.other;
+    const status = STATUS_MAP[v.status] || STATUS_MAP.active;
+    const owedRefs = (v.referrals || []).filter(r => r.status === 'pending' || r.status === 'overdue');
+    const owedTotal = owedRefs.reduce((sum, r) => sum + (parseFloat(String(r.amount).replace(/[$,]/g,'')) || 0), 0);
+    const paidTotal = (v.referrals || []).filter(r => r.status === 'paid').reduce((sum, r) => sum + (parseFloat(String(r.amount).replace(/[$,]/g,'')) || 0), 0);
+
+    return `<div class="vendor-card" onclick="openModal(${v.id})">
+      <div class="vc-header">
+        <div class="vc-logo" style="background:${col}20;color:${col}">${initials(v.name)}</div>
+        <div style="flex:1;">
+          <div class="vc-name">${v.name}</div>
+          <div class="vc-category">${cat.icon} ${cat.label}</div>
+        </div>
+        <span class="vc-status ${status.cls}">${status.label}</span>
+      </div>
+      ${v.contact ? `<div class="vc-contact"><strong>${v.contact}</strong>${v.title ? ' · ' + v.title : ''}</div>` : ''}
+      ${v.email ? `<div class="vc-contact">${v.email}</div>` : ''}
+      ${v.location ? `<div class="vc-contact" style="font-size:11px;">${v.location}</div>` : ''}
+      ${v.specialism ? `<div class="vc-tags"><span class="vc-tag">${v.specialism}</span></div>` : ''}
+      ${(v.referrals && v.referrals.length) ? `<div class="vc-revenue">
+        <div class="vc-rev-block"><div class="vc-rev-label">Collected</div><div class="vc-rev-val">${formatMoney(paidTotal)}</div></div>
+        <div class="vc-rev-block"><div class="vc-rev-label">Owed</div><div class="vc-rev-val" style="${owedTotal > 0 ? 'color:#f87171' : ''}">${formatMoney(owedTotal)}</div></div>
+      </div>` : ''}
+      ${v.followupAction ? `<div class="vc-followup">⚠️ ${v.followupAction}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+
+function openModal(id) {
+  editingId = id;
+  const v = id ? vendors.find(x => x.id === id) : null;
+  if (v) {
+    ['name','contact','title','email','phone','website','location','commission','reciprocal','specialism','followup','followup-action','notes'].forEach(f => {
+      const key = f === 'followup-action' ? 'followupAction' : f;
+      document.getElementById('f-' + f).value = v[key] || '';
+    });
+    document.getElementById('f-category').value = v.category || 'removal';
+    document.getElementById('f-status').value = v.status || 'active';
+    document.getElementById('f-agreement').value = v.agreement || 'no';
+    renderReferrals(v);
+    renderNotes(v);
+    document.getElementById('deleteBtn').style.display = '';
+  } else {
+    ['name','contact','title','email','phone','website','location','commission','reciprocal','specialism','followup','followup-action','notes'].forEach(f => document.getElementById('f-' + f).value = '');
+    document.getElementById('f-category').value = 'removal';
+    document.getElementById('f-status').value = 'active';
+    document.getElementById('f-agreement').value = 'no';
+    document.getElementById('referralList').innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:12px;">No referrals logged yet.</p>';
+    document.getElementById('notesLog').innerHTML = '<p style="color:var(--muted);font-style:italic;">No notes yet.</p>';
+    document.getElementById('deleteBtn').style.display = 'none';
+  }
+  updateModalHeader();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function updateModalHeader() {
+  const name = document.getElementById('f-name').value || 'New partner';
+  const cat = CATEGORY_MAP[document.getElementById('f-category').value] || CATEGORY_MAP.other;
+  const col = avatarColor(name);
+  document.getElementById('mName').textContent = name;
+  document.getElementById('mLogo').textContent = initials(name);
+  document.getElementById('mLogo').style.background = col+'20';
+  document.getElementById('mLogo').style.color = col;
+  document.getElementById('mSub').textContent = `${cat.icon} ${cat.label}`;
+}
+
+function renderReferrals(v) {
+  const list = document.getElementById('referralList');
+  if (!v.referrals || !v.referrals.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:12px;">No referrals logged yet.</p>';
+    return;
+  }
+  list.innerHTML = v.referrals.map((r, i) => {
+    const statusCls = r.status === 'paid' ? 'rs-paid' : r.status === 'overdue' ? 'rs-overdue' : 'rs-pending';
+    return `<div class="referral-entry">
+      <div>
+        <div class="re-name">${r.client}</div>
+        <div class="re-date">${r.date || 'No date'}</div>
+      </div>
+      <div class="re-amount">${r.amount || 'TBC'}</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="re-status ${statusCls}">${r.status}</span>
+        <button onclick="removeReferral(${i})" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:13px;">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderNotes(v) {
+  const log = document.getElementById('notesLog');
+  if (!v.callLog || !v.callLog.length) {
+    log.innerHTML = '<p style="color:var(--muted);font-style:italic;">No notes yet.</p>';
+    return;
+  }
+  log.innerHTML = v.callLog.map(n => `<p><span class="note-date">${n.date}</span> — ${n.text}</p>`).reverse().join('');
+}
+
+function addReferral() {
+  if (!editingId) {
+    alert('Save the partner first, then log referrals.');
+    return;
+  }
+  const client = document.getElementById('r-client').value.trim();
+  const amount = document.getElementById('r-amount').value.trim();
+  const status = document.getElementById('r-status').value;
+  if (!client) { alert('Client name required.'); return; }
+  const v = vendors.find(x => x.id === editingId);
+  if (!v.referrals) v.referrals = [];
+  v.referrals.push({
+    client, amount: amount ? '$' + amount.replace(/[$]/g,'') : 'TBC', status,
+    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+  });
+  document.getElementById('r-client').value = '';
+  document.getElementById('r-amount').value = '';
+  document.getElementById('r-status').value = 'pending';
+  renderReferrals(v);
+  save();
+  renderAll();
+}
+
+function removeReferral(idx) {
+  if (!editingId || !confirm('Remove this referral?')) return;
+  const v = vendors.find(x => x.id === editingId);
+  v.referrals.splice(idx, 1);
+  renderReferrals(v);
+  save();
+  renderAll();
+}
+
+function addNote() {
+  if (!editingId) { alert('Save the partner first.'); return; }
+  const text = document.getElementById('f-newnote').value.trim();
+  if (!text) return;
+  const v = vendors.find(x => x.id === editingId);
+  if (!v.callLog) v.callLog = [];
+  const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  v.callLog.push({ date: now, text });
+  document.getElementById('f-newnote').value = '';
+  renderNotes(v);
+  save();
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); editingId = null; }
+function closeModalOutside(e) { if (e.target.id === 'modalOverlay') closeModal(); }
+
+function saveVendor() {
+  const data = {
+    name: document.getElementById('f-name').value,
+    category: document.getElementById('f-category').value,
+    status: document.getElementById('f-status').value,
+    contact: document.getElementById('f-contact').value,
+    title: document.getElementById('f-title').value,
+    email: document.getElementById('f-email').value,
+    phone: document.getElementById('f-phone').value,
+    website: document.getElementById('f-website').value,
+    location: document.getElementById('f-location').value,
+    commission: document.getElementById('f-commission').value,
+    reciprocal: document.getElementById('f-reciprocal').value,
+    agreement: document.getElementById('f-agreement').value,
+    specialism: document.getElementById('f-specialism').value,
+    followup: document.getElementById('f-followup').value,
+    followupAction: document.getElementById('f-followup-action').value,
+    notes: document.getElementById('f-notes').value,
+  };
+  if (!data.name) { alert('Name required.'); return; }
+  if (editingId) {
+    const idx = vendors.findIndex(x => x.id === editingId);
+    vendors[idx] = { ...vendors[idx], ...data };
+  } else {
+    data.id = Date.now();
+    data.referrals = [];
+    data.callLog = [];
+    vendors.push(data);
+  }
+  save();
+  closeModal();
+  renderAll();
+}
+
+function deleteVendor() {
+  if (!editingId || !confirm('Delete this partner?')) return;
+  vendors = vendors.filter(x => x.id !== editingId);
+  save();
+  closeModal();
+  renderAll();
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+
+async function init() {
+  if (cloudConnected) {
+    updateSyncIndicator('syncing');
+    const cloudData = await cloudRead('vendors');
+    if (cloudData && cloudData.length) {
+      vendors = cloudData;
+      localStorage.setItem('jr_vendors', JSON.stringify(vendors));
+    }
+    updateSyncIndicator('connected');
+  } else {
+    updateSyncIndicator('disconnected');
+    if (!localStorage.getItem('jr_setup_skipped')) setTimeout(() => openSetup(), 500);
+  }
+  renderAll();
+
+  if (cloudConnected) {
+    setInterval(async () => {
+      const fresh = await cloudRead('vendors');
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(vendors)) {
+        vendors = fresh;
+        localStorage.setItem('jr_vendors', JSON.stringify(vendors));
+        renderAll();
+      }
+    }, 60000);
+  }
+}
+init();
+</script>
+</body>
+</html>

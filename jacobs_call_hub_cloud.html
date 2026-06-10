@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Call Hub (Cloud)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --ink: #0f0f1a; --ink2: #1a1a2e; --gold: #c9a84c; --gold2: #e8c96a;
+  --cream: #faf8f3; --muted: #8888a0; --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06); --card: #16162a; --card2: #1e1e35;
+  --success: #10b981; --danger: #ef4444;
+}
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: stretch; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
+.brand-mark {
+  width: 36px; height: 36px;
+  background: var(--gold); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; color: var(--ink);
+}
+.brand-text .name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #fff; display: block; line-height: 1; }
+.brand-text .sub { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-top: 3px; display: block; }
+
+.sync-status { display: flex; align-items: center; gap: 14px; padding: 1rem 0; }
+.sync-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.sync-pill.connected { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.sync-pill.disconnected { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; }
+.sync-pill.syncing { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sync-dot.pulsing { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.setup-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(8px); }
+.setup-modal { background: var(--card); border: 1px solid var(--border); border-radius: 14px; max-width: 540px; width: 100%; }
+.setup-header { padding: 1.5rem; border-bottom: 1px solid var(--border2); text-align: center; }
+.setup-icon { width: 50px; height: 50px; background: rgba(201,168,76,0.15); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 10px; }
+.setup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; }
+.setup-sub { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+.setup-body { padding: 1.5rem; }
+.setup-url-input { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--cream); outline: none; margin-bottom: 8px; }
+.setup-url-input:focus { border-color: var(--gold); }
+.setup-buttons { display: flex; gap: 8px; justify-content: space-between; margin-top: 12px; }
+.btn-cloud { background: var(--gold); color: var(--ink); border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-cloud:hover { background: var(--gold2); }
+.btn-skip { background: transparent; color: var(--muted); border: 1px solid var(--border2); padding: 10px 20px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.test-result { margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 12px; display: none; }
+.test-result.success { display: block; background: rgba(16,185,129,0.1); color: #34d399; }
+.test-result.error { display: block; background: rgba(239,68,68,0.1); color: #f87171; }
+
+.main { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+.mode-tabs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 4px; margin-bottom: 1.5rem; width: fit-content; }
+.mtab { font-size: 12px; font-weight: 500; padding: 8px 16px; border-radius: 6px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 6px; }
+.mtab:hover { color: var(--cream); }
+.mtab.on { background: var(--gold); color: var(--ink); font-weight: 600; }
+
+.panel { background: var(--card); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
+.panel-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.panel-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); }
+.panel-body { padding: 1.25rem; }
+
+.client-picker { background: var(--ink2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; }
+.picker-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.client-search { position: relative; }
+.client-search-input { width: 100%; background: var(--card); border: 1px solid var(--border2); border-radius: 6px; padding: 9px 12px; color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; }
+.client-search-input:focus { border-color: var(--gold); }
+.client-results { margin-top: 6px; background: var(--card); border: 1px solid var(--border2); border-radius: 6px; max-height: 240px; overflow-y: auto; display: none; }
+.client-results.open { display: block; }
+.client-result { padding: 9px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border2); }
+.client-result:hover { background: var(--card2); }
+.cr-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; font-family: 'Playfair Display', serif; }
+.cr-name { font-size: 13px; font-weight: 500; color: var(--cream); }
+.cr-sub { font-size: 11px; color: var(--muted); }
+.cr-status { font-size: 9px; padding: 2px 7px; border-radius: 10px; margin-left: auto; text-transform: uppercase; font-weight: 600; }
+
+.selected-banner { background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(139,92,246,0.05) 100%); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 14px; margin-bottom: 1rem; }
+.sb-avatar { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; font-family: 'Playfair Display', serif; flex-shrink: 0; }
+.sb-info { flex: 1; }
+.sb-name { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; font-weight: 600; }
+.sb-meta { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; gap: 10px; }
+.sb-change { background: transparent; border: 1px solid var(--border2); color: var(--muted); padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+.sb-change:hover { background: var(--card2); color: var(--cream); }
+
+.briefing { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.brief-block { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; }
+.brief-label { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 6px; }
+.brief-value { font-size: 13px; line-height: 1.6; color: var(--cream); }
+.brief-value.mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+
+.talk-points { list-style: none; padding: 0; }
+.talk-points li { padding: 10px 14px; background: var(--card2); border-left: 3px solid var(--gold); border-radius: 4px; margin-bottom: 6px; font-size: 13px; line-height: 1.6; color: var(--cream); }
+.talk-points li strong { display: block; color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; font-weight: 600; }
+
+.notes-area { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.7; outline: none; resize: vertical; min-height: 280px; }
+.notes-area:focus { border-color: var(--gold); }
+.notes-area::placeholder { color: var(--muted); }
+
+.call-timer { display: inline-flex; align-items: center; gap: 8px; background: var(--card2); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 14px; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--cream); }
+.timer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); animation: pulse 1.5s infinite; }
+
+.quick-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.chip { font-size: 11px; padding: 4px 11px; background: transparent; border: 1px solid var(--border2); color: var(--muted); border-radius: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.chip:hover { border-color: var(--gold); color: var(--gold); }
+
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; }
+.btn-primary { background: var(--gold); color: var(--ink); font-weight: 600; }
+.btn-primary:hover { background: var(--gold2); }
+.btn-secondary { background: transparent; color: var(--muted); border-color: var(--border2); }
+.btn-secondary:hover { background: var(--card2); color: var(--cream); }
+.btn-success { background: var(--success); color: white; font-weight: 600; }
+
+.transcript-area { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; color: var(--cream); font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.7; outline: none; resize: vertical; min-height: 200px; }
+.transcript-area:focus { border-color: var(--gold); }
+
+.process-results { display: none; margin-top: 1rem; }
+.process-results.show { display: block; }
+.extracted-section { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; margin-bottom: 8px; }
+.es-label { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.es-content { font-size: 13px; line-height: 1.7; color: var(--cream); }
+.es-content ul { padding-left: 1.2rem; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.empty-icon { font-size: 40px; opacity: 0.4; margin-bottom: 12px; }
+.empty-text { font-size: 14px; line-height: 1.6; }
+
+.info-banner { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 14px; display: flex; align-items: start; gap: 10px; margin-bottom: 1rem; font-size: 12px; color: #93c5fd; line-height: 1.5; }
+
+@media(max-width:768px){ .header,.main{padding-left:1rem;padding-right:1rem} .briefing { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="setup-overlay" id="setupOverlay" style="display:none;">
+  <div class="setup-modal">
+    <div class="setup-header">
+      <div class="setup-icon">☁️</div>
+      <div class="setup-title">Connect to your cloud sync</div>
+      <div class="setup-sub">Paste the same Web App URL you used for your CRM.</div>
+    </div>
+    <div class="setup-body">
+      <input type="text" class="setup-url-input" id="webAppUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+      <div class="test-result" id="testResult"></div>
+      <div class="setup-buttons">
+        <button class="btn-skip" onclick="closeSetup(true)">Skip</button>
+        <button class="btn-cloud" onclick="connectCloud()" id="connectBtn">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">J</div>
+    <div class="brand-text">
+      <span class="name">Jacobs Relocation</span>
+      <span class="sub">Call Hub</span>
+    </div>
+  </div>
+  <div class="sync-status"><div id="syncIndicator"></div></div>
+</div>
+
+<div class="main">
+
+  <div class="mode-tabs">
+    <button class="mtab on" onclick="setMode('pre', this)">📋 Pre-call brief</button>
+    <button class="mtab" onclick="setMode('live', this)">🎙️ Live call</button>
+    <button class="mtab" onclick="setMode('post', this)">✨ Post-call processing</button>
+  </div>
+
+  <div id="pickerWrap" class="panel">
+    <div class="panel-header"><span class="panel-title">Select client</span></div>
+    <div class="panel-body">
+      <div class="client-picker">
+        <div class="picker-label">Search and select a client from your CRM</div>
+        <div class="client-search">
+          <input type="text" class="client-search-input" id="clientSearch" placeholder="Type a name…" oninput="filterClients()" onfocus="showResults()">
+          <div class="client-results" id="clientResults"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="selectedBanner" style="display:none;"></div>
+
+  <div id="modePre" class="mode-pane">
+    <div id="briefingContent">
+      <div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Select a client above to generate their pre-call briefing.</div></div>
+    </div>
+  </div>
+
+  <div id="modeLive" class="mode-pane" style="display:none;">
+    <div id="liveCallContent">
+      <div class="empty-state"><div class="empty-icon">🎙️</div><div class="empty-text">Select a client above to start live note-taking.</div></div>
+    </div>
+  </div>
+
+  <div id="modePost" class="mode-pane" style="display:none;">
+    <div id="postCallContent">
+      <div class="empty-state"><div class="empty-icon">✨</div><div class="empty-text">Select a client, then paste a call transcript or rough notes.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let cloudUrl = localStorage.getItem('jr_cloud_url') || '';
+let cloudConnected = !!cloudUrl;
+let syncTimeout = null;
+
+async function cloudRead(table) {
+  if (!cloudUrl) return null;
+  try {
+    const res = await fetch(cloudUrl + '?action=read&table=' + table);
+    const data = await res.json();
+    return data.ok ? data.data : null;
+  } catch (err) { return null; }
+}
+
+async function cloudWrite(table, data) {
+  if (!cloudUrl) return false;
+  try {
+    updateSyncIndicator('syncing');
+    const res = await fetch(cloudUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'write', table, data })
+    });
+    const result = await res.json();
+    if (result.ok) { updateSyncIndicator('connected'); return true; }
+    throw new Error(result.error);
+  } catch (err) { updateSyncIndicator('error'); return false; }
+}
+
+function saveClients() {
+  localStorage.setItem('jr_clients', JSON.stringify(clients));
+  if (cloudConnected) {
+    if (syncTimeout) clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(() => cloudWrite('clients', clients), 800);
+  }
+}
+
+function updateSyncIndicator(state) {
+  const el = document.getElementById('syncIndicator');
+  if (!cloudConnected) { el.innerHTML = `<div class="sync-pill disconnected" onclick="openSetup()"><span class="sync-dot"></span>Local only · Click to connect</div>`; return; }
+  if (state === 'syncing') { el.innerHTML = `<div class="sync-pill syncing"><span class="sync-dot pulsing"></span>Syncing…</div>`; return; }
+  if (state === 'error') { el.innerHTML = `<div class="sync-pill disconnected"><span class="sync-dot"></span>Sync failed</div>`; return; }
+  el.innerHTML = `<div class="sync-pill connected"><span class="sync-dot"></span>Cloud synced</div>`;
+}
+
+function openSetup() {
+  document.getElementById('webAppUrl').value = cloudUrl;
+  document.getElementById('setupOverlay').style.display = 'flex';
+}
+function closeSetup(skip) {
+  document.getElementById('setupOverlay').style.display = 'none';
+  if (skip) localStorage.setItem('jr_setup_skipped', '1');
+}
+
+async function connectCloud() {
+  const url = document.getElementById('webAppUrl').value.trim();
+  const result = document.getElementById('testResult');
+  const btn = document.getElementById('connectBtn');
+  if (!url || !url.startsWith('https://script.google.com/')) { result.className = 'test-result error'; result.textContent = '⚠️ Invalid URL'; return; }
+  btn.disabled = true; btn.textContent = 'Testing...';
+  try {
+    const testRes = await fetch(url + '?action=read&table=clients');
+    const testData = await testRes.json();
+    if (!testData.ok && testData.error) throw new Error(testData.error);
+    cloudUrl = url; cloudConnected = true;
+    localStorage.setItem('jr_cloud_url', url);
+    if (testData.data && testData.data.length) {
+      clients = testData.data;
+      localStorage.setItem('jr_clients', JSON.stringify(clients));
+    }
+    result.className = 'test-result success'; result.textContent = '✓ Connected.';
+    setTimeout(() => { closeSetup(false); updateSyncIndicator('connected'); }, 1000);
+  } catch (err) {
+    result.className = 'test-result error'; result.textContent = '✗ Failed: ' + err.message;
+    btn.disabled = false; btn.textContent = 'Connect';
+  }
+}
+
+let clients = JSON.parse(localStorage.getItem('jr_clients') || '[]');
+let selectedClient = null;
+let mode = 'pre';
+let callStartTime = null;
+let timerInterval = null;
+
+const PALETTE = ['#c9a84c','#3b82f6','#8b5cf6','#10b981','#ef4444','#f59e0b','#06b6d4','#ec4899'];
+function avatarColor(name) { let h = 0; for(let c of name) h = (h*31+c.charCodeAt(0))%PALETTE.length; return PALETTE[h]; }
+function initials(name) { return name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase(); }
+
+const STATUS_MAP = {
+  hot: { color:'#f87171', bg:'rgba(239,68,68,0.15)', label:'Hot' },
+  active: { color:'#c9a84c', bg:'rgba(201,168,76,0.15)', label:'Active' },
+  warm: { color:'#60a5fa', bg:'rgba(59,130,246,0.15)', label:'Warm' },
+  visa: { color:'#a78bfa', bg:'rgba(139,92,246,0.15)', label:'Visa pending' },
+  cold: { color:'#9ca3af', bg:'rgba(107,114,128,0.15)', label:'Cold' },
+  closed: { color:'#34d399', bg:'rgba(16,185,129,0.15)', label:'Closed' },
+};
+const ORIGIN_FLAGS = { uk:'🇬🇧', canada:'🇨🇦', us:'🇺🇸', australia:'🇦🇺', other:'🌍' };
+const ORIGIN_NAMES = { uk:'United Kingdom', canada:'Canada', us:'United States', australia:'Australia', other:'Other' };
+const NEED_LABELS = { moving:'Moving/shipping', schools:'Schools', tax:'Tax', estate:'Estate planning', currency:'Currency', pets:'Pets', shortterm:'Short-term rental', furnished:'Furnished', propertymanagement:'Property mgmt', insurance:'Insurance' };
+const TYPE_MAP = { buyer:'Buyer', investor:'Investor', rental:'Rental', holiday:'Holiday home' };
+
+function filterClients() {
+  const q = document.getElementById('clientSearch').value.toLowerCase();
+  const results = document.getElementById('clientResults');
+  const filtered = clients.filter(c => c.name.toLowerCase().includes(q) || (c.area && c.area.toLowerCase().includes(q)) || (c.notes && c.notes.toLowerCase().includes(q)));
+  if (!filtered.length) {
+    results.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:12px;text-align:center;">No clients match.</div>';
+    results.classList.add('open');
+    return;
+  }
+  results.innerHTML = filtered.slice(0, 8).map(c => {
+    const col = avatarColor(c.name);
+    const status = STATUS_MAP[c.status] || STATUS_MAP.cold;
+    return `<div class="client-result" onclick="selectClient(${c.id})">
+      <div class="cr-avatar" style="background:${col}20;color:${col}">${initials(c.name)}</div>
+      <div>
+        <div class="cr-name">${c.name}</div>
+        <div class="cr-sub">${ORIGIN_FLAGS[c.origin]||''} ${c.area || 'No area'}</div>
+      </div>
+      <span class="cr-status" style="background:${status.bg};color:${status.color}">${status.label}</span>
+    </div>`;
+  }).join('');
+  results.classList.add('open');
+}
+function showResults() { filterClients(); }
+document.addEventListener('click', (e) => { if (!e.target.closest('.client-search')) document.getElementById('clientResults').classList.remove('open'); });
+
+function selectClient(id) {
+  selectedClient = clients.find(c => c.id === id);
+  if (!selectedClient) return;
+  document.getElementById('clientResults').classList.remove('open');
+  document.getElementById('clientSearch').value = '';
+  document.getElementById('pickerWrap').style.display = 'none';
+  renderSelectedBanner();
+  renderMode();
+}
+
+function clearSelection() {
+  selectedClient = null;
+  document.getElementById('selectedBanner').style.display = 'none';
+  document.getElementById('pickerWrap').style.display = '';
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  callStartTime = null;
+  renderMode();
+}
+
+function renderSelectedBanner() {
+  if (!selectedClient) return;
+  const c = selectedClient;
+  const col = avatarColor(c.name);
+  const status = STATUS_MAP[c.status] || STATUS_MAP.cold;
+  const banner = document.getElementById('selectedBanner');
+  banner.className = 'selected-banner';
+  banner.style.display = 'flex';
+  banner.innerHTML = `
+    <div class="sb-avatar" style="background:${col}20;color:${col}">${initials(c.name)}</div>
+    <div class="sb-info">
+      <div class="sb-name">${c.name}</div>
+      <div class="sb-meta">
+        <span>${ORIGIN_FLAGS[c.origin]||''} ${ORIGIN_NAMES[c.origin]||''}</span>
+        <span style="color:${status.color}">● ${status.label}</span>
+        <span>${c.area||'No area'}</span>
+        ${c.budget && c.budget !== 'TBC' ? `<span>${c.budget}</span>` : ''}
+      </div>
+    </div>
+    <button class="sb-change" onclick="clearSelection()">Change</button>`;
+}
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.mtab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('modePre').style.display = m === 'pre' ? '' : 'none';
+  document.getElementById('modeLive').style.display = m === 'live' ? '' : 'none';
+  document.getElementById('modePost').style.display = m === 'post' ? '' : 'none';
+  renderMode();
+}
+
+function renderMode() {
+  if (!selectedClient) return;
+  if (mode === 'pre') renderPreCall();
+  else if (mode === 'live') renderLiveCall();
+  else if (mode === 'post') renderPostCall();
+}
+
+function renderPreCall() {
+  const c = selectedClient;
+  const lastNote = c.callLog && c.callLog.length ? c.callLog[c.callLog.length-1] : null;
+  const needs = (c.relocNeeds||[]).map(n => NEED_LABELS[n]).join(', ') || 'None logged';
+  const talkingPoints = generateTalkingPoints(c);
+
+  const html = `
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Key facts</span></div>
+      <div class="panel-body">
+        <div class="briefing">
+          <div class="brief-block"><div class="brief-label">Budget</div><div class="brief-value mono">${c.budget || 'TBC'}</div></div>
+          <div class="brief-block"><div class="brief-label">Target area</div><div class="brief-value">${c.area || 'Not set'}</div></div>
+          <div class="brief-block"><div class="brief-label">Timeline</div><div class="brief-value">${c.timeline || 'TBC'}</div></div>
+          <div class="brief-block"><div class="brief-label">Property type</div><div class="brief-value">${c.proptype || 'TBC'}</div></div>
+          ${c.visa ? `<div class="brief-block"><div class="brief-label">Visa</div><div class="brief-value">${c.visa.toUpperCase()} — ${c.visaStatus || ''}</div></div>` : ''}
+          ${c.yieldTarget ? `<div class="brief-block"><div class="brief-label">Yield target</div><div class="brief-value mono">${c.yieldTarget}</div></div>` : ''}
+        </div>
+      </div>
+    </div>
+    ${c.history ? `<div class="panel"><div class="panel-header"><span class="panel-title">History</span></div><div class="panel-body"><div style="font-size:13px;line-height:1.7;color:var(--cream);white-space:pre-line;">${c.history}</div></div></div>` : ''}
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Relocation needs</span></div>
+      <div class="panel-body">
+        <div style="font-size:13px;color:var(--cream);line-height:1.7;">${needs}</div>
+        ${c.legal ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);font-size:12px;color:var(--muted);"><strong style="color:var(--gold);font-weight:500;">Legal/financial:</strong> ${c.legal}</div>` : ''}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">💬 Talking points</span></div>
+      <div class="panel-body">
+        <ul class="talk-points">${talkingPoints.map(p => `<li><strong>${p.label}</strong>${p.text}</li>`).join('')}</ul>
+      </div>
+    </div>
+    ${lastNote ? `<div class="panel"><div class="panel-header"><span class="panel-title">Last interaction</span></div><div class="panel-body"><div style="font-size:11px;color:var(--gold);margin-bottom:6px;">${lastNote.date}</div><div style="font-size:13px;color:var(--cream);line-height:1.6;">${lastNote.text}</div></div></div>` : ''}
+    ${c.notes ? `<div class="panel"><div class="panel-header"><span class="panel-title">Context</span></div><div class="panel-body"><div style="font-size:13px;color:var(--cream);line-height:1.7;">${c.notes}</div></div></div>` : ''}
+    <div class="btn-row" style="margin-top:1rem;">
+      <button class="btn btn-primary" onclick="setMode('live', document.querySelectorAll('.mtab')[1])">🎙️ Start live call notes</button>
+    </div>`;
+  document.getElementById('briefingContent').innerHTML = html;
+}
+
+function generateTalkingPoints(c) {
+  const points = [];
+  if (c.status === 'hot') points.push({ label: 'Ready to transact', text: 'They are at decision stage. Confirm next concrete step — viewing, offer, contract signing.' });
+  else if (c.status === 'visa') points.push({ label: 'Visa check-in', text: `Ask about ${c.visa ? c.visa.toUpperCase() : 'visa'} progress, blockers, expected approval date.` });
+  else if (c.status === 'warm') points.push({ label: 'Qualification needed', text: 'Confirm budget range, timeline, area, what would trigger them moving forward.' });
+  else if (c.status === 'cold') points.push({ label: 'Nurture', text: 'No hard sell. Share market intel, ask about broader plans.' });
+  else if (c.status === 'active') points.push({ label: 'Move forward', text: 'Mid-process. Address open questions and confirm next milestone.' });
+  else if (c.status === 'closed') points.push({ label: 'Post-close care', text: 'They are settling in. Check on post-move needs and ask for a referral.' });
+  if (!c.budget || c.budget === 'TBC') points.push({ label: 'Budget', text: 'Budget still TBC. Frame around range — what feels comfortable, what is the ceiling.' });
+  if (['uk','canada','australia'].includes(c.origin) && !c.visa) points.push({ label: 'Visa strategy', text: 'No visa logged. Ask whether they have legal counsel and which visa route they are considering.' });
+  const needs = c.relocNeeds || [];
+  if (needs.includes('schools') && !c.schools) points.push({ label: 'Schools', text: 'School requirements logged but no specifics. Ages, public vs private, IB or US curriculum.' });
+  if (needs.includes('currency')) points.push({ label: 'Currency', text: 'Mention currency exchange — recommend specialist FX broker, not their bank.' });
+  if (needs.includes('tax') && c.type === 'investor') points.push({ label: 'Tax', text: 'Confirm they have a US tax advisor lined up — especially for STR loophole or international structures.' });
+  if (c.history && c.history.trim()) points.push({ label: 'Existing relationship', text: 'Reference previous transactions specifically. Ask about how existing properties are performing.' });
+  if (c.referral && c.referral.trim()) points.push({ label: 'Referral fee', text: c.referral });
+  if (!points.length) points.push({ label: 'General check-in', text: 'Build relationship, understand current thinking and changes since last contact.' });
+  return points;
+}
+
+function renderLiveCall() {
+  const c = selectedClient;
+  const isRecording = callStartTime !== null;
+  const html = `
+    <div class="info-banner"><span>ℹ️</span><span>Take notes during the call. They auto-save. Click <strong>End call</strong> when done — saves to ${c.name}'s record and jumps to post-call processing.</span></div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Live call notes — ${c.name}</span>
+        ${isRecording ? `<div class="call-timer"><span class="timer-dot"></span><span id="timerDisplay">00:00</span></div>` : ''}
+      </div>
+      <div class="panel-body">
+        ${!isRecording ? `<button class="btn btn-success" onclick="startCall()" style="margin-bottom:14px;">▶ Start call</button>` : ''}
+        <textarea class="notes-area" id="liveNotes" placeholder="Start typing notes as you talk..." oninput="autoSaveLiveNotes()">${getDraftNotes(c.id)}</textarea>
+        <div class="quick-chips">
+          <button class="chip" onclick="insertSnippet('— Budget: ')">+ Budget</button>
+          <button class="chip" onclick="insertSnippet('— Timeline update: ')">+ Timeline</button>
+          <button class="chip" onclick="insertSnippet('— Area preference: ')">+ Area</button>
+          <button class="chip" onclick="insertSnippet('— ACTION: ')">+ Action</button>
+          <button class="chip" onclick="insertSnippet('— Next call: ')">+ Next call</button>
+          <button class="chip" onclick="insertSnippet('— Concern: ')">+ Concern</button>
+        </div>
+        <div class="btn-row" style="margin-top:1.25rem;">
+          ${isRecording ? `<button class="btn btn-primary" onclick="endCall()">⏹ End call & save</button>` : ''}
+          <button class="btn btn-secondary" onclick="saveDraft()">💾 Save draft</button>
+          <button class="btn btn-secondary" onclick="setMode('post', document.querySelectorAll('.mtab')[2])">➜ Process now</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('liveCallContent').innerHTML = html;
+}
+
+function startCall() {
+  callStartTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+  renderLiveCall();
+}
+function updateTimer() {
+  if (!callStartTime) return;
+  const el = document.getElementById('timerDisplay');
+  if (!el) return;
+  const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+  el.textContent = `${Math.floor(elapsed/60).toString().padStart(2,'0')}:${(elapsed%60).toString().padStart(2,'0')}`;
+}
+
+function insertSnippet(text) {
+  const notes = document.getElementById('liveNotes');
+  const cursor = notes.selectionStart;
+  const value = notes.value;
+  const before = value.substring(0, cursor);
+  const after = value.substring(cursor);
+  const insertion = (before && !before.endsWith('\n') ? '\n' : '') + text;
+  notes.value = before + insertion + after;
+  notes.focus();
+  notes.selectionStart = notes.selectionEnd = before.length + insertion.length;
+  autoSaveLiveNotes();
+}
+
+function getDraftNotes(id) { return localStorage.getItem('jr_draft_' + id) || ''; }
+function autoSaveLiveNotes() {
+  if (!selectedClient) return;
+  localStorage.setItem('jr_draft_' + selectedClient.id, document.getElementById('liveNotes').value);
+}
+function saveDraft() { autoSaveLiveNotes(); alert('Draft saved.'); }
+
+function endCall() {
+  if (!selectedClient) return;
+  const notes = document.getElementById('liveNotes').value.trim();
+  if (!notes) { if (!confirm('No notes to save. End call anyway?')) return; }
+  else {
+    const idx = clients.findIndex(c => c.id === selectedClient.id);
+    if (idx >= 0) {
+      if (!clients[idx].callLog) clients[idx].callLog = [];
+      const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      const duration = callStartTime ? Math.floor((Date.now() - callStartTime) / 60000) : null;
+      const header = duration ? `📞 Call (${duration} min)` : '📝 Note';
+      clients[idx].callLog.push({ date: now, text: `${header}\n${notes}` });
+      saveClients();
+      localStorage.removeItem('jr_draft_' + selectedClient.id);
+      selectedClient = clients[idx];
+    }
+  }
+  if (timerInterval) clearInterval(timerInterval);
+  callStartTime = null;
+  if (notes) sessionStorage.setItem('jr_lastnotes', notes);
+  setMode('post', document.querySelectorAll('.mtab')[2]);
+}
+
+function renderPostCall() {
+  const c = selectedClient;
+  const prefilled = sessionStorage.getItem('jr_lastnotes') || '';
+  const html = `
+    <div class="info-banner"><span>ℹ️</span><span>Paste a call transcript or rough notes. I'll extract action items and save to ${c.name}'s record.</span></div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Call transcript / notes</span></div>
+      <div class="panel-body">
+        <textarea class="transcript-area" id="transcriptInput" placeholder="Paste a transcript from Granola, Otter, Fireflies, or rough notes...">${prefilled}</textarea>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn btn-primary" onclick="processTranscript()">✨ Extract & process</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('transcriptInput').value=''">Clear</button>
+        </div>
+      </div>
+    </div>
+    <div id="processResults" class="process-results"></div>`;
+  document.getElementById('postCallContent').innerHTML = html;
+  sessionStorage.removeItem('jr_lastnotes');
+}
+
+function processTranscript() {
+  const text = document.getElementById('transcriptInput').value.trim();
+  if (!text || !selectedClient) { alert('Paste a transcript first.'); return; }
+  const extracted = extractFromTranscript(text);
+  const results = document.getElementById('processResults');
+  results.classList.add('show');
+  results.innerHTML = `
+    <div class="extracted-section"><div class="es-label">📝 Summary</div><div class="es-content">${extracted.summary}</div></div>
+    ${extracted.actions.length ? `<div class="extracted-section"><div class="es-label">⚡ Action items</div><div class="es-content"><ul>${extracted.actions.map(a => `<li>${a}</li>`).join('')}</ul></div></div>` : ''}
+    ${extracted.updates.length ? `<div class="extracted-section"><div class="es-label">🔄 CRM updates suggested</div><div class="es-content"><ul>${extracted.updates.map(u => `<li><strong>${u.field}:</strong> ${u.value}</li>`).join('')}</ul></div></div>` : ''}
+    ${extracted.concerns.length ? `<div class="extracted-section"><div class="es-label">⚠️ Concerns</div><div class="es-content"><ul>${extracted.concerns.map(c => `<li>${c}</li>`).join('')}</ul></div></div>` : ''}
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-primary" onclick='saveProcessedToRecord(${JSON.stringify(extracted.summary)}, ${JSON.stringify(extracted.actions)})'>💾 Save to ${selectedClient.name}'s record</button>
+    </div>`;
+}
+
+function extractFromTranscript(text) {
+  const lower = text.toLowerCase();
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  const actions = [];
+  const actionRe = /(?:action|todo|to do|need to|will|i'll|i will|send|follow up|chase|book|schedule|arrange)\s+([^.!?\n]{5,150})/gi;
+  let m;
+  while ((m = actionRe.exec(text)) !== null) actions.push(m[0].trim());
+  const concerns = [];
+  const concernRe = /(?:worried|concerned|blocker|problem|issue|nervous|hesitant|uncertain|stuck)[^.!?\n]{0,150}/gi;
+  while ((m = concernRe.exec(text)) !== null) concerns.push(m[0].trim());
+  const updates = [];
+  const budgetMatch = text.match(/(?:budget|spend|price range)[^.!?]*?(\$[\d.,]+[MmKk]?(?:\s*[-–to]+\s*\$?[\d.,]+[MmKk]?)?)/i);
+  if (budgetMatch) updates.push({ field: 'Budget', value: budgetMatch[1] });
+  if (lower.includes('approved') || lower.includes('visa came through')) updates.push({ field: 'Status', value: 'Visa approved — move to Hot/Active' });
+  if (lower.includes('not ready') || lower.includes('back burner')) updates.push({ field: 'Status', value: 'Move to Cold / nurture' });
+  const wordCount = text.split(/\s+/).length;
+  const summary = wordCount < 50 ? text : sentences.slice(0, 3).join(' ') + (sentences.length > 3 ? '...' : '');
+  return { summary, actions, concerns, updates };
+}
+
+function saveProcessedToRecord(summary, actions) {
+  if (!selectedClient) return;
+  const idx = clients.findIndex(c => c.id === selectedClient.id);
+  if (idx < 0) return;
+  if (!clients[idx].callLog) clients[idx].callLog = [];
+  const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  let entry = `✨ Call summary:\n${summary}`;
+  if (actions && actions.length) entry += `\n\nActions:\n${actions.map(a => '• ' + a).join('\n')}`;
+  clients[idx].callLog.push({ date: now, text: entry });
+  saveClients();
+  alert(`Saved to ${selectedClient.name}'s record.`);
+}
+
+async function init() {
+  if (cloudConnected) {
+    updateSyncIndicator('syncing');
+    const cloudData = await cloudRead('clients');
+    if (cloudData) {
+      clients = cloudData;
+      localStorage.setItem('jr_clients', JSON.stringify(clients));
+    }
+    updateSyncIndicator('connected');
+  } else {
+    updateSyncIndicator('disconnected');
+    if (!localStorage.getItem('jr_setup_skipped')) setTimeout(() => openSetup(), 500);
+  }
+
+  if (cloudConnected) {
+    setInterval(async () => {
+      const fresh = await cloudRead('clients');
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(clients)) {
+        clients = fresh;
+        localStorage.setItem('jr_clients', JSON.stringify(clients));
+      }
+    }, 60000);
+  }
+}
+init();
+</script>
+</body>
+</html>

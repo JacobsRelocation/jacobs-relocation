@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --ink: #0f0f1a; --ink2: #1a1a2e; --gold: #c9a84c; --gold2: #e8c96a;
+  --cream: #faf8f3; --muted: #8888a0; --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06); --card: #16162a; --card2: #1e1e35;
+  --success: #10b981; --danger: #ef4444; --warn: #f59e0b;
+}
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 2px solid var(--gold);
+  padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark { width: 44px; height: 44px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); }
+.brand-text .name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; display: block; line-height: 1; }
+.brand-text .sub { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-top: 4px; display: block; }
+
+.welcome { text-align: right; }
+.welcome-greeting { font-size: 13px; color: var(--cream); font-weight: 500; }
+.welcome-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.main { max-width: 1300px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+/* SECTION HEADER */
+.section-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* TOOLS GRID */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 1.5rem;
+}
+.tool-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--cream);
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tool-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.tool-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tool-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.tool-arrow {
+  color: var(--gold);
+  font-size: 18px;
+  transition: transform 0.15s;
+}
+.tool-card:hover .tool-arrow { transform: translateX(4px); }
+
+.tool-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+.tool-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.tool-meta {
+  font-size: 10px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+/* QUICK STATS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+.stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.stat-value { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold); line-height: 1; }
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* DAILY ACTIONS */
+.actions-block {
+  background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, rgba(139,92,246,0.04) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.actions-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.actions-list { list-style: none; padding: 0; }
+.actions-list li {
+  padding: 10px 0;
+  font-size: 13px;
+  color: var(--cream);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border2);
+  position: relative;
+  padding-left: 30px;
+}
+.actions-list li:last-child { border-bottom: none; }
+.actions-list li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* CONTENT WORKFLOW */
+.workflow-panel {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.workflow-header {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.workflow-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+.workflow-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.workflow-body { padding: 1.25rem; }
+
+.production-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 768px) { .production-grid { grid-template-columns: 1fr; } }
+
+.production-side {
+  padding: 1rem;
+  background: var(--card2);
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+}
+.production-side-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.production-side-icon { font-size: 18px; }
+.production-side-title { font-size: 14px; font-weight: 600; color: #fff; }
+.production-side-sub { font-size: 11px; color: var(--muted); }
+
+.production-types {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.production-types li {
+  font-size: 12px;
+  color: var(--cream);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; gap: 8px;
+}
+.production-types li:last-child { border-bottom: none; }
+.production-types li::before {
+  content: '•';
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* CHANNELS */
+.channels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.channel-card {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1rem;
+}
+.channel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.channel-icon { font-size: 16px; }
+.channel-name { font-size: 13px; font-weight: 600; color: #fff; }
+.channel-status {
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 8px;
+  margin-left: auto;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.cs-live { background: rgba(16,185,129,0.15); color: #34d399; }
+.cs-build { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.cs-planned { background: rgba(107,114,128,0.15); color: #9ca3af; }
+.channel-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.channel-cadence { font-size: 10px; color: var(--gold); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+
+/* HEYGEN GUIDE */
+.heygen-guide {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 12px;
+}
+.hg-step {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border2);
+}
+.hg-step:last-child { border-bottom: none; }
+.hg-num {
+  width: 24px; height: 24px;
+  background: var(--gold);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px;
+  flex-shrink: 0;
+}
+.hg-content { flex: 1; }
+.hg-title { font-size: 13px; font-weight: 600; color: var(--cream); margin-bottom: 3px; }
+.hg-desc { font-size: 11px; color: var(--muted); line-height: 1.55; }
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 500;
+}
+.cta-link:hover { color: var(--gold2); }
+
+/* SYNC */
+.sync-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 500;
+}
+.sync-pill.connected { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.sync-pill.disconnected { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+@media(max-width:768px){ .header,.main{padding-left:1rem;padding-right:1rem} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">J</div>
+    <div class="brand-text">
+      <span class="name">Jacobs Relocation</span>
+      <span class="sub">Command Center</span>
+    </div>
+  </div>
+  <div class="welcome">
+    <div class="welcome-greeting" id="greeting">Good morning, Adam</div>
+    <div class="welcome-date" id="welcomeDate"></div>
+    <div id="syncStatus" style="margin-top: 6px;"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- AT A GLANCE -->
+  <div class="section-label">📊 At a glance</div>
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- TODAY'S PRIORITIES -->
+  <div class="actions-block">
+    <div class="actions-title">⚡ Today's priorities</div>
+    <ul class="actions-list" id="priorityActions">
+      <li>Run morning market briefing (rates + Palm Beach + Miami-Dade)</li>
+      <li>Check Instagram notifications & DMs — reply to comments, follow back new followers</li>
+      <li>Review hot client pipeline — any movement needed on Daniel Silver or others</li>
+      <li>Chase outstanding referral fee from Veronica Hidalgo (Coldwell Banker, Nancy Huseby sale)</li>
+      <li>Send weekly property shortlists to active clients</li>
+      <li>Film or script one content piece (walk-and-talk Reel or HeyGen avatar)</li>
+    </ul>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="section-label">🛠️ Your tools</div>
+  <div class="tools-grid">
+
+    <a class="tool-card" onclick="openTool('jacobs_market_intel.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(59,130,246,0.15);color:#60a5fa;">📊</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Market Intel</div>
+      <div class="tool-desc">Daily Palm Beach + Miami-Dade briefing. Mortgage rates, county data, news, talking points.</div>
+      <div class="tool-meta">Run each morning</div>
+    </a>
+
+    <a class="tool-card" onclick="openTool('jacobs_crm_cloud.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(201,168,76,0.15);color:#c9a84c;">📋</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Client CRM</div>
+      <div class="tool-desc">16 clients tracked. Status, budget, area, visa, relocation needs, call log.</div>
+      <div class="tool-meta">Master record</div>
+    </a>
+
+    <a class="tool-card" onclick="openTool('jacobs_discovery_cloud.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(139,92,246,0.15);color:#a78bfa;">🎯</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Discovery Hub</div>
+      <div class="tool-desc">New prospect funnel. Intake → research → discovery call → qualify → push to CRM.</div>
+      <div class="tool-meta">For new leads</div>
+    </a>
+
+    <a class="tool-card" onclick="openTool('jacobs_call_hub_cloud.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(239,68,68,0.15);color:#f87171;">🎙️</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Call Hub</div>
+      <div class="tool-desc">Pre-call briefings, live note-taking, post-call processing with transcript extraction.</div>
+      <div class="tool-meta">Before / during / after calls</div>
+    </a>
+
+    <a class="tool-card" onclick="openTool('jacobs_property_match_cloud.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(16,185,129,0.15);color:#34d399;">🏡</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Property Matching</div>
+      <div class="tool-desc">Per-client shortlists from Realtor/Zillow/Compass/Redfin. Drafts emails in your voice.</div>
+      <div class="tool-meta">Weekly per client</div>
+    </a>
+
+    <a class="tool-card" onclick="openTool('jacobs_vendors_cloud.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24;">🤝</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Partner CRM</div>
+      <div class="tool-desc">Vendors, agents, lawyers, brokers. Referral tracking, revenue, follow-ups.</div>
+      <div class="tool-meta">Your network</div>
+    </a>
+
+    <a class="tool-card" onclick="openTool('jacobs_content_dashboard.html')">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:rgba(6,182,212,0.15);color:#22d3ee;">📅</div>
+        <div class="tool-arrow">→</div>
+      </div>
+      <div class="tool-name">Content Calendar</div>
+      <div class="tool-desc">40-post content plan across all pillars. US Domestic, UK/Canada, Adam's Story.</div>
+      <div class="tool-meta">Production schedule</div>
+    </a>
+
+  </div>
+
+  <!-- SOCIAL & CONTENT STRATEGY -->
+  <div class="section-label">📱 Social media strategy</div>
+
+  <div class="workflow-panel">
+    <div class="workflow-header">
+      <div>
+        <div class="workflow-title">Content production system</div>
+        <div class="workflow-sub">Two production tracks — film yourself for personal content, use HeyGen for informational content</div>
+      </div>
+    </div>
+    <div class="workflow-body">
+      <div class="production-grid">
+
+        <div class="production-side">
+          <div class="production-side-header">
+            <span class="production-side-icon">🎥</span>
+            <div>
+              <div class="production-side-title">FILM YOURSELF</div>
+              <div class="production-side-sub">The personal 60% — irreplaceable</div>
+            </div>
+          </div>
+          <ul class="production-types">
+            <li>Walk-and-talk Reels in actual SE Florida locations</li>
+            <li>Adam's Story content (London → SF → Boca)</li>
+            <li>Client Journeys (anonymised)</li>
+            <li>Lifestyle moments (sunset, golf, beach)</li>
+            <li>Behind-the-scenes property tours</li>
+            <li>Photography legacy stories (Mandela, Jagger, Clinton)</li>
+          </ul>
+          <div style="margin-top:10px;font-size:11px;color:var(--gold);font-weight:500;">Why: These work BECAUSE they're visibly you, in the place, in the moment.</div>
+        </div>
+
+        <div class="production-side">
+          <div class="production-side-header">
+            <span class="production-side-icon">🤖</span>
+            <div>
+              <div class="production-side-title">USE HEYGEN</div>
+              <div class="production-side-sub">The informational 40% — high leverage</div>
+            </div>
+          </div>
+          <ul class="production-types">
+            <li>Market Intel weekly updates (use today's data)</li>
+            <li>Relocation Guide explainers (checklists, FAQs)</li>
+            <li>US Domestic comparison posts (CA vs FL, NY vs FL)</li>
+            <li>Visa & legal overview content</li>
+            <li>Cost of living breakdowns</li>
+            <li>Multi-language repurposing (French Canadian)</li>
+          </ul>
+          <div style="margin-top:10px;font-size:11px;color:var(--gold);font-weight:500;">Why: Script-heavy, data-driven content where a clean delivery works fine.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- HEYGEN WORKFLOW -->
+  <div class="workflow-panel">
+    <div class="workflow-header">
+      <div>
+        <div class="workflow-title">HeyGen workflow (when ready)</div>
+        <div class="workflow-sub">One-time setup, then weekly content production in minutes</div>
+      </div>
+    </div>
+    <div class="workflow-body">
+      <div class="heygen-guide">
+
+        <div class="hg-step">
+          <div class="hg-num">1</div>
+          <div class="hg-content">
+            <div class="hg-title">Sign up & train your avatar</div>
+            <div class="hg-desc">Record 2-3 minutes of yourself talking to camera in a quiet, well-lit space. HeyGen needs about 5 minutes to train a custom avatar. Subscription: ~$24/month (Creator plan).</div>
+          </div>
+        </div>
+
+        <div class="hg-step">
+          <div class="hg-num">2</div>
+          <div class="hg-content">
+            <div class="hg-title">Test on Instagram first</div>
+            <div class="hg-desc">Before building a whole workflow, generate one test Reel and check how it looks on mobile at 9:16. Some avatars read uncanny on small screens. If it works → continue.</div>
+          </div>
+        </div>
+
+        <div class="hg-step">
+          <div class="hg-num">3</div>
+          <div class="hg-content">
+            <div class="hg-title">Build your script template library</div>
+            <div class="hg-desc">Create 3-4 reusable script templates: "Market update this week", "Cost comparison: X vs Florida", "Visa explainer", "Neighbourhood breakdown". Each one is just a fill-in-the-blanks.</div>
+          </div>
+        </div>
+
+        <div class="hg-step">
+          <div class="hg-num">4</div>
+          <div class="hg-content">
+            <div class="hg-title">Connect to Market Intel briefing</div>
+            <div class="hg-desc">Each Monday, run your Market Intel briefing → take the talking points → feed into the "Market update" template → HeyGen generates a 60-second avatar Reel ready to post. 10 minutes total.</div>
+          </div>
+        </div>
+
+        <div class="hg-step">
+          <div class="hg-num">5</div>
+          <div class="hg-content">
+            <div class="hg-title">Mix with personal content</div>
+            <div class="hg-desc">Aim for roughly 40% HeyGen (informational), 60% you-on-camera (personal/lifestyle). The mix is what stops the avatar feeling robotic — your real face still dominates the grid.</div>
+          </div>
+        </div>
+
+      </div>
+      <a href="https://www.heygen.com" target="_blank" class="cta-link">Open HeyGen →</a>
+    </div>
+  </div>
+
+  <!-- CHANNELS -->
+  <div class="section-label">📡 Channel strategy</div>
+  <div class="channels-grid">
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <span class="channel-icon">📷</span>
+        <span class="channel-name">Instagram</span>
+        <span class="channel-status cs-live">Live</span>
+      </div>
+      <div class="channel-desc">@jacobsrelocation · 266 followers · Walk-and-talk Reels perform best. Pin top 3 posts on profile.</div>
+      <div class="channel-cadence">4-5 posts/week</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <span class="channel-icon">🎵</span>
+        <span class="channel-name">TikTok</span>
+        <span class="channel-status cs-build">To build</span>
+      </div>
+      <div class="channel-desc">Repurpose Instagram Reels with US Domestic-focused content. Strong organic reach for relocation topics.</div>
+      <div class="channel-cadence">Repurpose, daily</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <span class="channel-icon">💼</span>
+        <span class="channel-name">LinkedIn</span>
+        <span class="channel-status cs-build">To build</span>
+      </div>
+      <div class="channel-desc">Professional positioning for HNW clients and referral partners. Market intel posts perform well here.</div>
+      <div class="channel-cadence">2-3 posts/week</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <span class="channel-icon">▶️</span>
+        <span class="channel-name">YouTube Shorts</span>
+        <span class="channel-status cs-planned">Planned</span>
+      </div>
+      <div class="channel-desc">Long-tail SEO play. Reels repurposed as Shorts. Searchable content like "Cost of living Boca Raton" surfaces for years.</div>
+      <div class="channel-cadence">Repurpose, weekly</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <span class="channel-icon">📧</span>
+        <span class="channel-name">Email newsletter</span>
+        <span class="channel-status cs-planned">Planned</span>
+      </div>
+      <div class="channel-desc">Monthly SE Florida market update to your email list. Long-form market commentary + featured listings.</div>
+      <div class="channel-cadence">Monthly</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <span class="channel-icon">🧵</span>
+        <span class="channel-name">Threads</span>
+        <span class="channel-status cs-planned">Planned</span>
+      </div>
+      <div class="channel-desc">Lower production cost, conversation-driven. Good for quick takes on market news and engaging with community.</div>
+      <div class="channel-cadence">Daily, low-effort</div>
+    </div>
+
+  </div>
+
+  <!-- AUDIENCE STRATEGY -->
+  <div class="workflow-panel">
+    <div class="workflow-header">
+      <div>
+        <div class="workflow-title">Audience differentiation strategy</div>
+        <div class="workflow-sub">How to stand out from Margot Platt (8.4K), Koolik (16K), Serhant (3M) — your competitors</div>
+      </div>
+    </div>
+    <div class="workflow-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
+
+        <div style="padding:1rem;background:var(--card2);border-radius:8px;border-left:3px solid var(--gold);">
+          <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:600;">Your unfair advantage</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;">You've lived the move. London → San Francisco → Boca. No competitor can say that. Lead every story with this.</div>
+        </div>
+
+        <div style="padding:1rem;background:var(--card2);border-radius:8px;border-left:3px solid var(--gold);">
+          <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:600;">The photography hook</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;">Mandela, Jagger, Clinton, Dalai Lama. Land it casually in 1-2 reels/quarter — establishes authority and uniqueness.</div>
+        </div>
+
+        <div style="padding:1rem;background:var(--card2);border-radius:8px;border-left:3px solid var(--gold);">
+          <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:600;">Trust through specificity</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;">Name real places, real numbers, real timelines. "I just helped a family from Toronto close on a Santorini model in Lotus Edge in 11 weeks." Specificity = trust.</div>
+        </div>
+
+        <div style="padding:1rem;background:var(--card2);border-radius:8px;border-left:3px solid var(--gold);">
+          <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:600;">Tone & voice</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;">British understatement, direct, no salesy hype. The opposite of Serhant. Your audience values discretion.</div>
+        </div>
+
+        <div style="padding:1rem;background:var(--card2);border-radius:8px;border-left:3px solid var(--gold);">
+          <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:600;">Multi-audience approach</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;">Three lanes: UK/Canada international, US domestic (NY/NJ/IL/CA), Australian. Each gets dedicated content but shares the same lifestyle story.</div>
+        </div>
+
+        <div style="padding:1rem;background:var(--card2);border-radius:8px;border-left:3px solid var(--gold);">
+          <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:600;">Authority laddering</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;">From "moved here" → "helped families move" → "the go-to relocation expert in SE Florida". Show progression through Client Journeys.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── INIT ───────────────────────────────────────────────────────────────────
+
+const now = new Date();
+const hour = now.getHours();
+let greeting = 'Good morning, Adam';
+if (hour >= 12 && hour < 17) greeting = 'Good afternoon, Adam';
+else if (hour >= 17) greeting = 'Good evening, Adam';
+document.getElementById('greeting').textContent = greeting;
+document.getElementById('welcomeDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+// SYNC STATUS
+const cloudUrl = localStorage.getItem('jr_cloud_url') || '';
+document.getElementById('syncStatus').innerHTML = cloudUrl
+  ? `<span class="sync-pill connected"><span class="sync-dot"></span>Cloud synced</span>`
+  : `<span class="sync-pill disconnected"><span class="sync-dot"></span>Local only — connect via any tool</span>`;
+
+// STATS
+const clients = JSON.parse(localStorage.getItem('jr_clients') || '[]');
+const prospects = JSON.parse(localStorage.getItem('jr_prospects') || '[]');
+const vendors = JSON.parse(localStorage.getItem('jr_vendors') || '[]');
+
+const hot = clients.filter(c => c.status === 'hot').length;
+const active = clients.filter(c => c.status === 'active').length;
+const visa = clients.filter(c => c.status === 'visa').length;
+const totalClients = clients.length;
+const totalProspects = prospects.filter(p => p.status !== 'qualified' && p.status !== 'nofit').length;
+const totalVendors = vendors.length;
+
+const owedRefs = vendors.flatMap(v => (v.referrals || []).filter(r => r.status === 'pending' || r.status === 'overdue'));
+const owedTotal = owedRefs.reduce((sum, r) => sum + (parseFloat(String(r.amount).replace(/[$,]/g,'')) || 0), 0);
+
+const stats = [
+  { label: 'Hot clients', value: hot, sub: 'Ready to transact' },
+  { label: 'Active pipeline', value: active, sub: 'In progress' },
+  { label: 'Visa pending', value: visa, sub: 'Awaiting approval' },
+  { label: 'Total clients', value: totalClients, sub: 'In CRM' },
+  { label: 'Open prospects', value: totalProspects, sub: 'In discovery funnel' },
+  { label: 'Partner network', value: totalVendors, sub: 'Vendors & referrers' },
+  { label: 'Owed to Jacobs', value: owedTotal >= 1000 ? '$' + (owedTotal/1000).toFixed(1) + 'k' : '$' + Math.round(owedTotal), sub: owedRefs.length + ' outstanding ' + (owedRefs.length === 1 ? 'fee' : 'fees') },
+];
+
+document.getElementById('statsGrid').innerHTML = stats.map(s =>
+  `<div class="stat-card">
+    <div class="stat-label">${s.label}</div>
+    <div class="stat-value">${s.value}</div>
+    <div class="stat-sub">${s.sub}</div>
+  </div>`
+).join('');
+
+// TOOL NAVIGATION
+function openTool(filename) {
+  // The files are saved in the same downloads folder usually
+  // Try opening in same directory
+  window.open(filename, '_blank');
+}
+</script>
+</body>
+</html>

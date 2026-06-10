@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Client CRM (Cloud Sync)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --ink: #0f0f1a;
+  --ink2: #1a1a2e;
+  --gold: #c9a84c;
+  --gold2: #e8c96a;
+  --cream: #faf8f3;
+  --muted: #8888a0;
+  --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06);
+  --card: #16162a;
+  --card2: #1e1e35;
+  --surface: #12121f;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: stretch; justify-content: space-between;
+  gap: 1rem;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
+.brand-mark {
+  width: 36px; height: 36px;
+  background: var(--gold); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; color: var(--ink);
+}
+.brand-text .name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 600; color: #fff;
+  display: block; line-height: 1;
+}
+.brand-text .sub {
+  font-size: 10px; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.14em;
+  margin-top: 3px; display: block;
+}
+
+/* SYNC STATUS */
+.sync-status {
+  display: flex; align-items: center; gap: 14px;
+  padding: 1rem 0;
+}
+.sync-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.sync-pill.connected {
+  background: rgba(16,185,129,0.12);
+  color: #34d399;
+  border: 1px solid rgba(16,185,129,0.2);
+}
+.sync-pill.disconnected {
+  background: rgba(245,158,11,0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245,158,11,0.2);
+  cursor: pointer;
+}
+.sync-pill.syncing {
+  background: rgba(59,130,246,0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+.sync-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.sync-dot.pulsing { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ─── SETUP MODAL ─── */
+.setup-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,15,26,0.95);
+  z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+}
+.setup-modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.setup-header {
+  padding: 2rem 2rem 1rem;
+  border-bottom: 1px solid var(--border2);
+  text-align: center;
+}
+.setup-icon {
+  width: 60px; height: 60px;
+  background: rgba(201,168,76,0.15);
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+.setup-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+.setup-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.setup-body {
+  padding: 1.5rem 2rem;
+}
+.setup-steps {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.setup-step {
+  display: flex; gap: 14px;
+  padding: 14px;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+}
+.setup-step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px;
+  flex-shrink: 0;
+}
+.setup-step-content { flex: 1; }
+.setup-step-title {
+  font-size: 13px; font-weight: 600; color: #fff;
+  margin-bottom: 4px;
+}
+.setup-step-desc {
+  font-size: 12px; color: var(--muted);
+  line-height: 1.6;
+}
+.setup-step-desc code {
+  background: var(--ink);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+}
+.setup-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--gold);
+  text-decoration: none;
+}
+.setup-link:hover { text-decoration: underline; }
+
+.setup-url-input {
+  width: 100%;
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 8px;
+}
+.setup-url-input:focus { border-color: var(--gold); }
+.setup-url-input::placeholder { color: var(--muted); }
+
+.setup-buttons {
+  display: flex; gap: 8px; justify-content: space-between;
+  margin-top: 1rem;
+}
+.btn-cloud {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-cloud:hover { background: var(--gold2); }
+.btn-cloud:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-skip {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-skip:hover { background: var(--card2); color: var(--cream); }
+
+.test-result {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: none;
+}
+.test-result.success {
+  display: block;
+  background: rgba(16,185,129,0.1);
+  color: #34d399;
+  border: 1px solid rgba(16,185,129,0.2);
+}
+.test-result.error {
+  display: block;
+  background: rgba(239,68,68,0.1);
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+/* DOWNLOAD SCRIPT BUTTON */
+.script-download {
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 12px;
+}
+.script-download-info { flex: 1; }
+.script-download-title { font-size: 13px; font-weight: 600; color: #93c5fd; }
+.script-download-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.script-copy-btn {
+  background: rgba(59,130,246,0.15);
+  color: #93c5fd;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.script-copy-btn:hover { background: rgba(59,130,246,0.25); }
+
+/* ─── TOOLBAR ─── */
+.toolbar {
+  background: var(--ink2);
+  border-bottom: 1px solid var(--border2);
+  padding: 0.75rem 2rem;
+  display: flex; align-items: center; gap: 1rem;
+  flex-wrap: wrap;
+}
+.search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+.search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 13px; pointer-events: none;
+}
+.search {
+  width: 100%; background: var(--card);
+  border: 1px solid var(--border2); border-radius: 6px;
+  padding: 7px 12px 7px 32px;
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  outline: none; transition: border-color 0.15s;
+}
+.search::placeholder { color: var(--muted); }
+.search:focus { border-color: var(--gold); }
+
+.filter-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.fbtn {
+  font-size: 11px; font-weight: 500;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--muted);
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.12s; white-space: nowrap;
+}
+.fbtn:hover { border-color: var(--border); color: var(--cream); }
+.fbtn.on { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+
+.add-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--gold); color: var(--ink);
+  border: none; padding: 7px 16px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.12s; white-space: nowrap;
+  margin-left: auto;
+}
+.add-btn:hover { background: var(--gold2); }
+
+/* ─── MAIN ─── */
+.main { padding: 1.5rem 2rem; max-width: 1440px; margin: 0 auto; }
+
+/* TABLE */
+.table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border2); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--card2); border-bottom: 1px solid var(--border); }
+th {
+  padding: 10px 14px;
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--muted); text-align: left; white-space: nowrap;
+  cursor: pointer;
+}
+th:hover { color: var(--gold); }
+tbody tr {
+  border-bottom: 1px solid var(--border2);
+  transition: background 0.1s;
+  cursor: pointer;
+}
+tbody tr:hover { background: var(--card2); }
+td { padding: 11px 14px; font-size: 13px; vertical-align: middle; }
+
+.client-cell { display: flex; align-items: center; gap: 10px; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+}
+.client-name { font-weight: 500; color: var(--white); color: #fff; }
+.client-origin { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 600; padding: 3px 9px;
+  border-radius: 20px; white-space: nowrap;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.badge::before {
+  content: ''; width: 5px; height: 5px;
+  border-radius: 50%; background: currentColor;
+  display: inline-block;
+}
+.b-hot { background: rgba(239,68,68,0.12); color: #f87171; }
+.b-active { background: rgba(201,168,76,0.15); color: var(--gold); }
+.b-warm { background: rgba(59,130,246,0.12); color: #60a5fa; }
+.b-visa { background: rgba(139,92,246,0.12); color: #a78bfa; }
+.b-cold { background: rgba(107,114,128,0.12); color: #9ca3af; }
+.b-closed { background: rgba(16,185,129,0.12); color: #34d399; }
+
+.type-tag {
+  font-size: 10px; font-weight: 500; padding: 2px 8px;
+  border-radius: 4px; white-space: nowrap;
+}
+.tt-buyer { background: rgba(201,168,76,0.1); color: var(--gold); }
+.tt-investor { background: rgba(59,130,246,0.1); color: #60a5fa; }
+.tt-rental { background: rgba(139,92,246,0.1); color: #a78bfa; }
+.tt-holiday { background: rgba(16,185,129,0.1); color: #34d399; }
+
+.budget-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--cream); }
+.budget-na { color: var(--muted); font-style: italic; font-size: 12px; }
+.flag { font-size: 14px; }
+
+td.actions-cell { white-space: nowrap; }
+.row-btn {
+  font-size: 11px; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--muted); cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  margin-right: 4px;
+}
+.row-btn:hover { background: var(--card2); color: var(--cream); }
+.row-btn.gold { color: var(--gold); border-color: rgba(201,168,76,0.3); }
+
+/* ─── MODAL (full editor) ─── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  z-index: 200; display: flex; align-items: center; justify-content: center;
+  padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; width: 100%; max-width: 780px;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-header {
+  padding: 1.5rem; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; gap: 1rem;
+  position: sticky; top: 0; background: var(--card); z-index: 10;
+}
+.modal-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+}
+.modal-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; }
+.modal-sub { font-size: 12px; color: var(--muted); margin-top: 3px; display: flex; gap: 8px; flex-wrap: wrap; }
+.modal-close {
+  margin-left: auto; width: 32px; height: 32px; border-radius: 6px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--muted); cursor: pointer; display: flex;
+  align-items: center; justify-content: center; font-size: 16px;
+}
+.modal-close:hover { background: var(--card2); color: var(--cream); }
+
+.modal-body { padding: 1.5rem; }
+.modal-section { margin-bottom: 1.5rem; }
+.modal-section-title {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--gold);
+  margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.field-block label {
+  display: block; font-size: 10px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.field-input, .field-select, .field-textarea {
+  width: 100%; background: var(--ink2); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 8px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  color: var(--cream); outline: none; transition: border-color 0.15s;
+}
+.field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--gold); }
+.field-select { appearance: none; cursor: pointer; }
+.field-textarea { resize: vertical; min-height: 80px; }
+.field-block.span-2 { grid-column: 1 / -1; }
+
+.checkbox-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.check-item { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.check-item input { accent-color: var(--gold); width: 14px; height: 14px; cursor: pointer; }
+.check-item span { font-size: 12px; color: var(--cream); }
+
+.modal-footer {
+  padding: 1rem 1.5rem; border-top: 1px solid var(--border2);
+  display: flex; gap: 8px; justify-content: flex-end;
+  position: sticky; bottom: 0; background: var(--card);
+}
+.btn-primary {
+  background: var(--gold); color: var(--ink);
+  border: none; padding: 9px 20px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--gold2); }
+.btn-secondary {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border2); padding: 9px 20px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer;
+}
+.btn-secondary:hover { background: var(--card2); color: var(--cream); }
+.btn-danger {
+  background: transparent; color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2); padding: 9px 20px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer;
+  margin-right: auto;
+}
+.btn-danger:hover { background: rgba(239,68,68,0.1); }
+
+.notes-log {
+  background: var(--ink2); border-radius: 8px; padding: 1rem;
+  border: 1px solid var(--border2); max-height: 200px; overflow-y: auto;
+  font-size: 12px; line-height: 1.7; color: var(--cream);
+  font-family: 'DM Mono', monospace;
+}
+.notes-log p { margin-bottom: 0.5rem; }
+.notes-log .note-date { color: var(--gold); font-size: 10px; }
+
+.empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.empty-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.4; }
+
+@media(max-width:768px){
+  .header,.toolbar,.main{ padding-left:1rem;padding-right:1rem; }
+  .add-btn { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="setup-overlay" id="setupOverlay" style="display:none;">
+  <div class="setup-modal">
+    <div class="setup-header">
+      <div class="setup-icon">☁️</div>
+      <div class="setup-title">Connect cloud sync</div>
+      <div class="setup-sub">One-time setup — your data lives in your own Google Sheet, accessible from any device, never leaves your account.</div>
+    </div>
+    <div class="setup-body">
+
+      <div class="script-download">
+        <div class="script-download-info">
+          <div class="script-download-title">📜 Setup script ready</div>
+          <div class="script-download-desc">Click to copy, then paste into Google Apps Script.</div>
+        </div>
+        <button class="script-copy-btn" onclick="copySetupScript()">Copy script</button>
+      </div>
+
+      <div class="setup-steps">
+
+        <div class="setup-step">
+          <div class="setup-step-num">1</div>
+          <div class="setup-step-content">
+            <div class="setup-step-title">Create a Google Sheet</div>
+            <div class="setup-step-desc">
+              Open Google Sheets and create a new blank spreadsheet. Name it "Jacobs Relocation Data".
+              <a href="https://sheets.new" target="_blank" class="setup-link">→ Open Google Sheets</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="setup-step-num">2</div>
+          <div class="setup-step-content">
+            <div class="setup-step-title">Open Apps Script</div>
+            <div class="setup-step-desc">
+              In your new sheet, click <code>Extensions → Apps Script</code>. Delete the placeholder code, then paste the script you copied above. Click the save icon.
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="setup-step-num">3</div>
+          <div class="setup-step-content">
+            <div class="setup-step-title">Deploy as Web App</div>
+            <div class="setup-step-desc">
+              Click <code>Deploy → New deployment</code>. Click the gear icon → select <code>Web app</code>.<br>
+              Execute as: <strong>Me</strong> · Who has access: <strong>Anyone</strong> · Click <code>Deploy</code>.<br>
+              You'll need to authorize — click through the "unverified" warning (it's your own script).
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="setup-step-num">4</div>
+          <div class="setup-step-content">
+            <div class="setup-step-title">Paste your Web App URL below</div>
+            <div class="setup-step-desc">
+              After deploying you'll get a URL ending in <code>/exec</code>. Paste it here.
+            </div>
+            <input type="text" class="setup-url-input" id="webAppUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" style="margin-top:10px;">
+            <div class="test-result" id="testResult"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="setup-buttons">
+        <button class="btn-skip" onclick="closeSetup(true)">Skip for now (local only)</button>
+        <button class="btn-cloud" onclick="connectCloud()" id="connectBtn">Connect & sync</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">J</div>
+    <div class="brand-text">
+      <span class="name">Jacobs Relocation</span>
+      <span class="sub">Client CRM</span>
+    </div>
+  </div>
+  <div class="sync-status">
+    <div id="syncIndicator"></div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search" id="searchInput" placeholder="Search clients, location, notes…" oninput="renderAll()">
+  </div>
+  <div class="filter-group">
+    <button class="fbtn on" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" onclick="setFilter('hot',this)">🔴 Hot</button>
+    <button class="fbtn" onclick="setFilter('active',this)">⭐ Active</button>
+    <button class="fbtn" onclick="setFilter('visa',this)">🛂 Visa</button>
+    <button class="fbtn" onclick="setFilter('uk',this)">🇬🇧 UK</button>
+    <button class="fbtn" onclick="setFilter('canada',this)">🇨🇦 Canada</button>
+    <button class="fbtn" onclick="setFilter('us',this)">🇺🇸 US</button>
+  </div>
+  <button class="add-btn" onclick="openModal(null)">+ Add client</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Origin</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Budget</th>
+          <th>Location</th>
+          <th>Timeline</th>
+          <th>Visa</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL (same as v1) -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-avatar" id="mAvatar"></div>
+      <div>
+        <div class="modal-name" id="mName">Client</div>
+        <div class="modal-sub" id="mSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Client details</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Full name</label><input class="field-input" id="f-name" oninput="updateModalHeader()"></div>
+          <div class="field-block"><label>Origin</label>
+            <select class="field-select" id="f-origin">
+              <option value="uk">🇬🇧 United Kingdom</option>
+              <option value="canada">🇨🇦 Canada</option>
+              <option value="us">🇺🇸 United States</option>
+              <option value="australia">🇦🇺 Australia</option>
+              <option value="other">🌍 Other</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Status</label>
+            <select class="field-select" id="f-status">
+              <option value="hot">🔴 Hot</option>
+              <option value="active">⭐ Active</option>
+              <option value="warm">🔵 Warm</option>
+              <option value="visa">🟣 Visa pending</option>
+              <option value="cold">⚪ Cold</option>
+              <option value="closed">✅ Closed</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Type</label>
+            <select class="field-select" id="f-type">
+              <option value="buyer">Buyer</option>
+              <option value="investor">Investor</option>
+              <option value="rental">Rental</option>
+              <option value="holiday">Holiday home</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Property</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Budget</label><input class="field-input" id="f-budget"></div>
+          <div class="field-block"><label>Target area</label><input class="field-input" id="f-area"></div>
+          <div class="field-block"><label>Property type</label><input class="field-input" id="f-proptype"></div>
+          <div class="field-block"><label>Timeline</label><input class="field-input" id="f-timeline"></div>
+          <div class="field-block"><label>Yield target</label><input class="field-input" id="f-yield"></div>
+          <div class="field-block"><label>Schools</label><input class="field-input" id="f-schools"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Visa & legal</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Visa type</label>
+            <select class="field-select" id="f-visa">
+              <option value="">None / N/A</option>
+              <option value="e2">E-2</option><option value="eb5">EB-5</option>
+              <option value="o1">O-1</option><option value="l1">L-1</option>
+              <option value="b2">B-2</option><option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Visa status</label><input class="field-input" id="f-visastatus"></div>
+          <div class="field-block span-2"><label>Legal / financial notes</label><input class="field-input" id="f-legal"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Relocation needs</div>
+        <div class="checkbox-group" id="relocNeeds">
+          <label class="check-item"><input type="checkbox" value="moving"> <span>Moving/shipping</span></label>
+          <label class="check-item"><input type="checkbox" value="schools"> <span>Schools</span></label>
+          <label class="check-item"><input type="checkbox" value="tax"> <span>Tax</span></label>
+          <label class="check-item"><input type="checkbox" value="estate"> <span>Estate planning</span></label>
+          <label class="check-item"><input type="checkbox" value="currency"> <span>Currency</span></label>
+          <label class="check-item"><input type="checkbox" value="pets"> <span>Pets</span></label>
+          <label class="check-item"><input type="checkbox" value="shortterm"> <span>Short-term rental</span></label>
+          <label class="check-item"><input type="checkbox" value="furnished"> <span>Furnished</span></label>
+          <label class="check-item"><input type="checkbox" value="propertymanagement"> <span>Property mgmt</span></label>
+          <label class="check-item"><input type="checkbox" value="insurance"> <span>Insurance</span></label>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">History & referrals</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Commission est.</label><input class="field-input" id="f-commission"></div>
+          <div class="field-block"><label>Referral fee owed</label><input class="field-input" id="f-referral"></div>
+          <div class="field-block span-2"><label>History / existing properties</label><input class="field-input" id="f-history"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Call log</div>
+        <div class="field-block" style="margin-bottom:10px;">
+          <label>Add note</label>
+          <div style="display:flex;gap:8px;">
+            <input class="field-input" id="f-newnote" placeholder="Add call note or update…" style="flex:1">
+            <button class="btn-primary" onclick="addNote()">+ Log</button>
+          </div>
+        </div>
+        <div class="notes-log" id="notesLog"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">General notes</div>
+        <textarea class="field-textarea" id="f-notes" rows="4"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="deleteBtn" onclick="deleteClient()">Delete</button>
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveClient()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── INITIAL DATA ────────────────────────────────────────────────────────────
+
+const INITIAL_CLIENTS = [
+  { id:1, name:'Adriana Shulman', origin:'canada', status:'visa', type:'buyer', budget:'TBC', area:'SE Florida', proptype:'TBC', timeline:'Post-visa approval', yieldTarget:'', schools:'', visa:'e2', visaStatus:'E-2 in progress', legal:'CAD→USD exchange', commission:'', referral:'', history:'', relocNeeds:['currency','tax'], notes:'Buying once E-2 visa comes through.', callLog:[] },
+  { id:2, name:'Daniel Silver', origin:'uk', status:'hot', type:'buyer', budget:'TBC', area:'Lotus Edge, Boca Raton', proptype:'Santorini model', timeline:'August / September 2025', yieldTarget:'', schools:'', visa:'e2', visaStatus:'TBC', legal:'Parents also potential buyers', commission:'', referral:'', history:'', relocNeeds:['moving','currency','schools'], notes:'Santorini model in Lotus Edge. Parents also potentially buying.', callLog:[] },
+  { id:3, name:'Josh Franks', origin:'uk', status:'warm', type:'buyer', budget:'TBC', area:'Lotus Edge / SE Florida', proptype:'TBC', timeline:'TBC', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'', commission:'', referral:'', history:'', relocNeeds:['moving','currency'], notes:'Liked Lotus community. Needs qualification.', callLog:[] },
+  { id:4, name:'Philip Braham', origin:'uk', status:'visa', type:'buyer', budget:'TBC', area:'SE Florida', proptype:'TBC', timeline:'Post-visa', yieldTarget:'', schools:'', visa:'e2', visaStatus:'Awaiting approval', legal:'Currency', commission:'', referral:'', history:'', relocNeeds:['currency','moving'], notes:'Waiting for visa. Check monthly.', callLog:[] },
+  { id:5, name:'Henry Bennett', origin:'uk', status:'warm', type:'buyer', budget:'TBC', area:'The Oaks or Woodfield CC', proptype:'TBC', timeline:'After UK home sells', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'Dependent on UK home sale', commission:'', referral:'', history:'', relocNeeds:['moving','currency','schools'], notes:'Will buy when UK home sells.', callLog:[] },
+  { id:6, name:'Dan Gilbert', origin:'us', status:'active', type:'investor', budget:'TBC', area:'Lotus community, Boca Raton', proptype:'Investment — min 4% yield', timeline:'Active', yieldTarget:'4% minimum', schools:'', visa:'', visaStatus:'', legal:'Investment income tax', commission:'', referral:'', history:'17117 Teton River Rd, Lotus — purchased\n17238 Teton River Rd, Lotus — purchased', relocNeeds:['tax','propertymanagement'], notes:'Already owns two Lotus investments. Wants 3rd at 4%+ yield.', callLog:[] },
+  { id:7, name:'Matt Britton', origin:'us', status:'active', type:'investor', budget:'$1.5M – $2M', area:'Delray Beach', proptype:'Apartment — STR', timeline:'Active', yieldTarget:'STR tax loophole', schools:'', visa:'', visaStatus:'', legal:'STR tax strategy', commission:'', referral:'', history:'', relocNeeds:['tax','propertymanagement'], notes:'Wants Delray STR for tax loophole. Connect with STR tax advisor.', callLog:[] },
+  { id:8, name:'Shelly Wolman', origin:'uk', status:'warm', type:'buyer', budget:'Up to $5M', area:'SE Florida', proptype:'TBC', timeline:'TBC', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'', commission:'', referral:'', history:'', relocNeeds:['moving','currency','schools'], notes:'$5M budget. Needs full qualification call.', callLog:[] },
+  { id:9, name:'Michael Horowitz', origin:'uk', status:'warm', type:'holiday', budget:'TBC', area:'SE Florida', proptype:'Holiday home', timeline:'Coming to view later in year', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'', commission:'', referral:'', history:'', relocNeeds:['currency'], notes:'Holiday home. Coming over later this year to view.', callLog:[] },
+  { id:10, name:'Carly Spital', origin:'uk', status:'warm', type:'rental', budget:'TBC', area:'Lotus, SE Florida', proptype:'Rental — may buy', timeline:'TBC', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'', commission:'', referral:'', history:'', relocNeeds:['moving','currency','schools'], notes:'Rental first, may buy in Lotus.', callLog:[] },
+  { id:11, name:'Ian Baron', origin:'uk', status:'active', type:'buyer', budget:'TBC', area:'The Point, Aventura → purchase TBC', proptype:'Renting first', timeline:'Rental June 15 — purchase ~June 2026', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'Currency', commission:'', referral:'', history:'', relocNeeds:['moving','currency','shortterm','schools'], notes:'Renting Aventura 12 months from June 15. Buys after.', callLog:[] },
+  { id:12, name:'Nancy Huseby', origin:'us', status:'closed', type:'buyer', budget:'TBC', area:'Valencia Grand, Boca Raton', proptype:'Addison model — PURCHASED', timeline:'Closed ✅ — STR needed September', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'Referral fee owed', commission:'', referral:'⚠️ Referral fee owed — Veronica Hidalgo, Coldwell Banker (Nancy CA home sale)', history:'Valencia Grand — Addison model PURCHASED', relocNeeds:['shortterm','moving'], notes:'Moved from CA. CHASE REFERRAL FEE from Veronica Hidalgo at Coldwell Banker.', callLog:[] },
+  { id:13, name:'Debbie Adler', origin:'uk', status:'warm', type:'buyer', budget:'Up to $5M', area:'SE Florida', proptype:'TBC', timeline:'TBC', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'', commission:'', referral:'', history:'', relocNeeds:['moving','currency','schools'], notes:'$5M budget. Needs qualification.', callLog:[] },
+  { id:14, name:'Dan Caristo', origin:'canada', status:'active', type:'buyer', budget:'$3M and/or ~$17k/mo rental', area:'SE Florida', proptype:'Purchase and/or rental', timeline:'Active', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'CAD→USD', commission:'', referral:'', history:'', relocNeeds:['currency','shortterm','tax'], notes:'$3M purchase AND/OR rental ~$17k/mo. Qualify priority.', callLog:[] },
+  { id:15, name:'Ian & Bev Marcus', origin:'uk', status:'warm', type:'buyer', budget:'TBC', area:'Valencia or Woodfield CC', proptype:'TBC', timeline:'TBC', yieldTarget:'', schools:'', visa:'', visaStatus:'', legal:'', commission:'', referral:'', history:'', relocNeeds:['moving','currency','schools'], notes:'Couple. Valencia or Woodfield CC. Needs qualification.', callLog:[] },
+  { id:16, name:'Alan Bloom', origin:'uk', status:'cold', type:'buyer', budget:'TBC', area:'SE Florida', proptype:'TBC', timeline:'Far from buying', yieldTarget:'', schools:'', visa:'other', visaStatus:'Exploring visa options', legal:'Visa exploration only', commission:'', referral:'', history:'', relocNeeds:['currency'], notes:'Exploring visas. Far from buying. Warm nurture.', callLog:[] }
+];
+
+// ── SETUP SCRIPT (embedded for copy button) ────────────────────────────────
+
+const SETUP_SCRIPT_CONTENT = `/**
+ * JACOBS RELOCATION — CLOUD SYNC BACKEND
+ * Paste this entire file into Google Apps Script (Extensions → Apps Script in your Google Sheet)
+ */
+
+const SHEETS = {
+  clients: 'Clients',
+  prospects: 'Prospects',
+  vendors: 'Vendors',
+  notes: 'Notes'
+};
+
+function doGet(e) {
+  try {
+    const action = (e.parameter.action || 'read').toLowerCase();
+    const table = (e.parameter.table || 'clients').toLowerCase();
+    ensureSheets();
+    if (action === 'read') return jsonResponse({ ok: true, data: readTable(table) });
+    return jsonResponse({ ok: false, error: 'Unknown action' });
+  } catch (err) { return jsonResponse({ ok: false, error: err.toString() }); }
+}
+
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    const action = (body.action || 'write').toLowerCase();
+    const table = (body.table || 'clients').toLowerCase();
+    ensureSheets();
+    if (action === 'write') { writeTable(table, body.data || []); return jsonResponse({ ok: true, count: (body.data || []).length }); }
+    if (action === 'append') { appendToTable(table, body.row || {}); return jsonResponse({ ok: true }); }
+    if (action === 'update') { updateRow(table, body.id, body.row || {}); return jsonResponse({ ok: true }); }
+    if (action === 'delete') { deleteRow(table, body.id); return jsonResponse({ ok: true }); }
+    return jsonResponse({ ok: false, error: 'Unknown action' });
+  } catch (err) { return jsonResponse({ ok: false, error: err.toString() }); }
+}
+
+function jsonResponse(obj) { return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON); }
+
+function ensureSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  Object.values(SHEETS).forEach(name => {
+    let sheet = ss.getSheetByName(name);
+    if (!sheet) {
+      sheet = ss.insertSheet(name);
+      sheet.getRange(1, 1).setValue('data_json');
+      sheet.getRange(1, 2).setValue('id');
+      sheet.getRange(1, 3).setValue('updated_at');
+      sheet.setFrozenRows(1);
+    }
+  });
+}
+
+function readTable(table) {
+  const sheetName = SHEETS[table]; if (!sheetName) throw new Error('Unknown table: ' + table);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const lastRow = sheet.getLastRow(); if (lastRow < 2) return [];
+  const range = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  const records = [];
+  range.forEach(row => { if (row[0]) { try { records.push(JSON.parse(row[0])); } catch(e){} } });
+  return records;
+}
+
+function writeTable(table, data) {
+  const sheetName = SHEETS[table]; if (!sheetName) throw new Error('Unknown table: ' + table);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const lastRow = sheet.getLastRow();
+  if (lastRow > 1) sheet.getRange(2, 1, lastRow - 1, 3).clearContent();
+  if (!data.length) return;
+  const now = new Date().toISOString();
+  const rows = data.map(r => [JSON.stringify(r), r.id || '', now]);
+  sheet.getRange(2, 1, rows.length, 3).setValues(rows);
+}
+
+function appendToTable(table, row) {
+  const sheetName = SHEETS[table]; if (!sheetName) throw new Error('Unknown table: ' + table);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  sheet.appendRow([JSON.stringify(row), row.id || '', new Date().toISOString()]);
+}
+
+function updateRow(table, id, newData) {
+  const sheetName = SHEETS[table]; if (!sheetName) throw new Error('Unknown table: ' + table);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const lastRow = sheet.getLastRow(); if (lastRow < 2) return;
+  const range = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
+  for (let i = 0; i < range.length; i++) {
+    if (String(range[i][0]) === String(id)) {
+      sheet.getRange(i + 2, 1).setValue(JSON.stringify(newData));
+      sheet.getRange(i + 2, 3).setValue(new Date().toISOString());
+      return;
+    }
+  }
+}
+
+function deleteRow(table, id) {
+  const sheetName = SHEETS[table]; if (!sheetName) throw new Error('Unknown table: ' + table);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const lastRow = sheet.getLastRow(); if (lastRow < 2) return;
+  const range = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
+  for (let i = 0; i < range.length; i++) {
+    if (String(range[i][0]) === String(id)) { sheet.deleteRow(i + 2); return; }
+  }
+}
+
+function setup() { ensureSheets(); Logger.log('Sheets ready: ' + Object.values(SHEETS).join(', ')); }`;
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+
+let clients = JSON.parse(localStorage.getItem('jr_clients') || 'null') || INITIAL_CLIENTS;
+let currentFilter = 'all';
+let editingId = null;
+let cloudUrl = localStorage.getItem('jr_cloud_url') || '';
+let cloudConnected = !!cloudUrl;
+let lastSyncTime = null;
+let syncTimeout = null;
+
+// ── CLOUD SYNC ──────────────────────────────────────────────────────────────
+
+async function cloudRead() {
+  if (!cloudUrl) return null;
+  try {
+    const res = await fetch(cloudUrl + '?action=read&table=clients');
+    const data = await res.json();
+    if (data.ok) return data.data;
+    throw new Error(data.error);
+  } catch (err) {
+    console.error('Cloud read failed:', err);
+    return null;
+  }
+}
+
+async function cloudWrite(data) {
+  if (!cloudUrl) return false;
+  try {
+    updateSyncIndicator('syncing');
+    // GAS web apps don't accept JSON with custom Content-Type from browser due to CORS preflight.
+    // Use text/plain to avoid preflight; server parses JSON regardless.
+    const res = await fetch(cloudUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'write', table: 'clients', data })
+    });
+    const result = await res.json();
+    if (result.ok) {
+      lastSyncTime = new Date();
+      updateSyncIndicator('connected');
+      return true;
+    }
+    throw new Error(result.error);
+  } catch (err) {
+    console.error('Cloud write failed:', err);
+    updateSyncIndicator('error');
+    return false;
+  }
+}
+
+function debouncedSync() {
+  if (!cloudConnected) return;
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => cloudWrite(clients), 800);
+}
+
+function save() {
+  localStorage.setItem('jr_clients', JSON.stringify(clients));
+  debouncedSync();
+}
+
+function updateSyncIndicator(state) {
+  const el = document.getElementById('syncIndicator');
+  if (!cloudConnected) {
+    el.innerHTML = `<div class="sync-pill disconnected" onclick="openSetup()">
+      <span class="sync-dot"></span>Local only · Click to connect cloud
+    </div>`;
+    return;
+  }
+  if (state === 'syncing') {
+    el.innerHTML = `<div class="sync-pill syncing">
+      <span class="sync-dot pulsing"></span>Syncing…
+    </div>`;
+    return;
+  }
+  if (state === 'error') {
+    el.innerHTML = `<div class="sync-pill disconnected">
+      <span class="sync-dot"></span>Sync failed
+    </div>`;
+    return;
+  }
+  const timeAgo = lastSyncTime
+    ? Math.floor((Date.now() - lastSyncTime.getTime()) / 1000) + 's ago'
+    : 'now';
+  el.innerHTML = `<div class="sync-pill connected">
+    <span class="sync-dot"></span>Cloud synced · ${timeAgo}
+  </div>`;
+}
+
+// ── SETUP FLOW ──────────────────────────────────────────────────────────────
+
+function openSetup() {
+  document.getElementById('setupOverlay').style.display = 'flex';
+}
+
+function closeSetup(skip) {
+  document.getElementById('setupOverlay').style.display = 'none';
+  if (skip) {
+    localStorage.setItem('jr_setup_skipped', '1');
+  }
+}
+
+function copySetupScript() {
+  navigator.clipboard.writeText(SETUP_SCRIPT_CONTENT).then(() => {
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = original, 2000);
+  });
+}
+
+async function connectCloud() {
+  const url = document.getElementById('webAppUrl').value.trim();
+  const result = document.getElementById('testResult');
+  const btn = document.getElementById('connectBtn');
+
+  if (!url || !url.startsWith('https://script.google.com/')) {
+    result.className = 'test-result error';
+    result.textContent = '⚠️ Please paste a valid Google Apps Script URL (starts with https://script.google.com/)';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Testing connection…';
+  result.className = 'test-result';
+  result.style.display = 'none';
+
+  try {
+    const testRes = await fetch(url + '?action=read&table=clients');
+    const testData = await testRes.json();
+    if (!testData.ok && testData.error) throw new Error(testData.error);
+
+    // Save URL
+    cloudUrl = url;
+    cloudConnected = true;
+    localStorage.setItem('jr_cloud_url', url);
+
+    result.className = 'test-result success';
+    result.textContent = '✓ Connected. Pushing your 16 clients to the cloud now…';
+
+    // Push current local data to cloud
+    await cloudWrite(clients);
+
+    result.textContent = '✓ Synced. All four tools (CRM, Discovery, Call Hub, Property Match) will now sync to this Google Sheet.';
+
+    setTimeout(() => {
+      closeSetup(false);
+      updateSyncIndicator('connected');
+    }, 1500);
+  } catch (err) {
+    result.className = 'test-result error';
+    result.textContent = '✗ Connection failed: ' + err.message + '. Check that you deployed as Web App with "Anyone" access.';
+    btn.disabled = false;
+    btn.textContent = 'Connect & sync';
+  }
+}
+
+// ── DATA UI HELPERS (same as v1) ───────────────────────────────────────────
+
+const PALETTE = ['#c9a84c','#3b82f6','#8b5cf6','#10b981','#ef4444','#f59e0b','#06b6d4','#ec4899'];
+function avatarColor(name) { let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))%PALETTE.length; return PALETTE[h]; }
+function initials(name) { return name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase(); }
+
+const STATUS_MAP = {
+  hot:{cls:'b-hot',label:'Hot'}, active:{cls:'b-active',label:'Active'},
+  warm:{cls:'b-warm',label:'Warm'}, visa:{cls:'b-visa',label:'Visa pending'},
+  cold:{cls:'b-cold',label:'Cold'}, closed:{cls:'b-closed',label:'Closed'}
+};
+const TYPE_MAP = {
+  buyer:{cls:'tt-buyer',label:'Buyer'}, investor:{cls:'tt-investor',label:'Investor'},
+  rental:{cls:'tt-rental',label:'Rental'}, holiday:{cls:'tt-holiday',label:'Holiday'}
+};
+const ORIGIN_FLAGS = { uk:'🇬🇧', canada:'🇨🇦', us:'🇺🇸', australia:'🇦🇺', other:'🌍' };
+const ORIGIN_NAMES = { uk:'United Kingdom', canada:'Canada', us:'United States', australia:'Australia', other:'Other' };
+
+function statusBadge(s) { const m=STATUS_MAP[s]||STATUS_MAP.cold; return `<span class="badge ${m.cls}">${m.label}</span>`; }
+function typeTag(t) { const m=TYPE_MAP[t]||TYPE_MAP.buyer; return `<span class="type-tag ${m.cls}">${m.label}</span>`; }
+
+// ── FILTER / RENDER ────────────────────────────────────────────────────────
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderAll();
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return clients.filter(c => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'hot') return c.status === 'hot';
+    if (currentFilter === 'active') return c.status === 'active';
+    if (currentFilter === 'visa') return c.status === 'visa';
+    if (currentFilter === 'uk') return c.origin === 'uk';
+    if (currentFilter === 'canada') return c.origin === 'canada';
+    if (currentFilter === 'us') return c.origin === 'us';
+    return true;
+  }).filter(c => {
+    if (!q) return true;
+    return [c.name, c.area, c.notes, c.budget, c.proptype].join(' ').toLowerCase().includes(q);
+  }).sort((a,b) => a.name.localeCompare(b.name));
+}
+
+function renderAll() {
+  const filtered = getFiltered();
+  const tbody = document.getElementById('tableBody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">🔍</div>No clients match.</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(c => {
+    const col = avatarColor(c.name);
+    return `<tr onclick="openModal(${c.id})">
+      <td><div class="client-cell">
+        <div class="avatar" style="background:${col}20;color:${col}">${initials(c.name)}</div>
+        <div><div class="client-name">${c.name}</div><div class="client-origin">${ORIGIN_FLAGS[c.origin]||''} ${ORIGIN_NAMES[c.origin]||''}</div></div>
+      </div></td>
+      <td><span class="flag">${ORIGIN_FLAGS[c.origin]||''}</span></td>
+      <td>${typeTag(c.type)}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td><span class="${c.budget&&c.budget!=='TBC'?'budget-val':'budget-na'}">${c.budget||'TBC'}</span></td>
+      <td style="max-width:180px;font-size:12px;">${c.area||'—'}<br><span style="color:var(--muted);font-size:11px">${c.proptype||''}</span></td>
+      <td style="font-size:12px;color:var(--muted);white-space:nowrap">${c.timeline||'—'}</td>
+      <td><span style="font-size:11px;color:var(--muted)">${c.visa?c.visa.toUpperCase():'—'}</span></td>
+      <td class="actions-cell"><button class="row-btn gold" onclick="event.stopPropagation();openModal(${c.id})">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+
+function openModal(id) {
+  editingId = id;
+  const c = id ? clients.find(x => x.id === id) : null;
+  if (c) {
+    ['name','origin','status','type','budget','area','proptype','timeline','yield','schools','visa','visastatus','legal','commission','referral','history','notes'].forEach(f => {
+      const key = f === 'yield' ? 'yieldTarget' : f === 'visastatus' ? 'visaStatus' : f;
+      document.getElementById('f-'+f).value = c[key] || '';
+    });
+    document.querySelectorAll('#relocNeeds input').forEach(cb => cb.checked = (c.relocNeeds||[]).includes(cb.value));
+    renderCallLog(c);
+    document.getElementById('deleteBtn').style.display = '';
+  } else {
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-origin').value = 'uk';
+    document.getElementById('f-status').value = 'warm';
+    document.getElementById('f-type').value = 'buyer';
+    ['budget','area','proptype','timeline','yield','schools','visastatus','legal','commission','referral','history','notes'].forEach(f => document.getElementById('f-'+f).value = '');
+    document.getElementById('f-visa').value = '';
+    document.querySelectorAll('#relocNeeds input').forEach(cb => cb.checked = false);
+    document.getElementById('notesLog').innerHTML = '<p style="color:var(--muted);font-style:italic;">No notes yet.</p>';
+    document.getElementById('deleteBtn').style.display = 'none';
+  }
+  updateModalHeader();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function updateModalHeader() {
+  const name = document.getElementById('f-name').value || 'New client';
+  const origin = document.getElementById('f-origin').value;
+  const status = document.getElementById('f-status').value;
+  const type = document.getElementById('f-type').value;
+  const col = avatarColor(name);
+  document.getElementById('mName').textContent = name;
+  document.getElementById('mAvatar').textContent = initials(name);
+  document.getElementById('mAvatar').style.background = col+'20';
+  document.getElementById('mAvatar').style.color = col;
+  document.getElementById('mSub').innerHTML = `${ORIGIN_FLAGS[origin]||''} ${ORIGIN_NAMES[origin]||''} · ${statusBadge(status)} · ${typeTag(type)}`;
+}
+
+function renderCallLog(c) {
+  const log = document.getElementById('notesLog');
+  if (!c.callLog || !c.callLog.length) {
+    log.innerHTML = '<p style="color:var(--muted);font-style:italic;">No notes yet.</p>';
+    return;
+  }
+  log.innerHTML = c.callLog.map(n => `<p><span class="note-date">${n.date}</span> — ${n.text}</p>`).reverse().join('');
+}
+
+function addNote() {
+  const text = document.getElementById('f-newnote').value.trim();
+  if (!text || !editingId) return;
+  const c = clients.find(x => x.id === editingId);
+  if (!c) return;
+  if (!c.callLog) c.callLog = [];
+  const now = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  c.callLog.push({ date: now, text });
+  document.getElementById('f-newnote').value = '';
+  renderCallLog(c);
+  save();
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); editingId = null; }
+function closeModalOutside(e) { if (e.target.id === 'modalOverlay') closeModal(); }
+
+function saveClient() {
+  const needs = [];
+  document.querySelectorAll('#relocNeeds input:checked').forEach(cb => needs.push(cb.value));
+  const data = {
+    name: document.getElementById('f-name').value,
+    origin: document.getElementById('f-origin').value,
+    status: document.getElementById('f-status').value,
+    type: document.getElementById('f-type').value,
+    budget: document.getElementById('f-budget').value,
+    area: document.getElementById('f-area').value,
+    proptype: document.getElementById('f-proptype').value,
+    timeline: document.getElementById('f-timeline').value,
+    yieldTarget: document.getElementById('f-yield').value,
+    schools: document.getElementById('f-schools').value,
+    visa: document.getElementById('f-visa').value,
+    visaStatus: document.getElementById('f-visastatus').value,
+    legal: document.getElementById('f-legal').value,
+    commission: document.getElementById('f-commission').value,
+    referral: document.getElementById('f-referral').value,
+    history: document.getElementById('f-history').value,
+    notes: document.getElementById('f-notes').value,
+    relocNeeds: needs
+  };
+  if (editingId) {
+    const idx = clients.findIndex(x => x.id === editingId);
+    clients[idx] = { ...clients[idx], ...data };
+  } else {
+    data.id = Date.now();
+    data.callLog = [];
+    clients.push(data);
+  }
+  save();
+  closeModal();
+  renderAll();
+}
+
+function deleteClient() {
+  if (!editingId || !confirm('Delete this client?')) return;
+  clients = clients.filter(x => x.id !== editingId);
+  save();
+  closeModal();
+  renderAll();
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+
+async function init() {
+  // If cloud is connected, try to pull fresh data
+  if (cloudConnected) {
+    updateSyncIndicator('syncing');
+    const cloudData = await cloudRead();
+    if (cloudData && cloudData.length) {
+      clients = cloudData;
+      localStorage.setItem('jr_clients', JSON.stringify(clients));
+      lastSyncTime = new Date();
+      updateSyncIndicator('connected');
+    } else {
+      updateSyncIndicator('connected');
+    }
+  } else {
+    updateSyncIndicator('disconnected');
+    // Show setup on first load if never skipped
+    if (!localStorage.getItem('jr_setup_skipped')) {
+      setTimeout(() => openSetup(), 500);
+    }
+  }
+  renderAll();
+
+  // Periodic re-pull from cloud every 60s to catch updates from other devices
+  if (cloudConnected) {
+    setInterval(async () => {
+      const fresh = await cloudRead();
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(clients)) {
+        clients = fresh;
+        localStorage.setItem('jr_clients', JSON.stringify(clients));
+        lastSyncTime = new Date();
+        renderAll();
+        updateSyncIndicator('connected');
+      }
+    }, 60000);
+  }
+}
+
+init();
+</script>
+</body>
+</html>

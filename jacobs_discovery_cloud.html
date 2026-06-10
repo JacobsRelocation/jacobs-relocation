@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Discovery Hub (Cloud)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --ink: #0f0f1a; --ink2: #1a1a2e; --gold: #c9a84c; --gold2: #e8c96a;
+  --cream: #faf8f3; --muted: #8888a0; --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06); --card: #16162a; --card2: #1e1e35;
+  --success: #10b981; --danger: #ef4444; --warn: #f59e0b;
+}
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: stretch; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
+.brand-mark {
+  width: 36px; height: 36px;
+  background: var(--gold); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; color: var(--ink);
+}
+.brand-text .name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 600; color: #fff;
+  display: block; line-height: 1;
+}
+.brand-text .sub {
+  font-size: 10px; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.14em;
+  margin-top: 3px; display: block;
+}
+
+.sync-status { display: flex; align-items: center; gap: 14px; padding: 1rem 0; }
+.sync-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 500;
+}
+.sync-pill.connected { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.sync-pill.disconnected { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; }
+.sync-pill.syncing { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sync-dot.pulsing { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.setup-overlay {
+  position: fixed; inset: 0; background: rgba(15,15,26,0.95);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+  padding: 1rem; backdrop-filter: blur(8px);
+}
+.setup-modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; max-width: 540px; width: 100%;
+}
+.setup-header {
+  padding: 1.5rem; border-bottom: 1px solid var(--border2); text-align: center;
+}
+.setup-icon {
+  width: 50px; height: 50px;
+  background: rgba(201,168,76,0.15); border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 10px;
+}
+.setup-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 600; color: #fff;
+}
+.setup-sub { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+.setup-body { padding: 1.5rem; }
+.setup-url-input {
+  width: 100%; background: var(--ink2);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+  color: var(--cream); outline: none; margin-bottom: 8px;
+}
+.setup-url-input:focus { border-color: var(--gold); }
+.setup-buttons { display: flex; gap: 8px; justify-content: space-between; margin-top: 12px; }
+.btn-cloud {
+  background: var(--gold); color: var(--ink); border: none;
+  padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer;
+}
+.btn-cloud:hover { background: var(--gold2); }
+.btn-skip {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border2); padding: 10px 20px; border-radius: 8px;
+  font-size: 13px; cursor: pointer;
+}
+.test-result { margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 12px; display: none; }
+.test-result.success { display: block; background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.test-result.error { display: block; background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+
+.main { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+.stepper {
+  display: flex; gap: 4px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 6px; margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+.step {
+  font-size: 12px; font-weight: 500;
+  padding: 9px 16px; border-radius: 7px;
+  border: none; background: transparent; color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap; flex-shrink: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.step:hover:not(:disabled) { color: var(--cream); }
+.step.on { background: var(--gold); color: var(--ink); font-weight: 600; }
+.step:disabled { opacity: 0.3; cursor: not-allowed; }
+.step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  font-size: 10px; font-weight: 700;
+}
+.step.on .step-num { background: rgba(15,15,26,0.2); color: var(--ink); }
+.step.done .step-num { background: var(--success); color: white; }
+
+.panel {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 12px; overflow: hidden; margin-bottom: 1rem;
+}
+.panel-header {
+  padding: 1rem 1.25rem; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--gold);
+}
+.panel-body { padding: 1.25rem; }
+
+.form-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.form-block label {
+  display: block; font-size: 10px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 5px; font-weight: 600;
+}
+.input, .select, .textarea {
+  width: 100%; background: var(--ink2);
+  border: 1px solid var(--border2); border-radius: 6px;
+  padding: 9px 12px; font-size: 13px;
+  color: var(--cream); outline: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.input:focus, .select:focus, .textarea:focus { border-color: var(--gold); }
+.input::placeholder, .textarea::placeholder { color: var(--muted); }
+.textarea { resize: vertical; min-height: 80px; }
+.select { appearance: none; cursor: pointer; }
+.form-block.span-full { grid-column: 1 / -1; }
+
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; border-radius: 6px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1px solid transparent;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary { background: var(--gold); color: var(--ink); font-weight: 600; }
+.btn-primary:hover { background: var(--gold2); }
+.btn-secondary { background: transparent; color: var(--muted); border-color: var(--border2); }
+.btn-secondary:hover { background: var(--card2); color: var(--cream); }
+.btn-success { background: var(--success); color: white; font-weight: 600; }
+.btn-success:hover { opacity: 0.9; }
+.btn-danger { background: transparent; color: #f87171; border-color: rgba(239,68,68,0.2); }
+.btn-danger:hover { background: rgba(239,68,68,0.1); }
+
+.info-banner {
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 8px; padding: 12px 16px;
+  display: flex; align-items: start; gap: 10px;
+  margin-bottom: 1rem; font-size: 12px;
+  color: #93c5fd; line-height: 1.55;
+}
+.info-banner.warn { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); color: #fcd34d; }
+
+.prospect-list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+.prospect-card {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 1rem;
+  cursor: pointer; transition: all 0.15s;
+}
+.prospect-card:hover { border-color: var(--border); transform: translateY(-1px); }
+.pc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.pc-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(201,168,76,0.15); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-weight: 700;
+}
+.pc-name { font-size: 14px; font-weight: 600; color: #fff; }
+.pc-source { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.pc-status {
+  font-size: 10px; padding: 3px 9px; border-radius: 12px;
+  text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;
+  margin-left: auto;
+}
+.ps-new { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.ps-researched { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.ps-called { background: rgba(201,168,76,0.15); color: var(--gold); }
+.ps-qualified { background: rgba(16,185,129,0.15); color: #34d399; }
+.ps-nofit { background: rgba(107,114,128,0.15); color: #9ca3af; }
+.pc-meta { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+.prospect-banner {
+  background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, rgba(139,92,246,0.05) 100%);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 1rem;
+}
+.pb-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(201,168,76,0.15); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 700;
+}
+.pb-info { flex: 1; }
+.pb-name { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; font-weight: 600; }
+.pb-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.dq-section { margin-bottom: 1.5rem; }
+.dq-section-title {
+  font-size: 12px; font-weight: 600; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.dq-block {
+  margin-bottom: 1rem; padding: 1rem;
+  background: var(--ink2); border-radius: 8px;
+  border: 1px solid var(--border2);
+}
+.dq-prompt { font-size: 13px; color: var(--cream); margin-bottom: 4px; font-weight: 500; }
+.dq-hint { font-size: 11px; color: var(--muted); margin-bottom: 8px; font-style: italic; }
+
+.notes-area {
+  width: 100%; background: var(--ink2);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 1rem; color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; line-height: 1.7;
+  outline: none; resize: vertical; min-height: 80px;
+}
+.notes-area:focus { border-color: var(--gold); }
+
+.checks { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.check {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; background: transparent;
+  border: 1px solid var(--border2); border-radius: 16px;
+  cursor: pointer; font-size: 12px; color: var(--muted);
+}
+.check:hover { color: var(--cream); border-color: var(--border); }
+.check input { display: none; }
+.check.on { background: rgba(201,168,76,0.15); color: var(--gold); border-color: var(--gold); }
+
+.call-timer {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 20px; padding: 5px 14px;
+  font-family: 'DM Mono', monospace; font-size: 13px;
+  color: var(--cream);
+}
+.timer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); animation: pulse 1.5s infinite; }
+
+.qual-result {
+  padding: 1.5rem; border-radius: 10px;
+  border-width: 2px; border-style: solid;
+  text-align: center; margin-bottom: 1rem;
+}
+.qual-hot { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); }
+.qual-warm { background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.3); }
+.qual-cold { background: rgba(107,114,128,0.08); border-color: rgba(107,114,128,0.3); }
+.qual-nofit { background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.3); }
+.qual-icon { font-size: 36px; margin-bottom: 10px; }
+.qual-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 6px; font-weight: 600; }
+.qual-sub { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.qual-score-pill {
+  display: inline-block; font-family: 'DM Mono', monospace;
+  font-size: 12px; padding: 3px 12px; border-radius: 20px;
+  background: rgba(0,0,0,0.3); margin-top: 8px;
+}
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.empty-icon { font-size: 40px; opacity: 0.4; margin-bottom: 12px; }
+.empty-text { font-size: 14px; line-height: 1.6; }
+
+@media(max-width:768px){
+  .header,.main{padding-left:1rem;padding-right:1rem}
+  .form-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="setup-overlay" id="setupOverlay" style="display:none;">
+  <div class="setup-modal">
+    <div class="setup-header">
+      <div class="setup-icon">☁️</div>
+      <div class="setup-title">Connect to your cloud sync</div>
+      <div class="setup-sub">Paste the same Google Apps Script Web App URL you used for your CRM.</div>
+    </div>
+    <div class="setup-body">
+      <input type="text" class="setup-url-input" id="webAppUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+      <div class="test-result" id="testResult"></div>
+      <div class="setup-buttons">
+        <button class="btn-skip" onclick="closeSetup(true)">Skip (local only)</button>
+        <button class="btn-cloud" onclick="connectCloud()" id="connectBtn">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">J</div>
+    <div class="brand-text">
+      <span class="name">Jacobs Relocation</span>
+      <span class="sub">Discovery Hub</span>
+    </div>
+  </div>
+  <div class="sync-status">
+    <div id="syncIndicator"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- STEPPER -->
+  <div class="stepper" id="stepper">
+    <button class="step on" data-step="prospects" onclick="goStep('prospects', this)">
+      <span class="step-num">1</span>Prospects
+    </button>
+    <button class="step" data-step="intake" onclick="goStep('intake', this)" disabled>
+      <span class="step-num">2</span>Intake
+    </button>
+    <button class="step" data-step="research" onclick="goStep('research', this)" disabled>
+      <span class="step-num">3</span>Research brief
+    </button>
+    <button class="step" data-step="discovery" onclick="goStep('discovery', this)" disabled>
+      <span class="step-num">4</span>Discovery call
+    </button>
+    <button class="step" data-step="qualify" onclick="goStep('qualify', this)" disabled>
+      <span class="step-num">5</span>Qualify
+    </button>
+  </div>
+
+  <!-- STEP 1: PROSPECTS LIST -->
+  <div id="step-prospects" class="step-pane">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Discovery prospects</span>
+        <button class="btn btn-primary" onclick="startNew()">+ New prospect</button>
+      </div>
+      <div class="panel-body" id="prospectListContainer"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: INTAKE -->
+  <div id="step-intake" class="step-pane" style="display:none;">
+    <div class="info-banner">
+      <span>ℹ️</span>
+      <span>Add whatever you know about the prospect. The more you provide, the better the pre-call research brief.</span>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">New prospect intake</span></div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="form-block"><label>Full name *</label><input class="input" id="i-name" placeholder="e.g. Sarah Mitchell"></div>
+          <div class="form-block"><label>How did they reach you?</label>
+            <select class="select" id="i-source">
+              <option value="">Select source...</option>
+              <option value="instagram">Instagram DM</option>
+              <option value="website">Website contact form</option>
+              <option value="referral">Referral from existing client</option>
+              <option value="referral-partner">Referral from partner</option>
+              <option value="event">Event / introduction</option>
+              <option value="cold">Cold inquiry</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-block"><label>Origin</label>
+            <select class="select" id="i-origin">
+              <option value="uk">🇬🇧 UK</option>
+              <option value="canada">🇨🇦 Canada</option>
+              <option value="us">🇺🇸 US</option>
+              <option value="australia">🇦🇺 Australia</option>
+              <option value="other">🌍 Other</option>
+            </select>
+          </div>
+          <div class="form-block"><label>Email</label><input class="input" id="i-email" type="email"></div>
+          <div class="form-block"><label>Phone</label><input class="input" id="i-phone"></div>
+          <div class="form-block"><label>Company / role</label><input class="input" id="i-company"></div>
+          <div class="form-block"><label>LinkedIn URL</label><input class="input" id="i-linkedin"></div>
+          <div class="form-block"><label>Instagram handle</label><input class="input" id="i-instagram"></div>
+          <div class="form-block span-full"><label>Context (paste DM, email, referral notes)</label>
+            <textarea class="textarea" id="i-context" rows="4"></textarea>
+          </div>
+          <div class="form-block"><label>Discovery call scheduled for</label><input class="input" id="i-calldate" type="datetime-local"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveIntake()">Save & continue to research →</button>
+          <button class="btn btn-secondary" onclick="goStep('prospects', document.querySelector('[data-step=prospects]'))">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: RESEARCH -->
+  <div id="step-research" class="step-pane" style="display:none;">
+    <div id="prospectBanner"></div>
+    <div class="info-banner warn">
+      <span>⚠️</span>
+      <span><strong>Research happens in Claude chat.</strong> Click below to copy a research prompt to clipboard. Paste into Claude, get back a brief, paste here.</span>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Generate research brief</span></div>
+      <div class="panel-body">
+        <div class="btn-row" style="margin-top:0;">
+          <button class="btn btn-primary" onclick="copyResearchPrompt()">📋 Copy research prompt</button>
+          <button class="btn btn-secondary" onclick="sendToClaudeIfPossible()">↗ Send to Claude</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Paste research brief here</span></div>
+      <div class="panel-body">
+        <textarea class="notes-area" id="researchBriefInput" rows="12" placeholder="Paste Claude's research output here..."></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveResearch()">💾 Save brief & continue to call →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: DISCOVERY -->
+  <div id="step-discovery" class="step-pane" style="display:none;">
+    <div id="prospectBannerDiscovery"></div>
+    <div class="info-banner">
+      <span>🎙️</span>
+      <span><strong>Recording recommendation:</strong> Use Granola or Otter. Work through the questions below as you go.</span>
+    </div>
+    <div class="btn-row" style="margin-bottom:1rem;">
+      <button class="btn btn-success" id="startCallBtn" onclick="startDiscoveryCall()">▶ Start call timer</button>
+      <button class="btn btn-secondary" onclick="showResearchBriefPopover()">📋 View research brief</button>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Discovery questionnaire</span></div>
+      <div class="panel-body">
+
+        <div class="dq-section">
+          <div class="dq-section-title">🎯 Why now</div>
+          <div class="dq-block">
+            <div class="dq-prompt">What's pushing you to move?</div>
+            <div class="dq-hint">Tax, climate, lifestyle, family, career?</div>
+            <textarea class="notes-area" id="q-motivation" rows="3"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Have you been thinking about this for a while?</div>
+            <textarea class="notes-area" id="q-timing_emotional" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">👨‍👩‍👧 Family & situation</div>
+          <div class="dq-block">
+            <div class="dq-prompt">Tell me about who's making this move</div>
+            <textarea class="notes-area" id="q-family" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Are you both on board?</div>
+            <textarea class="notes-area" id="q-decision" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">💰 Budget & finances</div>
+          <div class="dq-block">
+            <div class="dq-prompt">What's the budget range?</div>
+            <textarea class="notes-area" id="q-budget" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Cash or financing?</div>
+            <textarea class="notes-area" id="q-financing" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Currency / tax structuring planned?</div>
+            <textarea class="notes-area" id="q-tax_currency" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">🛂 Visa & legal</div>
+          <div class="dq-block">
+            <div class="dq-prompt">Visa status / plan?</div>
+            <textarea class="notes-area" id="q-visa" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Have legal counsel?</div>
+            <textarea class="notes-area" id="q-legal" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">🏡 Property requirements</div>
+          <div class="dq-block">
+            <div class="dq-prompt">Where are you looking?</div>
+            <textarea class="notes-area" id="q-area" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">What kind of property?</div>
+            <textarea class="notes-area" id="q-property" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Must-haves vs nice-to-haves?</div>
+            <textarea class="notes-area" id="q-features" rows="3"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Primary, investment, or both?</div>
+            <textarea class="notes-area" id="q-purpose" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">🎓 Schools</div>
+          <div class="dq-block">
+            <div class="dq-prompt">Ages of children and requirements?</div>
+            <textarea class="notes-area" id="q-schools" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">⏰ Timeline</div>
+          <div class="dq-block">
+            <div class="dq-prompt">Ideal timeline to be in new home?</div>
+            <textarea class="notes-area" id="q-timeline" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Anything that has to happen first?</div>
+            <textarea class="notes-area" id="q-blockers" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">🧰 Other relocation needs</div>
+          <div class="dq-block">
+            <div class="dq-prompt">What other help do you need?</div>
+            <div class="checks" id="q-needs-checks">
+              <label class="check"><input type="checkbox" value="moving"><span>International shipping</span></label>
+              <label class="check"><input type="checkbox" value="schools"><span>School placement</span></label>
+              <label class="check"><input type="checkbox" value="tax"><span>Tax advisor</span></label>
+              <label class="check"><input type="checkbox" value="legal"><span>Immigration attorney</span></label>
+              <label class="check"><input type="checkbox" value="estate"><span>Estate planning</span></label>
+              <label class="check"><input type="checkbox" value="currency"><span>Currency exchange</span></label>
+              <label class="check"><input type="checkbox" value="pets"><span>Pet relocation</span></label>
+              <label class="check"><input type="checkbox" value="shortterm"><span>Short-term rental first</span></label>
+              <label class="check"><input type="checkbox" value="furnished"><span>Fully furnished</span></label>
+              <label class="check"><input type="checkbox" value="mortgage"><span>Mortgage broker</span></label>
+              <label class="check"><input type="checkbox" value="propertymanagement"><span>Property mgmt</span></label>
+              <label class="check"><input type="checkbox" value="insurance"><span>Insurance</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="dq-section">
+          <div class="dq-section-title">🎬 Closing</div>
+          <div class="dq-block">
+            <div class="dq-prompt">Best next step from your side?</div>
+            <textarea class="notes-area" id="q-nextstep" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Any concerns / objections?</div>
+            <textarea class="notes-area" id="q-concerns" rows="2"></textarea>
+          </div>
+          <div class="dq-block">
+            <div class="dq-prompt">Your observations</div>
+            <textarea class="notes-area" id="q-freeform" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveDiscoveryAndContinue()">💾 Save & qualify →</button>
+          <button class="btn btn-secondary" onclick="saveDraftDiscovery()">Save draft</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: QUALIFY -->
+  <div id="step-qualify" class="step-pane" style="display:none;">
+    <div id="prospectBannerQualify"></div>
+    <div id="qualResult"></div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Your qualification decision</span></div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="form-block span-full"><label>Decision</label>
+            <select class="select" id="qual-decision">
+              <option value="">Select...</option>
+              <option value="hot">🔴 Hot — qualified, ready — add to CRM</option>
+              <option value="active">⭐ Active — in progress — add to CRM</option>
+              <option value="warm">🔵 Warm — nurture — add to CRM</option>
+              <option value="cold">⚪ Cold — long-term nurture — add to CRM</option>
+              <option value="nofit">🚫 Not a fit — decline</option>
+            </select>
+          </div>
+          <div class="form-block span-full"><label>Reasoning / notes</label>
+            <textarea class="notes-area" id="qual-notes" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="finalizeQualification()">✓ Finalize qualification</button>
+          <button class="btn btn-secondary" onclick="goStep('discovery', document.querySelector('[data-step=discovery]'))">← Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── CLOUD SYNC ─────────────────────────────────────────────────────────────
+
+let cloudUrl = localStorage.getItem('jr_cloud_url') || '';
+let cloudConnected = !!cloudUrl;
+let lastSyncTime = null;
+let syncTimeout = null;
+
+async function cloudRead(table) {
+  if (!cloudUrl) return null;
+  try {
+    const res = await fetch(cloudUrl + '?action=read&table=' + table);
+    const data = await res.json();
+    if (data.ok) return data.data;
+    throw new Error(data.error);
+  } catch (err) {
+    console.error('Cloud read failed:', err);
+    return null;
+  }
+}
+
+async function cloudWrite(table, data) {
+  if (!cloudUrl) return false;
+  try {
+    updateSyncIndicator('syncing');
+    const res = await fetch(cloudUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'write', table, data })
+    });
+    const result = await res.json();
+    if (result.ok) {
+      lastSyncTime = new Date();
+      updateSyncIndicator('connected');
+      return true;
+    }
+    throw new Error(result.error);
+  } catch (err) {
+    console.error('Cloud write failed:', err);
+    updateSyncIndicator('error');
+    return false;
+  }
+}
+
+function debouncedSyncProspects() {
+  if (!cloudConnected) return;
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => cloudWrite('prospects', prospects), 800);
+}
+
+function save() {
+  localStorage.setItem('jr_prospects', JSON.stringify(prospects));
+  debouncedSyncProspects();
+}
+
+function updateSyncIndicator(state) {
+  const el = document.getElementById('syncIndicator');
+  if (!cloudConnected) {
+    el.innerHTML = `<div class="sync-pill disconnected" onclick="openSetup()"><span class="sync-dot"></span>Local only · Click to connect</div>`;
+    return;
+  }
+  if (state === 'syncing') {
+    el.innerHTML = `<div class="sync-pill syncing"><span class="sync-dot pulsing"></span>Syncing…</div>`;
+    return;
+  }
+  if (state === 'error') {
+    el.innerHTML = `<div class="sync-pill disconnected"><span class="sync-dot"></span>Sync failed</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="sync-pill connected"><span class="sync-dot"></span>Cloud synced</div>`;
+}
+
+function openSetup() {
+  document.getElementById('webAppUrl').value = cloudUrl;
+  document.getElementById('setupOverlay').style.display = 'flex';
+}
+
+function closeSetup(skip) {
+  document.getElementById('setupOverlay').style.display = 'none';
+  if (skip) localStorage.setItem('jr_setup_skipped', '1');
+}
+
+async function connectCloud() {
+  const url = document.getElementById('webAppUrl').value.trim();
+  const result = document.getElementById('testResult');
+  const btn = document.getElementById('connectBtn');
+
+  if (!url || !url.startsWith('https://script.google.com/')) {
+    result.className = 'test-result error';
+    result.textContent = '⚠️ Please paste a valid Google Apps Script URL';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Testing...';
+
+  try {
+    const testRes = await fetch(url + '?action=read&table=prospects');
+    const testData = await testRes.json();
+    if (!testData.ok && testData.error) throw new Error(testData.error);
+
+    cloudUrl = url;
+    cloudConnected = true;
+    localStorage.setItem('jr_cloud_url', url);
+
+    result.className = 'test-result success';
+    result.textContent = '✓ Connected.';
+
+    // Pull existing prospects from cloud
+    if (testData.data && testData.data.length) {
+      prospects = testData.data;
+      localStorage.setItem('jr_prospects', JSON.stringify(prospects));
+    } else {
+      // push local prospects up
+      await cloudWrite('prospects', prospects);
+    }
+
+    setTimeout(() => {
+      closeSetup(false);
+      updateSyncIndicator('connected');
+      renderProspectList();
+    }, 1000);
+  } catch (err) {
+    result.className = 'test-result error';
+    result.textContent = '✗ Connection failed: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = 'Connect';
+  }
+}
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+
+let prospects = JSON.parse(localStorage.getItem('jr_prospects') || '[]');
+let currentProspect = null;
+let callStartTime = null;
+let timerInterval = null;
+
+const ORIGIN_FLAGS = { uk:'🇬🇧', canada:'🇨🇦', us:'🇺🇸', australia:'🇦🇺', other:'🌍' };
+const ORIGIN_NAMES = { uk:'United Kingdom', canada:'Canada', us:'United States', australia:'Australia', other:'Other' };
+const SOURCE_LABELS = {
+  instagram:'Instagram DM', website:'Website', referral:'Client referral',
+  'referral-partner':'Partner referral', event:'Event', cold:'Cold inquiry',
+  linkedin:'LinkedIn', other:'Other'
+};
+const STATUS_LABELS = {
+  new: { cls:'ps-new', label:'New' },
+  researched: { cls:'ps-researched', label:'Researched' },
+  called: { cls:'ps-called', label:'Called' },
+  qualified: { cls:'ps-qualified', label:'Qualified ✓' },
+  nofit: { cls:'ps-nofit', label:'Not a fit' },
+};
+
+function initials(name) { return name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase(); }
+
+function goStep(step, btn) {
+  document.querySelectorAll('.step-pane').forEach(p => p.style.display = 'none');
+  document.getElementById('step-' + step).style.display = '';
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('on'));
+  btn.classList.add('on');
+  if (step === 'prospects') renderProspectList();
+  if (step === 'intake') renderIntake();
+  if (step === 'research') renderResearchStep();
+  if (step === 'discovery') renderDiscoveryStep();
+  if (step === 'qualify') renderQualifyStep();
+}
+
+function enableSteps(stepsToEnable) {
+  document.querySelectorAll('.step').forEach(s => {
+    if (stepsToEnable.includes(s.dataset.step)) s.disabled = false;
+  });
+}
+
+function renderProspectList() {
+  const container = document.getElementById('prospectListContainer');
+  if (!prospects.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📞</div><div class="empty-text">No discovery prospects yet.<br><span style="font-size:12px;opacity:0.7;">Click "+ New prospect" to start.</span></div></div>`;
+    return;
+  }
+  const sorted = [...prospects].sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+  container.innerHTML = `<div class="prospect-list">${sorted.map(p => {
+    const status = STATUS_LABELS[p.status||'new'];
+    return `<div class="prospect-card" onclick="openProspect(${p.id})">
+      <div class="pc-header">
+        <div class="pc-avatar">${initials(p.name)}</div>
+        <div style="flex:1">
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-source">${ORIGIN_FLAGS[p.origin]||''} ${SOURCE_LABELS[p.source] || ''}</div>
+        </div>
+        <span class="pc-status ${status.cls}">${status.label}</span>
+      </div>
+      <div class="pc-meta">${p.context ? p.context.substring(0, 120) + (p.context.length > 120 ? '...' : '') : 'No context yet'}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function startNew() {
+  currentProspect = null;
+  enableSteps(['prospects','intake']);
+  goStep('intake', document.querySelector('[data-step=intake]'));
+}
+
+function openProspect(id) {
+  currentProspect = prospects.find(p => p.id === id);
+  if (!currentProspect) return;
+  const stepsToEnable = ['prospects','intake'];
+  if (currentProspect.name) stepsToEnable.push('research');
+  if (currentProspect.researchBrief) stepsToEnable.push('discovery');
+  if (currentProspect.discoveryAnswers) stepsToEnable.push('qualify');
+  enableSteps(stepsToEnable);
+  let targetStep = 'intake';
+  if (currentProspect.discoveryAnswers) targetStep = 'qualify';
+  else if (currentProspect.researchBrief) targetStep = 'discovery';
+  else if (currentProspect.name) targetStep = 'research';
+  goStep(targetStep, document.querySelector('[data-step=' + targetStep + ']'));
+}
+
+function renderIntake() {
+  if (currentProspect) {
+    document.getElementById('i-name').value = currentProspect.name||'';
+    document.getElementById('i-source').value = currentProspect.source||'';
+    document.getElementById('i-origin').value = currentProspect.origin||'uk';
+    document.getElementById('i-email').value = currentProspect.email||'';
+    document.getElementById('i-phone').value = currentProspect.phone||'';
+    document.getElementById('i-company').value = currentProspect.company||'';
+    document.getElementById('i-linkedin').value = currentProspect.linkedin||'';
+    document.getElementById('i-instagram').value = currentProspect.instagram||'';
+    document.getElementById('i-context').value = currentProspect.context||'';
+    document.getElementById('i-calldate').value = currentProspect.callDate||'';
+  } else {
+    ['i-name','i-email','i-phone','i-company','i-linkedin','i-instagram','i-context','i-calldate'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('i-source').value = '';
+    document.getElementById('i-origin').value = 'uk';
+  }
+}
+
+function saveIntake() {
+  const name = document.getElementById('i-name').value.trim();
+  if (!name) { alert('Name is required.'); return; }
+  const data = {
+    name,
+    source: document.getElementById('i-source').value,
+    origin: document.getElementById('i-origin').value,
+    email: document.getElementById('i-email').value,
+    phone: document.getElementById('i-phone').value,
+    company: document.getElementById('i-company').value,
+    linkedin: document.getElementById('i-linkedin').value,
+    instagram: document.getElementById('i-instagram').value,
+    context: document.getElementById('i-context').value,
+    callDate: document.getElementById('i-calldate').value,
+  };
+  if (currentProspect) {
+    Object.assign(currentProspect, data);
+  } else {
+    currentProspect = { ...data, id: Date.now(), status: 'new', createdAt: Date.now() };
+    prospects.push(currentProspect);
+  }
+  save();
+  enableSteps(['prospects','intake','research']);
+  goStep('research', document.querySelector('[data-step=research]'));
+}
+
+function renderResearchStep() {
+  if (!currentProspect) return;
+  document.getElementById('prospectBanner').innerHTML = prospectBannerHTML(currentProspect);
+  document.getElementById('researchBriefInput').value = currentProspect.researchBrief || '';
+}
+
+function copyResearchPrompt() {
+  const p = currentProspect;
+  const prompt = `I have a discovery call coming up with a prospect for my Jacobs Relocation business (SE Florida concierge relocation for HNW families). Research this person and write me a pre-call brief.
+
+Name: ${p.name}
+Origin: ${ORIGIN_NAMES[p.origin]||'Unknown'}
+Source: ${SOURCE_LABELS[p.source]||'Unknown'}
+${p.company ? 'Company/role: ' + p.company : ''}
+${p.linkedin ? 'LinkedIn: ' + p.linkedin : ''}
+${p.instagram ? 'Instagram: ' + p.instagram : ''}
+${p.email ? 'Email: ' + p.email : ''}
+${p.context ? 'Context I already have:\n' + p.context : ''}
+
+Please research them online (LinkedIn, news, company info, public socials) and return a brief with:
+
+1. Background summary
+2. Why SE Florida likely appeals
+3. Likely concerns / questions
+4. Specific talking points
+5. Red flags
+6. Suggested next-step pitch
+
+Format as a clean briefing I can scan in 2 minutes before the call.`;
+  navigator.clipboard.writeText(prompt).then(() => alert('Research prompt copied. Paste into Claude.'));
+}
+
+function sendToClaudeIfPossible() {
+  copyResearchPrompt();
+  setTimeout(() => window.open('https://claude.ai/new', '_blank'), 200);
+}
+
+function saveResearch() {
+  const brief = document.getElementById('researchBriefInput').value.trim();
+  if (!brief) { alert('Paste the research brief first.'); return; }
+  currentProspect.researchBrief = brief;
+  currentProspect.status = 'researched';
+  save();
+  enableSteps(['prospects','intake','research','discovery']);
+  goStep('discovery', document.querySelector('[data-step=discovery]'));
+}
+
+function renderDiscoveryStep() {
+  if (!currentProspect) return;
+  document.getElementById('prospectBannerDiscovery').innerHTML = prospectBannerHTML(currentProspect);
+  const answers = currentProspect.discoveryAnswers || {};
+  Object.keys(answers).forEach(k => {
+    if (k === 'needs') {
+      document.querySelectorAll('#q-needs-checks .check').forEach(check => {
+        const cb = check.querySelector('input');
+        cb.checked = answers.needs.includes(cb.value);
+        check.classList.toggle('on', cb.checked);
+      });
+    } else {
+      const el = document.getElementById('q-' + k);
+      if (el) el.value = answers[k];
+    }
+  });
+  document.querySelectorAll('#q-needs-checks .check').forEach(check => {
+    check.onclick = (e) => {
+      if (e.target.tagName !== 'INPUT') {
+        const cb = check.querySelector('input');
+        cb.checked = !cb.checked;
+      }
+      check.classList.toggle('on', check.querySelector('input').checked);
+    };
+  });
+}
+
+function startDiscoveryCall() {
+  callStartTime = Date.now();
+  document.getElementById('startCallBtn').textContent = '⏹ End call';
+  document.getElementById('startCallBtn').classList.remove('btn-success');
+  document.getElementById('startCallBtn').classList.add('btn-danger');
+  document.getElementById('startCallBtn').setAttribute('onclick', 'endDiscoveryCall()');
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  if (!callStartTime) return;
+  const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+  const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+  const secs = (elapsed % 60).toString().padStart(2, '0');
+  document.getElementById('startCallBtn').textContent = `⏹ End call (${mins}:${secs})`;
+}
+
+function endDiscoveryCall() {
+  const duration = callStartTime ? Math.floor((Date.now() - callStartTime) / 60000) : 0;
+  if (currentProspect) currentProspect.callDuration = duration;
+  callStartTime = null;
+  if (timerInterval) clearInterval(timerInterval);
+  document.getElementById('startCallBtn').textContent = '✓ Call ended (' + duration + ' min)';
+  document.getElementById('startCallBtn').disabled = true;
+  saveDraftDiscovery();
+}
+
+function collectDiscoveryAnswers() {
+  const fields = ['motivation','timing_emotional','family','decision','budget','financing','tax_currency','visa','legal','area','property','features','purpose','schools','timeline','blockers','nextstep','concerns','freeform'];
+  const answers = {};
+  fields.forEach(f => {
+    const el = document.getElementById('q-' + f);
+    if (el) answers[f] = el.value;
+  });
+  const needs = [];
+  document.querySelectorAll('#q-needs-checks input:checked').forEach(cb => needs.push(cb.value));
+  answers.needs = needs;
+  return answers;
+}
+
+function saveDraftDiscovery() {
+  if (!currentProspect) return;
+  currentProspect.discoveryAnswers = collectDiscoveryAnswers();
+  save();
+  alert('Draft saved.');
+}
+
+function saveDiscoveryAndContinue() {
+  if (!currentProspect) return;
+  currentProspect.discoveryAnswers = collectDiscoveryAnswers();
+  currentProspect.status = 'called';
+  save();
+  enableSteps(['prospects','intake','research','discovery','qualify']);
+  goStep('qualify', document.querySelector('[data-step=qualify]'));
+}
+
+function showResearchBriefPopover() {
+  if (!currentProspect || !currentProspect.researchBrief) {
+    alert('No research brief saved.');
+    return;
+  }
+  alert(currentProspect.researchBrief);
+}
+
+function renderQualifyStep() {
+  if (!currentProspect) return;
+  document.getElementById('prospectBannerQualify').innerHTML = prospectBannerHTML(currentProspect);
+  const score = calculateQualScore(currentProspect.discoveryAnswers || {});
+  renderQualScore(score);
+  if (currentProspect.qualification) {
+    document.getElementById('qual-decision').value = currentProspect.qualification.decision || '';
+    document.getElementById('qual-notes').value = currentProspect.qualification.notes || '';
+  }
+}
+
+function calculateQualScore(a) {
+  let score = 0;
+  let factors = [];
+  if (a.budget && a.budget.match(/\$|million|m\b|k\b|\d{3,}/i)) { score += 25; factors.push('Budget articulated'); }
+  if (a.timeline && /\b(month|next\s+\d|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|this\s+year|next\s+year)/i.test(a.timeline)) { score += 25; factors.push('Timeline defined'); }
+  if (a.motivation && a.motivation.length > 30) { score += 15; factors.push('Clear motivation'); }
+  if (a.area && a.area.length > 10) { score += 15; factors.push('Area preferences known'); }
+  if (a.visa && a.visa.length > 10) { score += 10; factors.push('Visa situation clear'); }
+  if (a.decision && a.decision.length > 10) { score += 10; factors.push('Decision dynamics clear'); }
+  let level, icon, title, sub, cls;
+  if (score >= 70) {
+    level = 'hot'; icon = '🔴'; title = 'HOT LEAD';
+    sub = 'Strong qualification across multiple dimensions. Move to active CRM and follow up within 48 hours.';
+    cls = 'qual-hot';
+  } else if (score >= 50) {
+    level = 'warm'; icon = '🟡'; title = 'WARM PROSPECT';
+    sub = 'Good interest but some gaps. Worth nurturing.';
+    cls = 'qual-warm';
+  } else if (score >= 25) {
+    level = 'cold'; icon = '🔵'; title = 'EARLY STAGE';
+    sub = 'Worth keeping warm but not deal-stage. Monthly check-ins.';
+    cls = 'qual-cold';
+  } else {
+    level = 'nofit'; icon = '🟣'; title = 'NEEDS MORE INFO';
+    sub = 'Too many unknowns. Schedule a follow-up call or close out.';
+    cls = 'qual-nofit';
+  }
+  return { score, level, icon, title, sub, cls, factors };
+}
+
+function renderQualScore(s) {
+  document.getElementById('qualResult').innerHTML = `
+    <div class="qual-result ${s.cls}">
+      <div class="qual-icon">${s.icon}</div>
+      <div class="qual-title">${s.title}</div>
+      <div class="qual-sub">${s.sub}</div>
+      <div class="qual-score-pill">Score: ${s.score}/100 · ${s.factors.length} factors</div>
+    </div>`;
+}
+
+async function finalizeQualification() {
+  const decision = document.getElementById('qual-decision').value;
+  const notes = document.getElementById('qual-notes').value;
+  if (!decision) { alert('Pick a qualification decision.'); return; }
+
+  currentProspect.qualification = { decision, notes, finalizedAt: Date.now() };
+
+  if (decision === 'nofit') {
+    currentProspect.status = 'nofit';
+    save();
+    alert('Marked as not a fit.');
+  } else {
+    currentProspect.status = 'qualified';
+    const a = currentProspect.discoveryAnswers || {};
+    const crmEntry = {
+      id: Date.now(),
+      name: currentProspect.name,
+      origin: currentProspect.origin,
+      status: decision,
+      type: a.purpose && /invest/i.test(a.purpose) ? 'investor' : a.purpose && /rent/i.test(a.purpose) ? 'rental' : a.purpose && /holiday|vacation/i.test(a.purpose) ? 'holiday' : 'buyer',
+      budget: extractBudget(a.budget) || 'TBC',
+      area: a.area || '',
+      proptype: a.property || '',
+      timeline: a.timeline || '',
+      yieldTarget: '',
+      schools: a.schools || '',
+      visa: '',
+      visaStatus: a.visa || '',
+      legal: a.tax_currency || '',
+      commission: '',
+      referral: '',
+      history: '',
+      relocNeeds: a.needs || [],
+      notes: `From discovery call.\nMotivation: ${a.motivation||'N/A'}\nNext step: ${a.nextstep||'N/A'}`,
+      callLog: [{
+        date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+        text: '🎙️ Discovery call summary\n' + summarizeDiscovery(a) + '\n\nQualification: ' + decision + (notes ? '\nNotes: ' + notes : '')
+      }]
+    };
+
+    let crmClients = JSON.parse(localStorage.getItem('jr_clients') || '[]');
+    crmClients.push(crmEntry);
+    localStorage.setItem('jr_clients', JSON.stringify(crmClients));
+
+    if (cloudConnected) await cloudWrite('clients', crmClients);
+
+    save();
+    alert(`Added ${currentProspect.name} to your CRM as a ${decision.toUpperCase()} client. Opens in your CRM dashboard automatically.`);
+  }
+
+  goStep('prospects', document.querySelector('[data-step=prospects]'));
+}
+
+function extractBudget(text) {
+  if (!text) return null;
+  const m = text.match(/\$?[\d.,]+\s*[mMkK]?(?:\s*[-–to]+\s*\$?[\d.,]+\s*[mMkK]?)?/);
+  return m ? m[0] : null;
+}
+
+function summarizeDiscovery(a) {
+  const parts = [];
+  if (a.motivation) parts.push('Why: ' + a.motivation.substring(0,100));
+  if (a.budget) parts.push('Budget: ' + a.budget.substring(0,80));
+  if (a.area) parts.push('Area: ' + a.area.substring(0,80));
+  if (a.timeline) parts.push('Timeline: ' + a.timeline.substring(0,80));
+  if (a.visa) parts.push('Visa: ' + a.visa.substring(0,80));
+  if (a.nextstep) parts.push('Next: ' + a.nextstep.substring(0,80));
+  return parts.join('\n');
+}
+
+function prospectBannerHTML(p) {
+  return `<div class="prospect-banner">
+    <div class="pb-avatar">${initials(p.name)}</div>
+    <div class="pb-info">
+      <div class="pb-name">${p.name}</div>
+      <div class="pb-meta">${ORIGIN_FLAGS[p.origin]||''} ${ORIGIN_NAMES[p.origin]||''} · ${SOURCE_LABELS[p.source]||'Unknown'}${p.company ? ' · ' + p.company : ''}</div>
+    </div>
+  </div>`;
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+
+async function init() {
+  if (cloudConnected) {
+    updateSyncIndicator('syncing');
+    const cloudData = await cloudRead('prospects');
+    if (cloudData) {
+      prospects = cloudData;
+      localStorage.setItem('jr_prospects', JSON.stringify(prospects));
+      lastSyncTime = new Date();
+    }
+    updateSyncIndicator('connected');
+  } else {
+    updateSyncIndicator('disconnected');
+    if (!localStorage.getItem('jr_setup_skipped')) {
+      setTimeout(() => openSetup(), 500);
+    }
+  }
+  renderProspectList();
+
+  if (cloudConnected) {
+    setInterval(async () => {
+      const fresh = await cloudRead('prospects');
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(prospects)) {
+        prospects = fresh;
+        localStorage.setItem('jr_prospects', JSON.stringify(prospects));
+        renderProspectList();
+      }
+    }, 60000);
+  }
+}
+
+init();
+</script>
+</body>
+</html>

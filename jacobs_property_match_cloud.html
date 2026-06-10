@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Property Matching (Cloud)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --ink: #0f0f1a; --ink2: #1a1a2e; --gold: #c9a84c; --gold2: #e8c96a;
+  --cream: #faf8f3; --muted: #8888a0; --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06); --card: #16162a; --card2: #1e1e35;
+  --success: #10b981; --danger: #ef4444;
+}
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: stretch; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; }
+.brand-mark { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--ink); }
+.brand-text .name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #fff; display: block; line-height: 1; }
+.brand-text .sub { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.14em; margin-top: 3px; display: block; }
+
+.sync-status { display: flex; align-items: center; gap: 14px; padding: 1rem 0; }
+.sync-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.sync-pill.connected { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.sync-pill.disconnected { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); cursor: pointer; }
+.sync-pill.syncing { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sync-dot.pulsing { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.setup-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(8px); }
+.setup-modal { background: var(--card); border: 1px solid var(--border); border-radius: 14px; max-width: 540px; width: 100%; }
+.setup-header { padding: 1.5rem; border-bottom: 1px solid var(--border2); text-align: center; }
+.setup-icon { width: 50px; height: 50px; background: rgba(201,168,76,0.15); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 10px; }
+.setup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: #fff; }
+.setup-sub { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+.setup-body { padding: 1.5rem; }
+.setup-url-input { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--cream); outline: none; margin-bottom: 8px; }
+.setup-url-input:focus { border-color: var(--gold); }
+.setup-buttons { display: flex; gap: 8px; justify-content: space-between; margin-top: 12px; }
+.btn-cloud { background: var(--gold); color: var(--ink); border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-cloud:hover { background: var(--gold2); }
+.btn-skip { background: transparent; color: var(--muted); border: 1px solid var(--border2); padding: 10px 20px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.test-result { margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 12px; display: none; }
+.test-result.success { display: block; background: rgba(16,185,129,0.1); color: #34d399; }
+.test-result.error { display: block; background: rgba(239,68,68,0.1); color: #f87171; }
+
+.main { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; }
+.panel { background: var(--card); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
+.panel-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; }
+.panel-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); }
+.panel-body { padding: 1.25rem; }
+
+.info-banner { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 12px 16px; display: flex; align-items: start; gap: 10px; margin-bottom: 1.5rem; font-size: 12px; color: #93c5fd; line-height: 1.55; }
+
+.client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.client-tile { background: var(--card2); border: 1px solid var(--border2); border-radius: 10px; padding: 1rem; cursor: pointer; transition: all 0.15s; }
+.client-tile:hover { border-color: var(--border); transform: translateY(-1px); }
+.client-tile.selected { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+.tile-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.tile-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.tile-name { font-size: 14px; font-weight: 600; color: #fff; }
+.tile-status { font-size: 10px; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-left: auto; }
+.ts-hot { background: rgba(239,68,68,0.15); color: #f87171; }
+.ts-active { background: rgba(201,168,76,0.15); color: var(--gold); }
+.ts-warm { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.tile-criteria { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 6px; }
+.tile-criteria strong { color: var(--cream); font-weight: 500; }
+
+.strategy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.strategy-block { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; }
+.strategy-label { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 6px; }
+.strategy-value { font-size: 13px; line-height: 1.6; color: var(--cream); }
+
+.search-links { display: grid; gap: 8px; margin-top: 1rem; }
+.search-link { display: flex; align-items: center; gap: 12px; background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; text-decoration: none; color: var(--cream); transition: all 0.12s; }
+.search-link:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+.sl-icon { width: 36px; height: 36px; background: var(--ink2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.sl-name { font-weight: 600; font-size: 13px; }
+.sl-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.sl-arrow { margin-left: auto; color: var(--gold); }
+
+.listing-input-section { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 1rem; margin-bottom: 12px; }
+.listing-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px; }
+.listing-row .input { width: 100%; background: var(--ink2); border: 1px solid var(--border2); border-radius: 6px; padding: 8px 10px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--cream); outline: none; }
+.listing-row .input:focus { border-color: var(--gold); }
+.btn-remove { background: transparent; border: 1px solid rgba(239,68,68,0.2); color: #f87171; border-radius: 6px; padding: 0 12px; cursor: pointer; font-size: 14px; }
+.btn-remove:hover { background: rgba(239,68,68,0.1); }
+
+.listing-card { background: var(--card2); border: 1px solid var(--border2); border-radius: 10px; padding: 1rem; margin-bottom: 10px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+.lc-address { font-weight: 600; color: #fff; font-size: 14px; margin-bottom: 4px; }
+.lc-meta { font-size: 12px; color: var(--muted); }
+.lc-price { font-family: 'DM Mono', monospace; font-size: 16px; color: var(--gold); font-weight: 600; }
+.lc-match-score { font-size: 10px; padding: 3px 9px; border-radius: 12px; background: rgba(16,185,129,0.15); color: #34d399; display: inline-block; margin-top: 6px; font-weight: 600; text-transform: uppercase; }
+.lc-notes { margin-top: 8px; padding: 8px 10px; background: var(--ink2); border-radius: 6px; font-size: 12px; color: var(--cream); line-height: 1.5; font-style: italic; }
+
+.email-preview { background: #f5f3ee; color: #1a1a2e; padding: 1.5rem 2rem; border-radius: 8px; font-family: 'Georgia', serif; font-size: 14px; line-height: 1.7; margin-top: 1rem; white-space: pre-wrap; max-height: 500px; overflow-y: auto; }
+
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; }
+.btn-primary { background: var(--gold); color: var(--ink); font-weight: 600; }
+.btn-primary:hover { background: var(--gold2); }
+.btn-secondary { background: transparent; color: var(--muted); border-color: var(--border2); }
+.btn-secondary:hover { background: var(--card2); color: var(--cream); }
+.btn-success { background: var(--success); color: white; font-weight: 600; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+.empty-icon { font-size: 40px; opacity: 0.4; margin-bottom: 12px; }
+.empty-text { font-size: 14px; line-height: 1.6; }
+
+@media(max-width:768px){ .header,.main{padding-left:1rem;padding-right:1rem} .listing-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="setup-overlay" id="setupOverlay" style="display:none;">
+  <div class="setup-modal">
+    <div class="setup-header">
+      <div class="setup-icon">☁️</div>
+      <div class="setup-title">Connect to your cloud sync</div>
+      <div class="setup-sub">Paste the same Web App URL you used for your CRM.</div>
+    </div>
+    <div class="setup-body">
+      <input type="text" class="setup-url-input" id="webAppUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+      <div class="test-result" id="testResult"></div>
+      <div class="setup-buttons">
+        <button class="btn-skip" onclick="closeSetup(true)">Skip</button>
+        <button class="btn-cloud" onclick="connectCloud()" id="connectBtn">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-mark">J</div>
+    <div class="brand-text">
+      <span class="name">Jacobs Relocation</span>
+      <span class="sub">Property Matching</span>
+    </div>
+  </div>
+  <div class="sync-status"><div id="syncIndicator"></div></div>
+</div>
+
+<div class="main">
+  <div class="info-banner">
+    <span>ℹ️</span>
+    <span><strong>How this works:</strong> Pick a client → see their criteria → click pre-built search links → paste listings → generate a personalised email in your voice.</span>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Select a client</span>
+      <span style="font-size:11px;color:var(--muted);" id="clientCount"></span>
+    </div>
+    <div class="panel-body">
+      <div id="clientGrid" class="client-grid"></div>
+    </div>
+  </div>
+
+  <div id="workflow" style="display:none;">
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title" id="criteriaTitle">Search criteria</span></div>
+      <div class="panel-body"><div class="strategy-grid" id="criteriaGrid"></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">Pre-built search links</span></div>
+      <div class="panel-body">
+        <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:0.75rem;">Click to open with your client's filters applied. Paste listings below.</p>
+        <div class="search-links" id="searchLinks"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Add listings to shortlist</span>
+        <button class="btn btn-secondary" onclick="addListingRow()" style="padding:6px 12px;font-size:11px;">+ Add another</button>
+      </div>
+      <div class="panel-body">
+        <div id="listingInputs"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="buildShortlist()">Build shortlist →</button>
+          <button class="btn btn-secondary" onclick="clearListings()">Clear all</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="shortlistPanel" style="display:none;">
+      <div class="panel-header"><span class="panel-title">Generated shortlist</span></div>
+      <div class="panel-body" id="shortlistBody"></div>
+    </div>
+
+    <div class="panel" id="emailPanel" style="display:none;">
+      <div class="panel-header"><span class="panel-title">Email draft for client</span></div>
+      <div class="panel-body">
+        <div class="email-preview" id="emailPreview"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="copyEmail()">📋 Copy email</button>
+          <button class="btn btn-success" onclick="openInGmail()">📧 Open in Gmail</button>
+          <button class="btn btn-secondary" onclick="generateEmail()">↻ Regenerate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let cloudUrl = localStorage.getItem('jr_cloud_url') || '';
+let cloudConnected = !!cloudUrl;
+
+async function cloudRead(table) {
+  if (!cloudUrl) return null;
+  try {
+    const res = await fetch(cloudUrl + '?action=read&table=' + table);
+    const data = await res.json();
+    return data.ok ? data.data : null;
+  } catch (err) { return null; }
+}
+
+function updateSyncIndicator(state) {
+  const el = document.getElementById('syncIndicator');
+  if (!cloudConnected) { el.innerHTML = `<div class="sync-pill disconnected" onclick="openSetup()"><span class="sync-dot"></span>Local only · Click to connect</div>`; return; }
+  if (state === 'syncing') { el.innerHTML = `<div class="sync-pill syncing"><span class="sync-dot pulsing"></span>Syncing…</div>`; return; }
+  if (state === 'error') { el.innerHTML = `<div class="sync-pill disconnected"><span class="sync-dot"></span>Sync failed</div>`; return; }
+  el.innerHTML = `<div class="sync-pill connected"><span class="sync-dot"></span>Cloud synced</div>`;
+}
+
+function openSetup() {
+  document.getElementById('webAppUrl').value = cloudUrl;
+  document.getElementById('setupOverlay').style.display = 'flex';
+}
+function closeSetup(skip) {
+  document.getElementById('setupOverlay').style.display = 'none';
+  if (skip) localStorage.setItem('jr_setup_skipped', '1');
+}
+
+async function connectCloud() {
+  const url = document.getElementById('webAppUrl').value.trim();
+  const result = document.getElementById('testResult');
+  const btn = document.getElementById('connectBtn');
+  if (!url || !url.startsWith('https://script.google.com/')) { result.className = 'test-result error'; result.textContent = '⚠️ Invalid URL'; return; }
+  btn.disabled = true; btn.textContent = 'Testing...';
+  try {
+    const testRes = await fetch(url + '?action=read&table=clients');
+    const testData = await testRes.json();
+    if (!testData.ok && testData.error) throw new Error(testData.error);
+    cloudUrl = url; cloudConnected = true;
+    localStorage.setItem('jr_cloud_url', url);
+    if (testData.data && testData.data.length) {
+      clients = testData.data;
+      localStorage.setItem('jr_clients', JSON.stringify(clients));
+    }
+    result.className = 'test-result success'; result.textContent = '✓ Connected.';
+    setTimeout(() => { closeSetup(false); updateSyncIndicator('connected'); renderClientGrid(); }, 1000);
+  } catch (err) {
+    result.className = 'test-result error'; result.textContent = '✗ Failed: ' + err.message;
+    btn.disabled = false; btn.textContent = 'Connect';
+  }
+}
+
+let clients = JSON.parse(localStorage.getItem('jr_clients') || '[]');
+let selectedClient = null;
+let currentListings = [];
+
+const PALETTE = ['#c9a84c','#3b82f6','#8b5cf6','#10b981','#ef4444','#f59e0b','#06b6d4','#ec4899'];
+function avatarColor(name) { let h = 0; for(let c of name) h = (h*31+c.charCodeAt(0))%PALETTE.length; return PALETTE[h]; }
+function initials(name) { return name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase(); }
+
+const ORIGIN_FLAGS = { uk:'🇬🇧', canada:'🇨🇦', us:'🇺🇸', australia:'🇦🇺', other:'🌍' };
+
+function renderClientGrid() {
+  const grid = document.getElementById('clientGrid');
+  const eligible = clients.filter(c => !['closed','cold'].includes(c.status));
+  document.getElementById('clientCount').textContent = eligible.length + ' active clients';
+  if (!eligible.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">📂</div><div class="empty-text">No active clients found. Open the CRM dashboard first.</div></div>`;
+    return;
+  }
+  grid.innerHTML = eligible.map(c => {
+    const col = avatarColor(c.name);
+    const statusClass = c.status === 'hot' ? 'ts-hot' : c.status === 'active' ? 'ts-active' : 'ts-warm';
+    return `<div class="client-tile" data-id="${c.id}" onclick="selectClient(${c.id})">
+      <div class="tile-header">
+        <div class="tile-avatar" style="background:${col}20;color:${col}">${initials(c.name)}</div>
+        <div>
+          <div class="tile-name">${c.name}</div>
+          <div style="font-size:11px;color:var(--muted);">${ORIGIN_FLAGS[c.origin]||''} ${c.type||'buyer'}</div>
+        </div>
+        <span class="tile-status ${statusClass}">${c.status}</span>
+      </div>
+      <div class="tile-criteria">
+        <strong>${c.budget && c.budget !== 'TBC' ? c.budget : 'Budget TBC'}</strong> · ${c.area || 'No area'}<br>
+        ${c.proptype || 'Property type TBC'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectClient(id) {
+  selectedClient = clients.find(c => c.id === id);
+  if (!selectedClient) return;
+  document.querySelectorAll('.client-tile').forEach(t => t.classList.remove('selected'));
+  document.querySelector(`.client-tile[data-id="${id}"]`).classList.add('selected');
+  document.getElementById('workflow').style.display = '';
+  renderCriteria();
+  renderSearchLinks();
+  resetListings();
+  document.getElementById('shortlistPanel').style.display = 'none';
+  document.getElementById('emailPanel').style.display = 'none';
+  document.getElementById('workflow').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderCriteria() {
+  const c = selectedClient;
+  document.getElementById('criteriaTitle').textContent = 'Search criteria — ' + c.name;
+  const blocks = [
+    { label: 'Budget', value: c.budget || 'TBC' },
+    { label: 'Target area', value: c.area || 'Not set' },
+    { label: 'Property type', value: c.proptype || 'TBC' },
+    { label: 'Timeline', value: c.timeline || 'TBC' },
+  ];
+  if (c.yieldTarget) blocks.push({ label: 'Yield target', value: c.yieldTarget });
+  if (c.schools) blocks.push({ label: 'Schools', value: c.schools });
+  document.getElementById('criteriaGrid').innerHTML = blocks.map(b => `<div class="strategy-block"><div class="strategy-label">${b.label}</div><div class="strategy-value">${b.value}</div></div>`).join('');
+}
+
+function buildSearchUrls(c) {
+  const area = c.area || 'Boca Raton, FL';
+  let maxPrice = '';
+  if (c.budget) {
+    const matches = c.budget.match(/\$?[\d.,]+\s*[mMkK]?/g);
+    if (matches && matches.length) {
+      const parse = (s) => {
+        const n = parseFloat(s.replace(/[$,]/g,''));
+        if (/m/i.test(s)) return n * 1000000;
+        if (/k/i.test(s)) return n * 1000;
+        return n;
+      };
+      maxPrice = parse(matches[matches.length - 1]);
+    }
+  }
+  const cityForUrl = encodeURIComponent(area.split(',')[0].trim());
+  const cityState = encodeURIComponent(area + (area.toLowerCase().includes('fl') ? '' : ', FL'));
+  const isInvestor = c.type === 'investor';
+  const isRental = c.type === 'rental';
+
+  const links = [];
+  let realtorUrl = `https://www.realtor.com/realestateandhomes-search/${cityForUrl}_FL`;
+  if (isRental) realtorUrl = `https://www.realtor.com/apartments/${cityForUrl}_FL`;
+  if (maxPrice) realtorUrl += `/price-na-${maxPrice}`;
+  links.push({ icon: '🏠', name: 'Realtor.com', desc: `Search ${area}${maxPrice ? ' up to $' + (maxPrice/1000000).toFixed(1) + 'M' : ''}`, url: realtorUrl });
+
+  let zillowUrl = `https://www.zillow.com/homes/${cityForUrl}-FL`;
+  if (isRental) zillowUrl = `https://www.zillow.com/homes/for_rent/${cityForUrl}-FL`;
+  links.push({ icon: '🔍', name: 'Zillow', desc: `Browse ${cityForUrl} ${isInvestor ? 'investments' : isRental ? 'rentals' : 'homes'}`, url: zillowUrl });
+
+  links.push({ icon: '🔻', name: 'Redfin', desc: 'Map-based search with filters', url: `https://www.redfin.com/city/search?location=${cityState}` });
+  links.push({ icon: '🧭', name: 'Compass', desc: 'Luxury HNW listings', url: `https://www.compass.com/homes-for-sale/${cityForUrl.toLowerCase()}-fl/` });
+
+  if (c.area && /lotus|woodfield|royal palm|valencia|the oaks/i.test(c.area)) {
+    const community = c.area.match(/lotus|woodfield|royal palm|valencia|the oaks/i)[0];
+    links.push({ icon: '🏘️', name: `${community} community search`, desc: `Listings in ${community}`, url: `https://www.google.com/search?q=${encodeURIComponent(community + ' Boca Raton FL homes for sale')}` });
+  }
+  return links;
+}
+
+function renderSearchLinks() {
+  const links = buildSearchUrls(selectedClient);
+  document.getElementById('searchLinks').innerHTML = links.map(l => `<a href="${l.url}" target="_blank" class="search-link"><div class="sl-icon">${l.icon}</div><div><div class="sl-name">${l.name}</div><div class="sl-desc">${l.desc}</div></div><div class="sl-arrow">→</div></a>`).join('');
+}
+
+function resetListings() {
+  currentListings = [];
+  document.getElementById('listingInputs').innerHTML = '';
+  for (let i = 0; i < 3; i++) addListingRow();
+}
+
+function addListingRow() {
+  const id = 'lst_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const row = document.createElement('div');
+  row.className = 'listing-input-section';
+  row.dataset.id = id;
+  row.innerHTML = `
+    <div class="listing-row">
+      <input class="input" placeholder="Address" data-field="address">
+      <input class="input" placeholder="Price (e.g. $1,850,000)" data-field="price">
+      <input class="input" placeholder="Beds/Baths/SqFt" data-field="meta">
+      <button class="btn-remove" onclick="removeListingRow('${id}')">✕</button>
+    </div>
+    <div class="listing-row" style="grid-template-columns:2fr 2fr;">
+      <input class="input" placeholder="Listing URL" data-field="url">
+      <input class="input" placeholder="Your note (why this matches)" data-field="note">
+    </div>`;
+  document.getElementById('listingInputs').appendChild(row);
+}
+
+function removeListingRow(id) { document.querySelector(`[data-id="${id}"]`)?.remove(); }
+function clearListings() { if (confirm('Clear all listings?')) resetListings(); }
+
+function buildShortlist() {
+  currentListings = [];
+  document.querySelectorAll('.listing-input-section').forEach(row => {
+    const get = (f) => row.querySelector(`[data-field="${f}"]`).value.trim();
+    const address = get('address');
+    if (!address) return;
+    currentListings.push({ address, price: get('price'), meta: get('meta'), url: get('url'), note: get('note') });
+  });
+  if (!currentListings.length) { alert('Add at least one listing.'); return; }
+  renderShortlist();
+  generateEmail();
+  document.getElementById('shortlistPanel').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderShortlist() {
+  const body = document.getElementById('shortlistBody');
+  body.innerHTML = currentListings.map((l, i) => `
+    <div class="listing-card">
+      <div class="lc-info">
+        <div class="lc-address">${l.address}</div>
+        <div class="lc-meta">${l.meta || 'Details not provided'}</div>
+        ${l.note ? `<div class="lc-notes">"${l.note}"</div>` : ''}
+        <div class="lc-match-score">Match #${i+1}</div>
+      </div>
+      <div class="lc-price">${l.price || 'POA'}</div>
+    </div>`).join('');
+  document.getElementById('shortlistPanel').style.display = '';
+}
+
+function generateEmail() {
+  const c = selectedClient;
+  const firstName = c.name.split(' ')[0];
+  const intro = getIntroLine(c);
+  const closer = getCloserLine(c);
+  let body = `Hi ${firstName},\n\n${intro}\n\n`;
+  currentListings.forEach((l, i) => {
+    body += `${i+1}. ${l.address}\n`;
+    if (l.price) body += `   ${l.price}\n`;
+    if (l.meta) body += `   ${l.meta}\n`;
+    if (l.note) body += `   Why I picked this: ${l.note}\n`;
+    if (l.url) body += `   ${l.url}\n`;
+    body += `\n`;
+  });
+  body += `${closer}\n\nBest,\nAdam\n\nAdam Jacobs\nJacobs Relocation\njacobsrelocation.com`;
+  document.getElementById('emailPreview').textContent = body;
+  document.getElementById('emailPanel').style.display = '';
+}
+
+function getIntroLine(c) {
+  if (c.status === 'hot') return `Quick update with this week's shortlist — I've handpicked these based on your criteria and what you mentioned on our last call. A few I think genuinely fit.`;
+  if (c.type === 'investor') return `Here's this week's investment shortlist — all hitting your yield criteria and in the right neighbourhoods. I've added a note on each as to why I think it stacks up.`;
+  if (c.type === 'rental') return `Latest rental options that match what you're after. I've kept the shortlist tight — these are the ones I'd actually go and view.`;
+  return `Quick weekly check-in with a curated shortlist. I've kept it focused — only the ones that genuinely match what you've told me you're looking for.`;
+}
+
+function getCloserLine(c) {
+  if (c.status === 'hot') return `Happy to set up viewings on any of these — let me know which ones catch your eye. Best to move quickly on the strong ones in this market.`;
+  return `Let me know which (if any) you'd like to dig deeper on. Always happy to talk through these — sometimes the photos don't do them justice.`;
+}
+
+function copyEmail() {
+  navigator.clipboard.writeText(document.getElementById('emailPreview').textContent).then(() => alert('Copied.'));
+}
+function openInGmail() {
+  const text = document.getElementById('emailPreview').textContent;
+  const subject = encodeURIComponent(`This week's shortlist — ${selectedClient.name.split(' ')[0]}`);
+  window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${encodeURIComponent(text)}`, '_blank');
+}
+
+async function init() {
+  if (cloudConnected) {
+    updateSyncIndicator('syncing');
+    const cloudData = await cloudRead('clients');
+    if (cloudData) {
+      clients = cloudData;
+      localStorage.setItem('jr_clients', JSON.stringify(clients));
+    }
+    updateSyncIndicator('connected');
+  } else {
+    updateSyncIndicator('disconnected');
+    if (!localStorage.getItem('jr_setup_skipped')) setTimeout(() => openSetup(), 500);
+  }
+  renderClientGrid();
+
+  if (cloudConnected) {
+    setInterval(async () => {
+      const fresh = await cloudRead('clients');
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(clients)) {
+        clients = fresh;
+        localStorage.setItem('jr_clients', JSON.stringify(clients));
+        renderClientGrid();
+      }
+    }, 60000);
+  }
+}
+init();
+</script>
+</body>
+</html>

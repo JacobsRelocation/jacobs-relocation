@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacobs Relocation — Market Intel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --ink: #0f0f1a; --ink2: #1a1a2e; --gold: #c9a84c; --gold2: #e8c96a;
+  --cream: #faf8f3; --muted: #8888a0; --border: rgba(201,168,76,0.15);
+  --border2: rgba(255,255,255,0.06); --card: #16162a; --card2: #1e1e35;
+  --success: #10b981; --danger: #ef4444; --warn: #f59e0b;
+}
+html { font-size: 14px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1a1230 100%);
+  border-bottom: 2px solid var(--gold);
+  padding: 1.5rem 2rem 1.25rem;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.header-left .eyebrow { font-size: 10px; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; font-weight: 500; }
+.header-left h1 { font-family: 'Playfair Display', serif; font-size: 24px; color: #fff; font-weight: 600; }
+.header-right { text-align: right; }
+.date-display { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 300; }
+.last-briefing { font-size: 11px; color: var(--gold); margin-top: 4px; }
+
+.content { padding: 1.5rem 2rem; max-width: 1300px; margin: 0 auto; }
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+}
+.step-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  position: relative;
+}
+.step-num {
+  position: absolute;
+  top: -10px; left: 1rem;
+  background: var(--gold);
+  color: var(--ink);
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px;
+}
+.step-title {
+  font-size: 12px; font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.step-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+.action-bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.ab-top {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1px solid transparent;
+}
+.btn-primary { background: var(--gold); color: var(--ink); font-weight: 600; }
+.btn-primary:hover { background: var(--gold2); }
+.btn-secondary { background: var(--card2); color: var(--cream); border-color: var(--border2); }
+.btn-secondary:hover { border-color: var(--border); }
+.btn.copied { background: var(--success); color: white; }
+
+.paste-area {
+  width: 100%;
+  background: var(--ink2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 1rem;
+  color: var(--cream);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  line-height: 1.55;
+  outline: none;
+  resize: vertical;
+  min-height: 120px;
+  margin-bottom: 0.75rem;
+}
+.paste-area:focus { border-color: var(--gold); }
+.paste-area::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; }
+
+.error-msg {
+  display: none;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #f87171;
+  margin-bottom: 0.75rem;
+}
+.error-msg.show { display: block; }
+
+.section-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin: 1.5rem 0 12px; display: flex; align-items: center; gap: 10px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.rates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+.rate-card { background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 1.25rem 1rem; text-align: center; }
+.rate-card .rate-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.rate-card .rate-value { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--gold); font-weight: 600; }
+.rate-card .rate-trend { font-size: 11px; margin-top: 4px; display: inline-flex; align-items: center; gap: 4px; }
+.rate-trend.up { color: #f87171; }
+.rate-trend.down { color: #34d399; }
+.rate-trend.flat { color: var(--muted); }
+
+.county-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1.5rem; }
+@media (max-width: 768px) { .county-grid { grid-template-columns: 1fr; } }
+.county-card { background: var(--card); border: 1px solid var(--border2); border-radius: 10px; overflow: hidden; }
+.county-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border2); display: flex; align-items: center; gap: 10px; }
+.county-icon { font-size: 18px; }
+.county-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #fff; }
+.county-meta { font-size: 11px; color: var(--muted); margin-left: auto; }
+.county-stats { padding: 1rem 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cs-block { padding: 8px 10px; background: var(--card2); border-radius: 6px; }
+.cs-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.cs-value { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--cream); font-weight: 500; }
+.cs-change { font-size: 10px; margin-top: 2px; }
+.cs-change.up { color: #34d399; }
+.cs-change.down { color: #f87171; }
+.cs-change.flat { color: var(--muted); }
+.county-insight { padding: 1rem 1.25rem; border-top: 1px solid var(--border2); font-size: 12px; color: var(--cream); line-height: 1.6; background: rgba(201,168,76,0.03); }
+
+.talking-points-block {
+  background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, rgba(139,92,246,0.04) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.tpb-title { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--gold); font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.tpb-list { list-style: none; padding: 0; }
+.tpb-list li { padding: 8px 0; font-size: 13px; color: var(--cream); line-height: 1.6; border-bottom: 1px solid var(--border2); position: relative; padding-left: 24px; }
+.tpb-list li:last-child { border-bottom: none; }
+.tpb-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 600; }
+
+.news-grid { display: grid; gap: 10px; }
+.news-item { background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 1rem 1.25rem; display: flex; gap: 12px; align-items: start; }
+.news-icon-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(201,168,76,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+.news-source { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 3px; }
+.news-headline { font-size: 14px; font-weight: 500; color: #fff; line-height: 1.4; margin-bottom: 5px; }
+.news-summary { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.news-talking-point { margin-top: 8px; padding: 8px 10px; background: rgba(201,168,76,0.06); border-left: 2px solid var(--gold); border-radius: 4px; font-size: 11px; color: var(--cream); line-height: 1.5; }
+.news-talking-point strong { color: var(--gold); font-weight: 500; }
+
+.timestamp { font-size: 11px; color: var(--muted); text-align: center; padding: 1.5rem 0 0.5rem; font-weight: 300; }
+
+@media(max-width:768px){
+  .header,.content{padding-left:1rem;padding-right:1rem}
+  .header { padding-top: 1rem; padding-bottom: 1rem; }
+  .header-left h1 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="eyebrow">Jacobs Relocation</div>
+    <h1>Market Intel — Palm Beach & Miami-Dade</h1>
+  </div>
+  <div class="header-right">
+    <div class="date-display" id="dateDisplay"></div>
+    <div class="last-briefing" id="lastBriefing"></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="workflow-steps">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Copy the prompt</div>
+      <div class="step-desc">Click below to copy today's market briefing prompt to your clipboard.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Run in Claude</div>
+      <div class="step-desc">Open Claude chat. Paste the prompt. Claude searches the web for live data and returns a JSON briefing.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">Paste back here</div>
+      <div class="step-desc">Copy Claude's full JSON response, paste it below, click Render — your dashboard fills in.</div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <div class="ab-top">
+      <button class="btn btn-primary" id="copyBtn" onclick="copyPrompt()">📋 Copy briefing prompt</button>
+      <button class="btn btn-secondary" onclick="openClaude()">↗ Open Claude</button>
+      <button class="btn btn-secondary" onclick="loadSaved()" id="loadBtn" style="display:none;">↻ Reload last briefing</button>
+    </div>
+
+    <textarea class="paste-area" id="pasteArea" placeholder="Paste the JSON output from Claude here, then click Render..."></textarea>
+    <div class="error-msg" id="errorMsg"></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="renderBriefing()">✨ Render briefing</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <div id="briefingContent" style="display:none;">
+
+    <div class="section-label">📈 Mortgage rates today</div>
+    <div class="rates-grid" id="ratesGrid"></div>
+
+    <div class="section-label">🏛️ County-level intel</div>
+    <div class="county-grid" id="countyGrid"></div>
+
+    <div class="talking-points-block">
+      <div class="tpb-title">💬 Today's client talking points</div>
+      <ul class="tpb-list" id="talkingPoints"></ul>
+    </div>
+
+    <div class="section-label">📰 Headlines & deals</div>
+    <div class="news-grid" id="newsGrid"></div>
+
+    <div class="timestamp" id="briefingTimestamp"></div>
+
+  </div>
+
+</div>
+
+<script>
+const PROMPT_TEMPLATE = `Run my daily Jacobs Relocation market intel briefing.
+
+I'm Adam at Jacobs Relocation — a SE Florida concierge relocation consultancy targeting HNW UK, Canadian, and US domestic movers (NY/NJ/IL/CA) relocating to Palm Beach County and Miami-Dade County.
+
+Use web_search to find current data for today:
+1. Today's 30-year, 15-year, and jumbo mortgage rates (national)
+2. Palm Beach County real estate: median sale price, inventory months supply, sales volume YoY change, days on market
+3. Miami-Dade County real estate: median sale price, inventory months supply, sales volume YoY change, days on market
+4. 3-4 recent (last 7 days) SE Florida real estate news items relevant to HNW buyers
+
+Return ONLY a valid JSON object in this exact structure. No markdown, no code fences, no preamble or explanation. Start with { and end with }:
+
+{
+  "rates": {
+    "thirtyYear": { "value": "6.56%", "trend": "down", "change": "-0.05% this week" },
+    "fifteenYear": { "value": "5.89%", "trend": "down", "change": "-0.04% this week" },
+    "jumbo": { "value": "6.78%", "trend": "flat", "change": "flat this week" },
+    "fedOutlook": "One-sentence Fed/rate outlook for next 30-60 days"
+  },
+  "palmBeach": {
+    "medianPrice": "$650,000",
+    "priceChange": "+5.2% YoY",
+    "priceDirection": "up",
+    "inventory": "3.2 months",
+    "inventoryChange": "+0.4 months",
+    "inventoryDirection": "up",
+    "salesVolume": "1,847 sold last month",
+    "salesChange": "-2.1% YoY",
+    "salesDirection": "down",
+    "daysOnMarket": "47 days",
+    "domChange": "+5 days YoY",
+    "domDirection": "up",
+    "insight": "2-3 sentence insight on what this means for HNW relocators. Who's buying, where the deals are, what's overpriced."
+  },
+  "miamiDade": {
+    "medianPrice": "...",
+    "priceChange": "...",
+    "priceDirection": "up",
+    "inventory": "...",
+    "inventoryChange": "...",
+    "inventoryDirection": "up",
+    "salesVolume": "...",
+    "salesChange": "...",
+    "salesDirection": "up",
+    "daysOnMarket": "...",
+    "domChange": "...",
+    "domDirection": "up",
+    "insight": "2-3 sentence insight specific to Miami-Dade for HNW relocators."
+  },
+  "news": [
+    {
+      "source": "Publication name",
+      "headline": "Headline",
+      "summary": "2-sentence summary",
+      "category": "luxury",
+      "talkingPoint": "How I can use this in a client conversation — 1 sentence"
+    }
+  ],
+  "talkingPoints": [
+    "5 client-ready talking points, each 1 sentence, weaving together rates, county data, and news. Be specific. Reference actual numbers."
+  ]
+}
+
+Rules:
+- talkingPoints array must contain exactly 5 items
+- news array should contain 3-4 items
+- All direction fields must be lowercase: "up", "down", or "flat"
+- category must be one of: "luxury", "market", "policy", "deal", "migration"
+- Output the raw JSON only — nothing before or after`;
+
+const now = new Date();
+document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+function updateLastBriefingDisplay() {
+  const saved = localStorage.getItem('jr_market_briefing');
+  const savedAt = localStorage.getItem('jr_market_briefing_at');
+  if (saved && savedAt) {
+    const when = new Date(parseInt(savedAt));
+    const sameDay = when.toDateString() === new Date().toDateString();
+    document.getElementById('lastBriefing').textContent = sameDay
+      ? `Last briefing today at ${when.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`
+      : `Last briefing: ${when.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    document.getElementById('loadBtn').style.display = '';
+  }
+}
+updateLastBriefingDisplay();
+
+function copyPrompt() {
+  navigator.clipboard.writeText(PROMPT_TEMPLATE).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied — now paste into Claude';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '📋 Copy briefing prompt';
+    }, 3000);
+  });
+}
+
+function openClaude() {
+  window.open('https://claude.ai/new', '_blank');
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearError() { document.getElementById('errorMsg').classList.remove('show'); }
+
+function clearAll() {
+  document.getElementById('pasteArea').value = '';
+  document.getElementById('briefingContent').style.display = 'none';
+  clearError();
+}
+
+function loadSaved() {
+  const saved = localStorage.getItem('jr_market_briefing');
+  if (!saved) return;
+  try { renderFromObject(JSON.parse(saved)); }
+  catch (e) { showError('Could not load saved briefing.'); }
+}
+
+function trendIcon(direction) {
+  const d = (direction || 'flat').toLowerCase();
+  if (d === 'up') return { icon: '↑', cls: 'up' };
+  if (d === 'down') return { icon: '↓', cls: 'down' };
+  return { icon: '→', cls: 'flat' };
+}
+
+function renderBriefing() {
+  clearError();
+  const text = document.getElementById('pasteArea').value.trim();
+  if (!text) {
+    showError("Paste Claude's JSON response into the box first.");
+    return;
+  }
+
+  let jsonString = text;
+  jsonString = jsonString.replace(/```json|```/g, '').trim();
+  const firstBrace = jsonString.indexOf('{');
+  const lastBrace = jsonString.lastIndexOf('}');
+  if (firstBrace === -1 || lastBrace === -1) {
+    showError('No JSON object found. Make sure you paste the full JSON output.');
+    return;
+  }
+  jsonString = jsonString.substring(firstBrace, lastBrace + 1);
+
+  let briefing;
+  try { briefing = JSON.parse(jsonString); }
+  catch (e) {
+    showError('JSON parsing failed: ' + e.message);
+    return;
+  }
+
+  if (!briefing.rates || !briefing.palmBeach || !briefing.miamiDade) {
+    showError('JSON missing required sections (rates, palmBeach, miamiDade).');
+    return;
+  }
+
+  localStorage.setItem('jr_market_briefing', JSON.stringify(briefing));
+  localStorage.setItem('jr_market_briefing_at', Date.now().toString());
+  updateLastBriefingDisplay();
+  renderFromObject(briefing);
+}
+
+function renderFromObject(briefing) {
+  const rateBlocks = [
+    { label: '30-year fixed', data: briefing.rates.thirtyYear },
+    { label: '15-year fixed', data: briefing.rates.fifteenYear },
+    { label: 'Jumbo', data: briefing.rates.jumbo },
+  ];
+  document.getElementById('ratesGrid').innerHTML = rateBlocks.map(r => {
+    if (!r.data) return '';
+    const t = trendIcon(r.data.trend);
+    return `<div class="rate-card">
+      <div class="rate-label">${r.label}</div>
+      <div class="rate-value">${r.data.value}</div>
+      <div class="rate-trend ${t.cls}">${t.icon} ${r.data.change || ''}</div>
+    </div>`;
+  }).join('') + (briefing.rates.fedOutlook ? `
+    <div class="rate-card" style="grid-column:1/-1;">
+      <div class="rate-label">Outlook</div>
+      <div style="font-size:13px;color:var(--cream);line-height:1.5;margin-top:6px;font-family:'DM Sans',sans-serif;">${briefing.rates.fedOutlook}</div>
+    </div>` : '');
+
+  const renderCounty = (c) => {
+    const blocks = [
+      { label: 'Median price', value: c.medianPrice, change: c.priceChange, direction: c.priceDirection },
+      { label: 'Inventory', value: c.inventory, change: c.inventoryChange, direction: c.inventoryDirection },
+      { label: 'Sales volume', value: c.salesVolume, change: c.salesChange, direction: c.salesDirection },
+      { label: 'Days on market', value: c.daysOnMarket, change: c.domChange, direction: c.domDirection },
+    ];
+    return blocks.map(b => `
+      <div class="cs-block">
+        <div class="cs-label">${b.label}</div>
+        <div class="cs-value">${b.value || '—'}</div>
+        <div class="cs-change ${(b.direction || 'flat').toLowerCase()}">${b.change || ''}</div>
+      </div>`).join('');
+  };
+
+  document.getElementById('countyGrid').innerHTML = `
+    <div class="county-card">
+      <div class="county-header">
+        <span class="county-icon">🌴</span>
+        <span class="county-name">Palm Beach County</span>
+        <span class="county-meta">Boca · Delray · Palm Beach</span>
+      </div>
+      <div class="county-stats">${renderCounty(briefing.palmBeach)}</div>
+      <div class="county-insight">${briefing.palmBeach.insight || ''}</div>
+    </div>
+    <div class="county-card">
+      <div class="county-header">
+        <span class="county-icon">🏖️</span>
+        <span class="county-name">Miami-Dade County</span>
+        <span class="county-meta">Miami · Aventura · Coral Gables</span>
+      </div>
+      <div class="county-stats">${renderCounty(briefing.miamiDade)}</div>
+      <div class="county-insight">${briefing.miamiDade.insight || ''}</div>
+    </div>`;
+
+  if (briefing.talkingPoints && briefing.talkingPoints.length) {
+    document.getElementById('talkingPoints').innerHTML = briefing.talkingPoints.map(p => `<li>${p}</li>`).join('');
+  }
+
+  if (briefing.news && briefing.news.length) {
+    const newsIcons = { luxury: '🏛️', market: '📊', policy: '⚖️', deal: '💼', migration: '✈️' };
+    document.getElementById('newsGrid').innerHTML = briefing.news.map(n => `
+      <div class="news-item">
+        <div class="news-icon-circle">${newsIcons[n.category] || '📰'}</div>
+        <div style="flex:1;">
+          <div class="news-source">${n.source || ''}</div>
+          <div class="news-headline">${n.headline || ''}</div>
+          <div class="news-summary">${n.summary || ''}</div>
+          ${n.talkingPoint ? `<div class="news-talking-point"><strong>Use this:</strong> ${n.talkingPoint}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  const ts = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  document.getElementById('briefingTimestamp').textContent = `Briefing rendered at ${ts}`;
+  document.getElementById('briefingContent').style.display = 'block';
+  document.getElementById('briefingContent').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Auto-load last briefing on open if from same day
+const savedAt = localStorage.getItem('jr_market_briefing_at');
+if (savedAt) {
+  const when = new Date(parseInt(savedAt));
+  if (when.toDateString() === new Date().toDateString()) {
+    loadSaved();
+  }
+}
+</script>
+</body>
+</html>
