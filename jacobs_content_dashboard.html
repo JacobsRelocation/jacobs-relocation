@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0066)file:///Users/adamjacobs/Downloads/jacobs_content_dashboard_2.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jacobs Relocation — Content Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="./Jacobs Relocation — Content Dashboard_files/css2" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -400,27 +400,891 @@
 </div>
 
 <div class="nav">
-  <button class="nav-tab active" onclick="switchTab('calendar', this)">Calendar</button>
-  <button class="nav-tab" onclick="switchTab('analytics', this)">Analytics</button>
-  <button class="nav-tab" onclick="switchTab('us-domestic', this)">🇺🇸 US Domestic</button>
-  <button class="nav-tab" onclick="switchTab('templates', this)">DM Templates</button>
+  <button class="nav-tab active" onclick="switchTab(&#39;calendar&#39;, this)">Calendar</button>
+  <button class="nav-tab" onclick="switchTab(&#39;analytics&#39;, this)">Analytics</button>
+  <button class="nav-tab" onclick="switchTab(&#39;us-domestic&#39;, this)">🇺🇸 US Domestic</button>
+  <button class="nav-tab" onclick="switchTab(&#39;templates&#39;, this)">DM Templates</button>
 </div>
 
 <!-- CALENDAR TAB -->
 <div class="tab-pane active" id="tab-calendar">
   <div class="main">
 
-    <div class="legend" id="legend"></div>
+    <div class="legend" id="legend"><div class="pill" style="background: rgb(219, 234, 254); color: rgb(30, 64, 175);"><span class="pill-dot" style="background:#2563eb"></span>Relocation Guide</div><div class="pill" style="background: rgb(209, 250, 229); color: rgb(6, 95, 70);"><span class="pill-dot" style="background:#059669"></span>SE FL Lifestyle</div><div class="pill" style="background: rgb(254, 243, 199); color: rgb(146, 64, 14);"><span class="pill-dot" style="background:#d97706"></span>Adam's Story</div><div class="pill" style="background: rgb(207, 250, 254); color: rgb(21, 94, 117);"><span class="pill-dot" style="background:#0891b2"></span>Client Journeys</div><div class="pill" style="background: rgb(237, 233, 254); color: rgb(91, 33, 182);"><span class="pill-dot" style="background:#7c3aed"></span>Market Intel</div><div class="pill" style="background: rgb(254, 226, 226); color: rgb(153, 27, 27);"><span class="pill-dot" style="background:#dc2626"></span>US Domestic</div></div>
 
     <div class="filter-bar">
       <span class="filter-label">Filter:</span>
-      <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-      <button class="filter-btn" onclick="filterCards('Reel', this)">Reels</button>
-      <button class="filter-btn" onclick="filterCards('Carousel', this)">Carousels</button>
-      <button class="filter-btn" onclick="filterCards('new', this)">🇺🇸 New US posts</button>
+      <button class="filter-btn active" onclick="filterCards(&#39;all&#39;, this)">All</button>
+      <button class="filter-btn" onclick="filterCards(&#39;Reel&#39;, this)">Reels</button>
+      <button class="filter-btn" onclick="filterCards(&#39;Carousel&#39;, this)">Carousels</button>
+      <button class="filter-btn" onclick="filterCards(&#39;new&#39;, this)">🇺🇸 New US posts</button>
     </div>
 
-    <div id="calendarContainer"></div>
+    <div id="calendarContainer"><div class="week-label">Week 1 — Establish the problem</div><div class="grid"><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 1</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Most people moving to Florida get this wrong on day one"</div>
+      <div class="card-caption">Three mistakes: wrong area, wrong season, no local knowledge. CTA: DM for guide.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(1)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(1,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(1,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(1,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(1,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#059669"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 2</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">Boca vs Delray vs Palm Beach — which is actually right for you?</div>
+      <div class="card-caption">5-slide comparison. Lifestyle, price, schools, vibe. Saveable.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#d1fae5;color:#065f46">SE FL Lifestyle</span>
+            <button class="script-btn" onclick="requestScript(2)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(2,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(2,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(2,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(2,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#d97706"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 3</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"I moved from London to Florida and this is what nobody tells you"</div>
+      <div class="card-caption">Walk-and-talk. Personal. The London → Boca story, raw version.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fef3c7;color:#92400e">Adam's Story</span>
+            <button class="script-btn" onclick="requestScript(3)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(3,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(3,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(3,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(3,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 5</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">The SE Florida relocation checklist — 12 things to sort before you land</div>
+      <div class="card-caption">Saveable, shareable. Covers visas, schools, insurance, banking.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(5)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(5,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(5,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(5,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(5,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#059669"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 7</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"In South Florida, your commute looks like this"</div>
+      <div class="card-caption">Film the drive/walk. Beautiful B-roll with VO. Pure aspiration.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#d1fae5;color:#065f46">SE FL Lifestyle</span>
+            <button class="script-btn" onclick="requestScript(7)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(7,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(7,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(7,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(7,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div><div class="week-label">Week 2 — Build authority</div><div class="grid"><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#7c3aed"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 8</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Here's what $1.5M actually buys you in Boca right now"</div>
+      <div class="card-caption">Walk through neighbourhood. Real numbers. No fluff.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#ede9fe;color:#5b21b6">Market Intel</span>
+            <button class="script-btn" onclick="requestScript(8)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(8,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(8,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(8,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(8,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 9</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">Schools in SE Florida — the honest guide for UK and international families</div>
+      <div class="card-caption">Private vs public, IB options, waiting lists. Saveable.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(9)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(9,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(9,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(9,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(9,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#d97706"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 10</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"I was a photographer who shot Mandela and Mick Jagger. Then I couldn't leave bed."</div>
+      <div class="card-caption">The migraine chapter. Vulnerable, human, sets up the move to Florida.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fef3c7;color:#92400e">Adam's Story</span>
+            <button class="script-btn" onclick="requestScript(10)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(10,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(10,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(10,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(10,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#0891b2"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 12</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">A family moved from London to Boca — here's their first 90 days</div>
+      <div class="card-caption">Anonymised client story. Schools, house, community. Real.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#cffafe;color:#155e75">Client Journeys</span>
+            <button class="script-btn" onclick="requestScript(12)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(12,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(12,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(12,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(12,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#059669"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 14</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">Not all the best spots in South Florida are on the map</div>
+      <div class="card-caption">Your local knowledge reel. Hidden gems format. High shareability.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#d1fae5;color:#065f46">SE FL Lifestyle</span>
+            <button class="script-btn" onclick="requestScript(14)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(14,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(14,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(14,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(14,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div><div class="week-label">Week 3 — Social proof + aspiration</div><div class="grid"><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#7c3aed"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 15</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">Florida ranked #1 for economic performance in the US. Here's why that matters</div>
+      <div class="card-caption">Tie CBRE/Rich States data into the relocation case. Reassuring.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#ede9fe;color:#5b21b6">Market Intel</span>
+            <button class="script-btn" onclick="requestScript(15)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(15,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(15,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(15,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(15,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 16</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">The visa question — what UK and Canadian families actually need to know</div>
+      <div class="card-caption">E2, EB-5, O-1 at a glance. Not advice, but the overview. Huge demand.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(16)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(16,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(16,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(16,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(16,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#d97706"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 17</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Why I left San Francisco for Boca — and I'd do it again tomorrow"</div>
+      <div class="card-caption">Cost of living delta. Weather. Lifestyle upgrade. Personal and punchy.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fef3c7;color:#92400e">Adam's Story</span>
+            <button class="script-btn" onclick="requestScript(17)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(17,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(17,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(17,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(17,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#0891b2"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 19</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">Canadian family, 3 kids, full relocation in 11 weeks — here's how</div>
+      <div class="card-caption">Anonymised. Schools sorted first, then home. Timeline format.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#cffafe;color:#155e75">Client Journeys</span>
+            <button class="script-btn" onclick="requestScript(19)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(19,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(19,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(19,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(19,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#059669"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 21</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">Work days end like this in South Florida</div>
+      <div class="card-caption">The sunset / golf / beach close-of-day reel. High aspiration.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#d1fae5;color:#065f46">SE FL Lifestyle</span>
+            <button class="script-btn" onclick="requestScript(21)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(21,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(21,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(21,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(21,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div><div class="week-label">Week 4 — Convert</div><div class="grid"><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 22</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Most realtors hand you the keys and disappear. We're just getting started."</div>
+      <div class="card-caption">Your service differentiator. Closing day is the beginning, not the end.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(22)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(22,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(22,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(22,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(22,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#7c3aed"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 23</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">SE Florida market update — what's moving and what's not in 2026</div>
+      <div class="card-caption">Current inventory, rates, buyer demand. Positions you as the authority.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#ede9fe;color:#5b21b6">Market Intel</span>
+            <button class="script-btn" onclick="requestScript(23)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(23,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(23,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(23,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(23,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#d97706"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 24</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Here's what I wish I knew before I made the move"</div>
+      <div class="card-caption">Top 5 things. Practical, credible, builds trust before a DM.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fef3c7;color:#92400e">Adam's Story</span>
+            <button class="script-btn" onclick="requestScript(24)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(24,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(24,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(24,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(24,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#0891b2"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 26</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">They asked every question. We answered every one. Here's what they asked.</div>
+      <div class="card-caption">FAQ format based on real client questions. FAQs drive DMs.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#cffafe;color:#155e75">Client Journeys</span>
+            <button class="script-btn" onclick="requestScript(26)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(26,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(26,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(26,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(26,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 28</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"If you're thinking about moving to SE Florida — watch this first"</div>
+      <div class="card-caption">Direct to camera. Warm, confident, clear CTA to DM or link in bio.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(28)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(28,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(28,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(28,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(28,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div><div class="week-label">Week 5 — Ongoing authority</div><div class="grid"><div class="card" data-format="Reel" data-new="false">
+    <div class="card-accent" style="background:#059669"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 29</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">The Royal Palm Yacht &amp; Country Club just sold for $75M. Here's what that tells us.</div>
+      <div class="card-caption">Tie Boca record sale into market narrative. Smart money is moving here.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#d1fae5;color:#065f46">SE FL Lifestyle</span>
+            <button class="script-btn" onclick="requestScript(29)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(29,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(29,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(29,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(29,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="false">
+    <div class="card-accent" style="background:#2563eb"></div>
+    
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 30</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">Country club living in Boca — what you actually need to know before applying</div>
+      <div class="card-caption">Membership costs, waitlists, lifestyle. Saveable. HNW-specific.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#dbeafe;color:#1e40af">Relocation Guide</span>
+            <button class="script-btn" onclick="requestScript(30)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(30,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(30,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(30,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(30,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div><div class="week-label">US Domestic — New content pillar <span class="new-badge">NEW</span></div><div class="grid"><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 31</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"I moved from San Francisco to Boca and here's what nobody tells you"</div>
+      <div class="card-caption">Personal story, cost of living delta, weather, lifestyle upgrade. Highest-potential domestic reel. Film walking through a Boca neighbourhood.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(31)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(31,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(31,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(31,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(31,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 32</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"What $800k buys you in Boca vs what it buys you in New Jersey"</div>
+      <div class="card-caption">Walk-and-talk neighbourhood tour. Visual, shareable, stops the scroll. Real price comparison.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(32)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(32,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(32,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(32,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(32,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 33</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Why New Yorkers are choosing Boca over Miami"</div>
+      <div class="card-caption">Positioning piece. Less traffic, better schools, quieter money. Speaks directly to a huge migrant pool.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(33)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(33,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(33,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(33,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(33,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 34</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"The 3 mistakes people make when moving from California to Florida"</div>
+      <div class="card-caption">Problem/solution format. Draws on your SF experience. Instant credibility with West Coast movers.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(34)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(34,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(34,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(34,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(34,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 35</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">California vs Florida: the honest comparison</div>
+      <div class="card-caption">Taxes, cost of living, weather, lifestyle, schools. Side-by-side. Highly shareable and saveable.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(35)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(35,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(35,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(35,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(35,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 36</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">So you're thinking about leaving New York — here's what SE Florida actually looks like</div>
+      <div class="card-caption">Neighbourhood breakdown, price points, commute reality. Practical and reassuring. NYC is your biggest domestic feeder market.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(36)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(36,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(36,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(36,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(36,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 37</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">The real cost of living in Boca Raton in 2026</div>
+      <div class="card-caption">Groceries, housing, schools, golf, dining. Breaks the "Florida is cheap" myth while showing the value vs NYC/SF/Chicago.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(37)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(37,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(37,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(37,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(37,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 38</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Done with the New York winters? Here's what the move actually looks like"</div>
+      <div class="card-caption">Walk through the relocation process from a domestic perspective. No visa stress, no currency risk. Just the move.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(38)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(38,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(38,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(38,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(38,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 39</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">No visa. No currency risk. No international school anxiety. Just the move.</div>
+      <div class="card-caption">Direct comparison: domestic relocation vs international. Removes all friction. Speaks to the hesitant domestic audience.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(39)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(39,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(39,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(39,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(39,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 40</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"I left San Francisco. I'd never go back."</div>
+      <div class="card-caption">Confident, personal close-of-series reel. SF → Boca full story condensed. Hard CTA: DM if you're thinking about it.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(40)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(40,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(40,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(40,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(40,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div></div>
   </div>
 </div>
 
@@ -452,7 +1316,43 @@
 
     <div style="background:var(--card);border:0.5px solid var(--border-light);border-radius:10px;padding:1.25rem;">
       <div style="font-size:13px;font-weight:500;margin-bottom:1rem;">Posts by pillar</div>
-      <div class="bar-chart" id="pillarChart"></div>
+      <div class="bar-chart" id="pillarChart">
+      <div class="bar-row">
+        <div class="bar-label">Relocation Guide</div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%;background:#2563eb"></div></div>
+        <div class="bar-count">7</div>
+      </div>
+    
+      <div class="bar-row">
+        <div class="bar-label">SE FL Lifestyle</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%;background:#059669"></div></div>
+        <div class="bar-count">5</div>
+      </div>
+    
+      <div class="bar-row">
+        <div class="bar-label">Adam's Story</div>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:#d97706"></div></div>
+        <div class="bar-count">4</div>
+      </div>
+    
+      <div class="bar-row">
+        <div class="bar-label">Market Intel</div>
+        <div class="bar-track"><div class="bar-fill" style="width:30%;background:#7c3aed"></div></div>
+        <div class="bar-count">3</div>
+      </div>
+    
+      <div class="bar-row">
+        <div class="bar-label">Client Journeys</div>
+        <div class="bar-track"><div class="bar-fill" style="width:30%;background:#0891b2"></div></div>
+        <div class="bar-count">3</div>
+      </div>
+    
+      <div class="bar-row">
+        <div class="bar-label">US Domestic</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626"></div></div>
+        <div class="bar-count">10</div>
+      </div>
+    </div>
     </div>
   </div>
 </div>
@@ -464,14 +1364,356 @@
       <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Strategy note</div>
       <div style="font-size:14px;line-height:1.7;color:var(--ink);">US domestic movers are a frictionless audience — no visa complexity, no currency risk, no international school anxiety. They need the <strong style="font-weight:500;">lifestyle case</strong> made clearly and someone they trust to handle logistics. Your San Francisco background is a powerful credibility signal for West Coast movers specifically. This pillar also avoids the obstacles international clients face and opens up a significantly larger addressable market.</div>
     </div>
-    <div class="grid" id="usDomesticGrid"></div>
+    <div class="grid" id="usDomesticGrid"><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 31</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"I moved from San Francisco to Boca and here's what nobody tells you"</div>
+      <div class="card-caption">Personal story, cost of living delta, weather, lifestyle upgrade. Highest-potential domestic reel. Film walking through a Boca neighbourhood.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(31)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(31,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(31,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(31,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(31,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 32</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"What $800k buys you in Boca vs what it buys you in New Jersey"</div>
+      <div class="card-caption">Walk-and-talk neighbourhood tour. Visual, shareable, stops the scroll. Real price comparison.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(32)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(32,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(32,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(32,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(32,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 33</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Why New Yorkers are choosing Boca over Miami"</div>
+      <div class="card-caption">Positioning piece. Less traffic, better schools, quieter money. Speaks directly to a huge migrant pool.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(33)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(33,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(33,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(33,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(33,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 34</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"The 3 mistakes people make when moving from California to Florida"</div>
+      <div class="card-caption">Problem/solution format. Draws on your SF experience. Instant credibility with West Coast movers.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(34)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(34,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(34,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(34,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(34,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 35</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">California vs Florida: the honest comparison</div>
+      <div class="card-caption">Taxes, cost of living, weather, lifestyle, schools. Side-by-side. Highly shareable and saveable.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(35)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(35,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(35,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(35,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(35,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 36</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">So you're thinking about leaving New York — here's what SE Florida actually looks like</div>
+      <div class="card-caption">Neighbourhood breakdown, price points, commute reality. Practical and reassuring. NYC is your biggest domestic feeder market.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(36)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(36,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(36,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(36,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(36,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 37</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">The real cost of living in Boca Raton in 2026</div>
+      <div class="card-caption">Groceries, housing, schools, golf, dining. Breaks the "Florida is cheap" myth while showing the value vs NYC/SF/Chicago.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(37)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(37,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(37,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(37,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(37,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 38</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"Done with the New York winters? Here's what the move actually looks like"</div>
+      <div class="card-caption">Walk through the relocation process from a domestic perspective. No visa stress, no currency risk. Just the move.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(38)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(38,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(38,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(38,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(38,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Carousel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 39</span>
+        <span class="card-format">Carousel</span>
+      </div>
+      <div class="card-hook">No visa. No currency risk. No international school anxiety. Just the move.</div>
+      <div class="card-caption">Direct comparison: domestic relocation vs international. Removes all friction. Speaks to the hesitant domestic audience.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(39)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(39,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(39,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(39,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(39,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><div class="card" data-format="Reel" data-new="true">
+    <div class="card-accent" style="background:#dc2626"></div>
+    <span class="new-flag">🇺🇸 New</span>
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-day">Day 40</span>
+        <span class="card-format">Reel</span>
+      </div>
+      <div class="card-hook">"I left San Francisco. I'd never go back."</div>
+      <div class="card-caption">Confident, personal close-of-series reel. SF → Boca full story condensed. Hard CTA: DM if you're thinking about it.</div>
+      <div class="card-footer">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <span class="pillar-tag" style="background:#fee2e2;color:#991b1b">US Domestic</span>
+            <button class="script-btn" onclick="requestScript(40)">📋 Get script</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="status-row">
+              <button class="status-btn " onclick="setStatus(40,&#39;planned&#39;,this)">Planned</button>
+              <button class="status-btn " onclick="setStatus(40,&#39;filmed&#39;,this)">Filmed</button>
+              <button class="status-btn " onclick="setStatus(40,&#39;posted&#39;,this)">Posted</button>
+            </div>
+            <input class="views-input" type="number" placeholder="Views" value="" onchange="setViews(40,this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
   </div>
 </div>
 
 <!-- DM TEMPLATES TAB -->
 <div class="tab-pane" id="tab-templates">
   <div class="main">
-    <div style="display:grid;gap:12px;" id="templatesContainer"></div>
+    <div style="display:grid;gap:12px;" id="templatesContainer"><div style="background: var(--card); border: 0.5px solid var(--border-light); border-radius: 10px; overflow: hidden;">
+      <div style="height:3px;background:#7c3aed"></div>
+      <div style="padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">Version 1</span>
+          <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:#ede9fe;color:#7c3aed;font-weight:500;">General new follower (unknown origin)</span>
+        </div>
+        <pre style="font-size:13px;font-family:&#39;DM Sans&#39;,sans-serif;line-height:1.7;color:var(--ink);white-space:pre-wrap;background:var(--bg);padding:1rem;border-radius:8px;border:0.5px solid var(--border-light);">Hey [name] — really appreciate the follow! 👋
+
+I'm Adam, British-born and Boca-based. I run Jacobs Relocation — we help people make the move to SE Florida the right way. Whether you're coming from the UK, Canada or anywhere in the US, we handle the whole picture — the right neighbourhood, schools, lifestyle, all of it.
+
+If Florida's ever on your radar, feel free to reach out. Always happy to have a proper conversation. 🌴</pre>
+        <button onclick="copyTemplate(this, `Hey [name] — really appreciate the follow! 👋
+
+I&#39;m Adam, British-born and Boca-based. I run Jacobs Relocation — we help people make the move to SE Florida the right way. Whether you&#39;re coming from the UK, Canada or anywhere in the US, we handle the whole picture — the right neighbourhood, schools, lifestyle, all of it.
+
+If Florida&#39;s ever on your radar, feel free to reach out. Always happy to have a proper conversation. 🌴`)" style="margin-top:10px;font-size:12px;color:#7c3aed;background:#ede9fe;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:&#39;DM Sans&#39;,sans-serif;font-weight:500;">Copy to clipboard</button>
+      </div>
+    </div><div style="background: var(--card); border: 0.5px solid var(--border-light); border-radius: 10px; overflow: hidden;">
+      <div style="height:3px;background:#dc2626"></div>
+      <div style="padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">Version 2</span>
+          <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:#fee2e2;color:#dc2626;font-weight:500;">US domestic mover (Northeast, Midwest, West Coast profile)</span>
+        </div>
+        <pre style="font-size:13px;font-family:&#39;DM Sans&#39;,sans-serif;line-height:1.7;color:var(--ink);white-space:pre-wrap;background:var(--bg);padding:1rem;border-radius:8px;border:0.5px solid var(--border-light);">Hey [name] — thanks for following, great to have you here! 👋
+
+Quick one — are you thinking about making the move to Florida, or just enjoying the content for now? Either's completely fine!
+
+I'm Adam — I made the move myself from San Francisco and learned every mistake the hard way. That's honestly what pushed me to start Jacobs Relocation. A lot of our clients are coming from New York, New Jersey, Illinois and California — people who are done with the cost of living and want something better. If that sounds familiar, I'm easy to reach. 😊</pre>
+        <button onclick="copyTemplate(this, `Hey [name] — thanks for following, great to have you here! 👋
+
+Quick one — are you thinking about making the move to Florida, or just enjoying the content for now? Either&#39;s completely fine!
+
+I&#39;m Adam — I made the move myself from San Francisco and learned every mistake the hard way. That&#39;s honestly what pushed me to start Jacobs Relocation. A lot of our clients are coming from New York, New Jersey, Illinois and California — people who are done with the cost of living and want something better. If that sounds familiar, I&#39;m easy to reach. 😊`)" style="margin-top:10px;font-size:12px;color:#dc2626;background:#fee2e2;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:&#39;DM Sans&#39;,sans-serif;font-weight:500;">Copy to clipboard</button>
+      </div>
+    </div><div style="background: var(--card); border: 0.5px solid var(--border-light); border-radius: 10px; overflow: hidden;">
+      <div style="height:3px;background:#2563eb"></div>
+      <div style="padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">Version 3</span>
+          <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:#dbeafe;color:#2563eb;font-weight:500;">UK or Canada profile</span>
+        </div>
+        <pre style="font-size:13px;font-family:&#39;DM Sans&#39;,sans-serif;line-height:1.7;color:var(--ink);white-space:pre-wrap;background:var(--bg);padding:1rem;border-radius:8px;border:0.5px solid var(--border-light);">Hey [name] — appreciate the follow! 👋
+
+I'm Adam, originally from London, now based in Boca Raton. I run Jacobs Relocation — we help British and Canadian families make the move to SE Florida the right way. Not just finding a home, but the whole transition — visas, schools, neighbourhoods, the lot.
+
+If Florida's on your radar, feel free to drop me a message. Always up for a proper conversation. 🌴</pre>
+        <button onclick="copyTemplate(this, `Hey [name] — appreciate the follow! 👋
+
+I&#39;m Adam, originally from London, now based in Boca Raton. I run Jacobs Relocation — we help British and Canadian families make the move to SE Florida the right way. Not just finding a home, but the whole transition — visas, schools, neighbourhoods, the lot.
+
+If Florida&#39;s on your radar, feel free to drop me a message. Always up for a proper conversation. 🌴`)" style="margin-top:10px;font-size:12px;color:#2563eb;background:#dbeafe;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:&#39;DM Sans&#39;,sans-serif;font-weight:500;">Copy to clipboard</button>
+      </div>
+    </div><div style="background: var(--card); border: 0.5px solid var(--border-light); border-radius: 10px; overflow: hidden;">
+      <div style="height:3px;background:#059669"></div>
+      <div style="padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">Version 4</span>
+          <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:#d1fae5;color:#059669;font-weight:500;">Local Boca / SE Florida based (referral partner)</span>
+        </div>
+        <pre style="font-size:13px;font-family:&#39;DM Sans&#39;,sans-serif;line-height:1.7;color:var(--ink);white-space:pre-wrap;background:var(--bg);padding:1rem;border-radius:8px;border:0.5px solid var(--border-light);">Hey [name] — appreciate you following along! 👋
+
+I'm Adam at Jacobs Relocation — we specialise in helping people relocate to SE Florida from the UK, Canada and across the US. Not just the property search, the whole move.
+
+Always good to connect with people in the Boca community. If you ever come across someone thinking about making the move down here, I'd love an introduction. 😊</pre>
+        <button onclick="copyTemplate(this, `Hey [name] — appreciate you following along! 👋
+
+I&#39;m Adam at Jacobs Relocation — we specialise in helping people relocate to SE Florida from the UK, Canada and across the US. Not just the property search, the whole move.
+
+Always good to connect with people in the Boca community. If you ever come across someone thinking about making the move down here, I&#39;d love an introduction. 😊`)" style="margin-top:10px;font-size:12px;color:#059669;background:#d1fae5;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:&#39;DM Sans&#39;,sans-serif;font-weight:500;">Copy to clipboard</button>
+      </div>
+    </div></div>
   </div>
 </div>
 
@@ -623,7 +1865,7 @@ function makeCard(p) {
         <div style="display:flex;flex-direction:column;gap:6px;width:100%">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
             <span class="pillar-tag" style="background:${pillar.bg};color:${pillar.text}">${p.pillar}</span>
-            <button class="script-btn" onclick="requestScript(${p.day})">Get script ↗</button>
+            <button class="script-btn" onclick="requestScript(${p.day})">📋 Get script</button>
           </div>
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <div class="status-row">
@@ -753,7 +1995,44 @@ function updateAnalytics() {
 
 function requestScript(day) {
   const p = posts.find(x => x.day === day);
-  if (p) sendPrompt(`Write me a full script for Day ${day}: "${p.hook}" — ${p.format}, pillar: ${p.pillar}`);
+  if (!p) return;
+
+  const prompt = `Write me a full content script for my Instagram @jacobsrelocation.
+
+POST DETAILS:
+- Day: ${day}
+- Format: ${p.format}
+- Pillar: ${p.pillar}
+- Hook / title: "${p.hook}"
+- Caption notes: ${p.caption}
+
+MY VOICE & CONTEXT:
+- I'm Adam Jacobs — British-born, moved London → San Francisco → Boca Raton
+- I run Jacobs Relocation, a concierge relocation consultancy for HNW families
+- Target audience: UK, Canadian, and US domestic movers (NY/NJ/IL/CA) relocating to SE Florida
+- Tone: British understatement, direct, warm, no salesy hype, specific places and numbers
+- My tagline: "I've lived the move. Now I guide yours."
+
+PLEASE WRITE:
+1. Full spoken script (if Reel — word for word what I say to camera, with stage directions for walk-and-talk)
+2. Instagram caption (with hook line, body, CTA, and 5 relevant hashtags)
+3. Any on-screen text overlays or captions to add in editing
+
+Keep it natural and conversational — this should sound like me talking, not a corporate brand.`;
+
+  navigator.clipboard.writeText(prompt).then(() => {
+    // Show feedback on the button
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#10b981';
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.style.color = '';
+    }, 2500);
+    // Open Claude in new tab
+    setTimeout(() => window.open('https://claude.ai/new', '_blank'), 300);
+  });
 }
 
 function copyTemplate(btn, text) {
@@ -764,7 +2043,7 @@ function copyTemplate(btn, text) {
 }
 
 function sendPrompt(text) {
-  if (window.sendPrompt) window.sendPrompt(text);
+  // legacy stub — no longer used
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
@@ -774,5 +2053,6 @@ renderUSDomestic();
 renderTemplates();
 renderAnalytics();
 </script>
-</body>
-</html>
+
+
+</body></html>
