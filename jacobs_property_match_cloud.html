@@ -14,22 +14,11 @@ html{font-size:14px}body{font-family:'DM Sans',sans-serif;background:var(--ink);
 .brand-mark{width:36px;height:36px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink)}
 .brand-text .name{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#fff;display:block;line-height:1}
 .brand-text .sub{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.14em;margin-top:3px;display:block}
-.main{max-width:1200px;margin:0 auto;padding:1.5rem 2rem}
-.layout{display:grid;grid-template-columns:420px 1fr;gap:1.5rem;align-items:start}
-@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.main{max-width:1300px;margin:0 auto;padding:1.5rem 2rem}
 .panel{background:var(--card);border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-bottom:1rem}
-.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .panel-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--gold)}
 .panel-body{padding:1.25rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.form-row.single{grid-template-columns:1fr}
-.form-row.three{grid-template-columns:1fr 1fr 1fr}
-.field-block label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;font-weight:600}
-.input,.select,.textarea{width:100%;background:var(--ink2);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--cream);outline:none;transition:border-color .15s}
-.input:focus,.select:focus,.textarea:focus{border-color:var(--gold)}
-.input::placeholder{color:var(--muted)}
-.textarea{resize:vertical;min-height:80px}
-.select{appearance:none;cursor:pointer}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .12s}
 .btn-primary{background:var(--gold);color:var(--ink);font-weight:600}
 .btn-primary:hover{background:var(--gold2)}
@@ -42,43 +31,83 @@ html{font-size:14px}body{font-family:'DM Sans',sans-serif;background:var(--ink);
 .btn-whatsapp:hover{background:rgba(37,211,102,.22)}
 .btn-sms{background:rgba(59,130,246,.12);color:#60a5fa;border-color:rgba(59,130,246,.2)}
 .btn-sms:hover{background:rgba(59,130,246,.22)}
-.listings-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.listing-chip{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px}
-.lc-addr{font-size:13px;font-weight:500;color:#fff;flex:1}
-.lc-price{font-family:'DM Mono',monospace;font-size:12px;color:var(--gold)}
-.lc-meta{font-size:11px;color:var(--muted)}
-.lc-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 2px}
-.lc-remove:hover{color:var(--danger)}
-.match-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
+
+/* WORKFLOW STEPS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem}
+.step{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1rem;position:relative}
+.step-num{position:absolute;top:-10px;left:1rem;background:var(--gold);color:var(--ink);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.step-title{font-size:12px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;margin-bottom:4px}
+.step-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* PASTE AREA */
+.paste-area{width:100%;background:var(--ink2);border:1px solid var(--border2);border-radius:8px;padding:1rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:11px;line-height:1.55;outline:none;resize:vertical;min-height:140px;margin-bottom:.75rem;transition:border-color .15s}
+.paste-area:focus{border-color:var(--gold)}
+.paste-area::placeholder{color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px}
+.error-msg{display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:10px 14px;font-size:12px;color:#f87171;margin-bottom:.75rem}
+.error-msg.show{display:block}
+
+/* CLIENT GRID */
+.clients-overview{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:1rem}
+.client-summary{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:.75rem;font-size:12px}
+.cs-name{font-weight:600;color:#fff;margin-bottom:3px}
+.cs-detail{color:var(--muted);font-size:11px;line-height:1.4}
+
+/* LISTING CARDS */
+.listings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:1.5rem}
+.listing-summary-card{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:1rem;cursor:pointer;transition:all .15s}
+.listing-summary-card:hover{border-color:var(--border);transform:translateY(-1px)}
+.listing-summary-card.selected{border-color:var(--gold);background:rgba(201,168,76,.05)}
+.lsc-addr{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.lsc-price{font-family:'DM Mono',monospace;font-size:15px;color:var(--gold);font-weight:600}
+.lsc-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.lsc-badge{font-size:9px;padding:2px 7px;border-radius:8px;background:rgba(16,185,129,.12);color:#34d399;display:inline-block;margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+/* MATCH RESULTS */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
+.section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.filter-bar{display:flex;gap:5px;flex-wrap:wrap}
+.fbtn{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
+.fbtn:hover{color:var(--cream)}
+.fbtn.on{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+
+.match-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-bottom:10px}
 .match-card:hover{border-color:var(--border)}
 .match-header{padding:1rem 1.25rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border2)}
 .match-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;flex-shrink:0}
-.match-name{font-size:15px;font-weight:600;color:#fff}
+.match-name{font-size:14px;font-weight:600;color:#fff}
 .match-meta{font-size:11px;color:var(--muted);margin-top:2px}
-.score-badge{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;padding:4px 12px;border-radius:8px;margin-left:auto}
+.score-badge{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;padding:4px 12px;border-radius:8px;margin-left:auto;flex-shrink:0}
 .score-excellent{background:rgba(16,185,129,.15);color:#34d399}
 .score-good{background:rgba(201,168,76,.15);color:var(--gold)}
 .score-fair{background:rgba(245,158,11,.15);color:#fbbf24}
 .score-poor{background:rgba(107,114,128,.15);color:#9ca3af}
-.match-reasons{padding:.75rem 1.25rem;display:flex;flex-wrap:wrap;gap:5px;border-bottom:1px solid var(--border2)}
+.match-reasons{padding:.6rem 1.25rem;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--border2)}
 .reason-pill{font-size:10px;padding:3px 9px;border-radius:10px;font-weight:500}
 .r-pass{background:rgba(16,185,129,.12);color:#34d399}
 .r-warn{background:rgba(245,158,11,.12);color:#fbbf24}
 .r-fail{background:rgba(239,68,68,.12);color:#f87171}
 .match-actions{padding:.75rem 1.25rem;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .match-listing-label{font-size:11px;color:var(--muted);margin-right:4px}
-.filter-bar{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
-.fbtn{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
-.fbtn:hover{color:var(--cream)}
-.fbtn.on{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
-.listing-tabs{display:flex;gap:4px;margin-bottom:1rem;background:var(--card2);border-radius:8px;padding:3px}
-.ltab{flex:1;font-size:11px;font-weight:500;padding:6px 10px;border-radius:5px;border:none;background:transparent;color:var(--muted);cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif}
+
+/* LISTING TABS */
+.listing-tabs-wrap{overflow-x:auto;margin-bottom:1rem}
+.listing-tabs{display:flex;gap:6px;min-width:max-content}
+.ltab{font-size:11px;font-weight:500;padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .ltab:hover{color:var(--cream)}
-.ltab.on{background:var(--gold);color:var(--ink);font-weight:600}
+.ltab.on{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+
+/* STAT PILLS */
+.stat-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.stat-pill{background:var(--card2);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:12px;display:flex;align-items:center;gap:6px}
+.stat-pill strong{color:var(--gold)}
+
+/* EMPTY */
 .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted)}
-.empty-icon{font-size:36px;opacity:.4;margin-bottom:10px}
+.empty-icon{font-size:40px;opacity:.4;margin-bottom:12px}
 .empty-text{font-size:13px;line-height:1.6}
-.section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 10px}
+
+/* MSG MODAL */
 .msg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
 .msg-overlay.open{opacity:1;pointer-events:all}
 .msg-modal{background:var(--card);border:1px solid var(--border);border-radius:12px;width:100%;max-width:640px;max-height:85vh;overflow-y:auto}
@@ -89,10 +118,29 @@ html{font-size:14px}body{font-family:'DM Sans',sans-serif;background:var(--ink);
 .msg-body{padding:1.25rem}
 .msg-preview{background:var(--ink2);border:1px solid var(--border2);border-radius:8px;padding:1rem;font-size:13px;line-height:1.7;color:var(--cream);white-space:pre-wrap;min-height:180px;margin-bottom:10px;font-family:'Georgia',serif}
 .msg-footer{padding:1rem 1.25rem;border-top:1px solid var(--border2);display:flex;gap:8px;justify-content:flex-end}
+
+/* MANUAL ADD */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.field-block label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;font-weight:600}
+.input,.select{width:100%;background:var(--ink2);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--cream);outline:none;transition:border-color .15s}
+.input:focus,.select:focus{border-color:var(--gold)}
+.input::placeholder{color:var(--muted)}
+.select{appearance:none;cursor:pointer}
+.field-block.span-full{grid-column:1/-1}
+.textarea{width:100%;background:var(--ink2);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--cream);outline:none;resize:vertical;min-height:70px}
+.textarea:focus{border-color:var(--gold)}
+
+/* TABS */
+.view-tabs{display:flex;gap:4px;background:var(--card2);border-radius:8px;padding:3px;margin-bottom:1.25rem;width:fit-content}
+.vtab{font-size:12px;font-weight:500;padding:7px 16px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
+.vtab:hover{color:var(--cream)}
+.vtab.on{background:var(--gold);color:var(--ink);font-weight:600}
+
 @media(max-width:768px){.header,.main{padding-left:1rem;padding-right:1rem}}
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="brand">
     <div class="brand-mark">J</div>
@@ -101,154 +149,130 @@ html{font-size:14px}body{font-family:'DM Sans',sans-serif;background:var(--ink);
       <span class="sub">Listing Matcher</span>
     </div>
   </div>
-  <div style="font-size:11px;color:var(--muted)" id="clientCount"></div>
+  <div style="font-size:11px;color:var(--muted)" id="headerMeta"></div>
 </div>
 
 <div class="main">
-  <div class="layout">
 
-    <!-- LEFT: LISTING INPUT -->
-    <div>
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title">Add MLS listing</span></div>
-        <div class="panel-body">
-          <div class="form-row single">
-            <div class="field-block"><label>Address</label>
-              <input class="input" id="l-address" placeholder="e.g. 17117 Teton River Rd, Boca Raton, FL 33496">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field-block"><label>Asking price</label>
-              <input class="input" id="l-price" placeholder="e.g. $1,850,000">
-            </div>
-            <div class="field-block"><label>Community</label>
-              <input class="input" id="l-community" placeholder="e.g. Lotus Edge">
-            </div>
-          </div>
-          <div class="form-row three">
-            <div class="field-block"><label>Beds</label>
-              <select class="select" id="l-beds">
-                <option value="">-</option>
-                <option value="1">1</option><option value="2">2</option>
-                <option value="3">3</option><option value="4">4</option>
-                <option value="5">5</option><option value="6">6</option><option value="7">7+</option>
-              </select>
-            </div>
-            <div class="field-block"><label>Baths</label>
-              <select class="select" id="l-baths">
-                <option value="">-</option>
-                <option value="1">1</option><option value="1.5">1.5</option>
-                <option value="2">2</option><option value="2.5">2.5</option>
-                <option value="3">3</option><option value="3.5">3.5</option>
-                <option value="4">4</option><option value="4.5">4.5</option><option value="5">5+</option>
-              </select>
-            </div>
-            <div class="field-block"><label>Garage</label>
-              <select class="select" id="l-garage">
-                <option value="">-</option>
-                <option value="1">1</option><option value="2">2</option>
-                <option value="3">3</option><option value="4">4+</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field-block"><label>Sq ft</label>
-              <input class="input" id="l-sqft" placeholder="e.g. 3,500">
-            </div>
-            <div class="field-block"><label>HOA / month</label>
-              <input class="input" id="l-hoa" placeholder="e.g. $650">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field-block"><label>Property type</label>
-              <select class="select" id="l-type">
-                <option value="">Select...</option>
-                <option value="Single Family">Single Family</option>
-                <option value="Condo">Condo</option>
-                <option value="Townhouse">Townhouse</option>
-                <option value="Villa">Villa</option>
-                <option value="Multi-Family">Multi-Family</option>
-              </select>
-            </div>
-            <div class="field-block"><label>Pool</label>
-              <select class="select" id="l-pool">
-                <option value="">No pool</option>
-                <option value="yes">Pool included</option>
-                <option value="optional">Pool optional/can add</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field-block"><label>Style</label>
-              <select class="select" id="l-style">
-                <option value="">Standard</option>
-                <option value="waterfront">Waterfront</option>
-                <option value="golf">Golf course</option>
-                <option value="gated">Gated</option>
-                <option value="corner">Corner lot</option>
-                <option value="cul-de-sac">Cul-de-sac</option>
-              </select>
-            </div>
-            <div class="field-block"><label>Furnished</label>
-              <select class="select" id="l-furnished">
-                <option value="unfurnished">Unfurnished</option>
-                <option value="furnished">Furnished</option>
-                <option value="negotiable">Negotiable</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="field-block"><label>MLS # / URL</label>
-              <input class="input" id="l-mls" placeholder="MLS number or listing URL">
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="field-block"><label>Your notes on this listing</label>
-              <textarea class="textarea" id="l-notes" placeholder="Key selling points, condition, why it's worth seeing..."></textarea>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:4px;">
-            <button class="btn btn-primary" style="flex:1;" onclick="addListing()">+ Add to batch</button>
-            <button class="btn btn-secondary" onclick="clearListingForm()">Clear</button>
-          </div>
+  <!-- WORKFLOW STEPS -->
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Generate search</div>
+      <div class="step-desc">Click below — a tailored search prompt is built from your active client preferences and copied to clipboard.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Run in Claude</div>
+      <div class="step-desc">Paste the prompt into Claude chat. Claude searches Zillow, Realtor.com and Redfin for today's matching listings.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Paste results back</div>
+      <div class="step-desc">Copy Claude's JSON response and paste it below. Every listing auto-matches against every client instantly.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-title">Send to clients</div>
+      <div class="step-desc">One-click Gmail drafts, WhatsApp, and SMS for each matched client — pre-written in your voice.</div>
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Daily listing search</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="copyBtn" onclick="copySearchPrompt()">📋 Copy today's search prompt</button>
+        <button class="btn btn-secondary" onclick="window.open('https://claude.ai/new','_blank')">↗ Open Claude</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div id="clientsOverviewWrap"></div>
+      <div style="margin-bottom:.5rem;">
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Paste Claude's JSON response here:</label>
+        <textarea class="paste-area" id="pasteArea" placeholder="Paste Claude's listing JSON here, then click Run matching..."></textarea>
+      </div>
+      <div class="error-msg" id="errorMsg"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="runFromPaste()">🎯 Run matching</button>
+        <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+        <button class="btn btn-secondary btn-sm" onclick="showManualAdd()" style="margin-left:auto;">+ Add listing manually</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANUAL ADD (hidden by default) -->
+  <div class="panel" id="manualAddPanel" style="display:none;">
+    <div class="panel-header">
+      <span class="panel-title">Add listing manually</span>
+      <button class="btn btn-sm btn-secondary" onclick="hideManualAdd()">Close</button>
+    </div>
+    <div class="panel-body">
+      <div class="form-grid">
+        <div class="field-block span-full"><label>Address</label><input class="input" id="m-address" placeholder="e.g. 100 SE Mizner Blvd, Boca Raton FL"></div>
+        <div class="field-block"><label>Price</label><input class="input" id="m-price" placeholder="e.g. $1,850,000"></div>
+        <div class="field-block"><label>Community</label><input class="input" id="m-community" placeholder="e.g. Lotus Edge"></div>
+        <div class="field-block"><label>Beds</label>
+          <select class="select" id="m-beds"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
+        </div>
+        <div class="field-block"><label>Baths</label>
+          <select class="select" id="m-baths"><option value="">-</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>3.5</option><option>4</option><option>4.5</option><option>5</option></select>
+        </div>
+        <div class="field-block"><label>Sq ft</label><input class="input" id="m-sqft" placeholder="e.g. 3,500"></div>
+        <div class="field-block"><label>HOA/mo</label><input class="input" id="m-hoa" placeholder="e.g. $650"></div>
+        <div class="field-block"><label>Pool</label>
+          <select class="select" id="m-pool"><option value="">No pool</option><option value="yes">Pool</option><option value="optional">Optional</option></select>
+        </div>
+        <div class="field-block"><label>Garage</label>
+          <select class="select" id="m-garage"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+        </div>
+        <div class="field-block"><label>Type</label>
+          <select class="select" id="m-type"><option value="">Any</option><option>Single Family</option><option>Condo</option><option>Townhouse</option><option>Villa</option></select>
+        </div>
+        <div class="field-block"><label>Style</label>
+          <select class="select" id="m-style"><option value="">Standard</option><option value="waterfront">Waterfront</option><option value="golf">Golf course</option><option value="gated">Gated</option></select>
+        </div>
+        <div class="field-block"><label>Furnished</label>
+          <select class="select" id="m-furnished"><option value="unfurnished">Unfurnished</option><option value="furnished">Furnished</option><option value="negotiable">Negotiable</option></select>
+        </div>
+        <div class="field-block"><label>MLS #</label><input class="input" id="m-mls" placeholder="MLS number"></div>
+        <div class="field-block span-full"><label>Your notes</label>
+          <textarea class="textarea" id="m-notes" placeholder="Key selling points, why it's worth seeing..."></textarea>
         </div>
       </div>
+      <div style="margin-top:10px;display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="addManualListing()">Add listing + run matching</button>
+        <button class="btn btn-secondary" onclick="hideManualAdd()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-      <div class="panel" id="batchPanel" style="display:none;">
-        <div class="panel-header">
-          <span class="panel-title">Batch — <span id="batchCount">0</span> listings</span>
-          <button class="btn btn-sm btn-secondary" onclick="clearBatch()">Clear all</button>
-        </div>
-        <div class="panel-body">
-          <div class="listings-list" id="listingsList"></div>
-          <button class="btn btn-primary" style="width:100%;" onclick="runMatching()">🎯 Match against all clients</button>
-        </div>
+  <!-- RESULTS -->
+  <div id="resultsSection" style="display:none;">
+
+    <!-- Listing tabs -->
+    <div class="listing-tabs-wrap" id="listingTabsWrap"></div>
+
+    <!-- Stats bar -->
+    <div class="stat-pills" id="statPills"></div>
+
+    <!-- Filter + results -->
+    <div class="results-header">
+      <div class="section-label" id="resultsLabel">Matches</div>
+      <div class="filter-bar">
+        <button class="fbtn on" onclick="filterResults('all',this)">All clients</button>
+        <button class="fbtn" onclick="filterResults('excellent',this)">🟢 90%+</button>
+        <button class="fbtn" onclick="filterResults('good',this)">🟡 70%+</button>
+        <button class="fbtn" onclick="filterResults('hot',this)">🔴 Hot only</button>
+        <button class="fbtn" onclick="filterResults('active',this)">⭐ Active+</button>
       </div>
     </div>
 
-    <!-- RIGHT: RESULTS -->
-    <div>
-      <div id="resultsEmpty" class="empty-state">
-        <div class="empty-icon">🎯</div>
-        <div class="empty-text">Add a listing and run matching.<br><span style="font-size:11px;opacity:.6">Each listing is scored against every active client's saved preferences. Matched clients get Gmail + WhatsApp drafts ready to send.</span></div>
-      </div>
-
-      <div id="resultsWrap" style="display:none;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
-          <div class="section-label" id="resultsTitle" style="margin:0;">Match results</div>
-          <div class="filter-bar" style="margin:0;">
-            <button class="fbtn on" onclick="filterResults('all',this)">All</button>
-            <button class="fbtn" onclick="filterResults('excellent',this)">🟢 90%+</button>
-            <button class="fbtn" onclick="filterResults('good',this)">🟡 70%+</button>
-            <button class="fbtn" onclick="filterResults('hot',this)">🔴 Hot clients</button>
-          </div>
-        </div>
-        <div id="listingTabsWrap"></div>
-        <div id="matchResults"></div>
-      </div>
-    </div>
+    <div id="matchResults"></div>
 
   </div>
+
 </div>
 
 <!-- MESSAGE MODAL -->
@@ -263,129 +287,269 @@ html{font-size:14px}body{font-family:'DM Sans',sans-serif;background:var(--ink);
     </div>
     <div class="msg-footer">
       <button class="btn btn-secondary" onclick="closeMsg()">Cancel</button>
-      <button class="btn btn-primary" id="msgActionBtn" onclick="copyMsgToClipboard()">Copy to clipboard</button>
+      <button class="btn btn-primary" onclick="copyMsgToClipboard()">Copy to clipboard</button>
     </div>
   </div>
 </div>
 
 <script>
+// ── DATA ───────────────────────────────────────────────────────────────────
+
 function loadClients(){try{return JSON.parse(localStorage.getItem('jr_clients')||'[]')}catch(e){return[]}}
-let clients=loadClients();
-let listings=[];
-let allResults=[];
-let currentResultFilter='all';
-let currentListingTab=0;
+let clients = loadClients();
+let currentListings = [];
+let allResults = [];
+let currentListingIdx = 0;
+let currentFilter = 'all';
 
 const PALETTE=['#c9a84c','#3b82f6','#8b5cf6','#10b981','#ef4444','#f59e0b','#06b6d4','#ec4899'];
 function avatarColor(n){let h=0;for(let c of n)h=(h*31+c.charCodeAt(0))%PALETTE.length;return PALETTE[h]}
 function initials(n){return n.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase()}
 const ORIGIN_FLAGS={uk:'🇬🇧',canada:'🇨🇦',us:'🇺🇸',australia:'🇦🇺',other:'🌍'};
-const STATUS_LABELS={hot:'🔴 Hot',active:'⭐ Active',warm:'🔵 Warm',visa:'🟣 Visa pending',cold:'⚪ Cold'};
-
-function updateHeader(){
-  const active=clients.filter(c=>!['closed','cold'].includes(c.status));
-  document.getElementById('clientCount').textContent=active.length+' active clients loaded';
-}
-updateHeader();
+const STATUS_LABELS={hot:'🔴 Hot',active:'⭐ Active',warm:'🔵 Warm',visa:'🟣 Visa',cold:'⚪ Cold'};
 
 function parseMoney(s){
   if(!s)return 0;
-  const n=parseFloat(s.toString().replace(/[$,\s]/g,''));
+  const str=s.toString().replace(/[$,\s]/g,'');
+  const n=parseFloat(str);
   if(/m/i.test(s))return n*1000000;
   if(/k/i.test(s))return n*1000;
   return n||0;
 }
 
-function getListingForm(){
-  return{
-    id:Date.now(),
-    address:document.getElementById('l-address').value.trim(),
-    price:document.getElementById('l-price').value.trim(),
-    priceNum:parseMoney(document.getElementById('l-price').value),
-    community:document.getElementById('l-community').value.trim(),
-    beds:parseInt(document.getElementById('l-beds').value)||0,
-    baths:parseFloat(document.getElementById('l-baths').value)||0,
-    garage:parseInt(document.getElementById('l-garage').value)||0,
-    sqft:parseInt(document.getElementById('l-sqft').value.replace(/[,]/g,''))||0,
-    hoa:parseMoney(document.getElementById('l-hoa').value),
-    type:document.getElementById('l-type').value,
-    pool:document.getElementById('l-pool').value,
-    style:document.getElementById('l-style').value,
-    furnished:document.getElementById('l-furnished').value,
-    mls:document.getElementById('l-mls').value.trim(),
-    notes:document.getElementById('l-notes').value.trim()
+// ── INIT ────────────────────────────────────────────────────────────────────
+
+function init(){
+  const active = clients.filter(c=>!['closed','cold'].includes(c.status));
+  document.getElementById('headerMeta').textContent = active.length + ' active clients';
+  renderClientsOverview(active);
+}
+
+function renderClientsOverview(active){
+  const wrap = document.getElementById('clientsOverviewWrap');
+  if(!active.length){
+    wrap.innerHTML = '<div style="font-size:12px;color:var(--muted);margin-bottom:1rem;padding:10px;background:rgba(239,68,68,.08);border-radius:6px;border:1px solid rgba(239,68,68,.2);color:#f87171;">No active clients found. Open the CRM first so this tool can read your client data.</div>';
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Searching for listings that match these <strong style="color:var(--cream)">${active.length} active clients</strong>:</div>
+    <div class="clients-overview">${active.map(c=>`
+      <div class="client-summary">
+        <div class="cs-name">${c.name}</div>
+        <div class="cs-detail">
+          ${c.budget||c.budgetMin?'Budget: '+(c.budgetMin?c.budgetMin+' – ':'')+(c.budget||'TBC')+'<br>':''}
+          ${c.area?'Area: '+c.area+'<br>':''}
+          ${c.bedsMin?c.bedsMin+'+ beds · ':''}${c.pool==='required'?'Pool req. · ':''}${c.proptype&&c.proptype!='Any'?c.proptype:''}
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ── SEARCH PROMPT GENERATION ──────────────────────────────────────────────
+
+function buildSearchPrompt(){
+  const active = clients.filter(c=>!['closed','cold'].includes(c.status));
+  if(!active.length) return null;
+
+  // Aggregate ranges across all clients
+  const allBudgetsMax = active.map(c=>parseMoney(c.budget)).filter(n=>n>0);
+  const allBudgetsMin = active.map(c=>parseMoney(c.budgetMin)).filter(n=>n>0);
+  const globalMin = allBudgetsMin.length ? Math.min(...allBudgetsMin) : 500000;
+  const globalMax = allBudgetsMax.length ? Math.max(...allBudgetsMax) : 5000000;
+
+  // Communities
+  const areas = [...new Set(active.map(c=>(c.area||'').split(',')[0].trim()).filter(Boolean))];
+
+  // Pool needs
+  const poolRequired = active.filter(c=>c.pool==='required').length;
+
+  // Bed ranges
+  const allBedsMin = active.map(c=>parseInt(c.bedsMin)||0).filter(n=>n>0);
+  const minBeds = allBedsMin.length ? Math.min(...allBedsMin) : 2;
+
+  // Property types
+  const types = [...new Set(active.map(c=>c.proptype).filter(c=>c&&c!=='Any'))];
+
+  // Investors
+  const investors = active.filter(c=>c.type==='investor');
+  const renters = active.filter(c=>c.type==='rental');
+  const buyers = active.filter(c=>c.type==='buyer'||c.type==='holiday');
+
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  return `Run my daily Jacobs Relocation listing search for today (${today}).
+
+I'm Adam — a licensed REALTOR in Florida (SL3647012), running Jacobs Relocation in Boca Raton. I have ${active.length} active clients looking for properties in SE Florida. Search for today's listings that match my client pool below.
+
+SEARCH PARAMETERS (aggregated from all active clients):
+- Location: ${areas.length ? areas.join(', ') : 'Boca Raton, Delray Beach, Palm Beach County, FL'}
+- Budget range: $${(globalMin/1000).toFixed(0)}k – $${(globalMax/1000000).toFixed(1)}M
+- Min beds: ${minBeds}+
+${poolRequired > 0 ? `- ${poolRequired} client(s) require a pool — include pool flag in results` : ''}
+${types.length ? `- Property types of interest: ${types.join(', ')}` : ''}
+${investors.length ? `- ${investors.length} investor client(s) — look for high-yield rental properties, new builds, below-market` : ''}
+${renters.length ? `- ${renters.length} rental client(s) — include rental listings` : ''}
+
+MY ACTIVE CLIENTS AND THEIR CRITERIA:
+${active.map((c,i)=>`${i+1}. ${c.name} (${ORIGIN_FLAGS[c.origin]||''} ${c.status})
+   Budget: ${c.budgetMin?c.budgetMin+' – ':''}${c.budget||'TBC'} | Area: ${c.area||'Flexible'} | Beds: ${c.bedsMin||'Any'}+ | Pool: ${c.pool||'No pref'} | Type: ${c.proptype||'Any'} | ${c.dealBreakers?'Deal-breakers: '+c.dealBreakers:''}`).join('\n')}
+
+Use web_search to find properties listed FOR SALE (and for rent where relevant) TODAY on Zillow, Realtor.com, Redfin, and Compass that fit the above parameters in SE Florida / Palm Beach County.
+
+Return ONLY a valid JSON object. No markdown, no code fences, no preamble. Start with [ and end with ]:
+
+[
+  {
+    "address": "Full address",
+    "price": "$1,850,000",
+    "priceNum": 1850000,
+    "community": "Community or neighbourhood name",
+    "beds": 4,
+    "baths": 3.5,
+    "sqft": 3200,
+    "hoa": 650,
+    "pool": "yes",
+    "garage": 2,
+    "type": "Single Family",
+    "style": "gated",
+    "furnished": "unfurnished",
+    "mls": "MLS number if available",
+    "url": "Listing URL",
+    "description": "2-3 sentence description of key features and why it is noteworthy",
+    "daysOnMarket": 5,
+    "priceReduced": false
+  }
+]
+
+Rules:
+- Return 8-15 listings
+- All numeric fields (priceNum, beds, baths, sqft, hoa, garage, daysOnMarket) must be numbers, not strings
+- pool must be "yes", "no", or "optional"
+- style must be one of: "waterfront", "golf", "gated", "corner", "cul-de-sac", or ""
+- furnished must be "furnished", "unfurnished", or "negotiable"
+- priceReduced must be true or false
+- Focus on quality over quantity — listings that genuinely fit at least one client's criteria
+- Output the raw JSON array only`;
+}
+
+function copySearchPrompt(){
+  const prompt = buildSearchPrompt();
+  if(!prompt){alert('No active clients found. Open the CRM first.');return}
+  navigator.clipboard.writeText(prompt).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied — paste into Claude';
+    setTimeout(()=>{btn.classList.remove('copied');btn.textContent = '📋 Copy today\'s search prompt'},3000);
+  });
+}
+
+// ── PARSE + MATCH ──────────────────────────────────────────────────────────
+
+function runFromPaste(){
+  clearError();
+  const text = document.getElementById('pasteArea').value.trim();
+  if(!text){showError('Paste Claude\'s JSON response first.');return}
+
+  let jsonStr = text.replace(/```json|```/g,'').trim();
+  const firstBracket = jsonStr.indexOf('[');
+  const lastBracket = jsonStr.lastIndexOf(']');
+  if(firstBracket===-1||lastBracket===-1){
+    // Try object array wrapped in braces
+    const firstBrace = jsonStr.indexOf('{');
+    if(firstBrace===-1){showError('No JSON array found. Make sure Claude returned a JSON array starting with [');return}
+    jsonStr = '[' + jsonStr.substring(firstBrace) + ']';
+  } else {
+    jsonStr = jsonStr.substring(firstBracket, lastBracket+1);
+  }
+
+  let listings;
+  try{listings = JSON.parse(jsonStr)}
+  catch(e){showError('JSON parse error: '+e.message);return}
+
+  if(!Array.isArray(listings)||!listings.length){showError('Expected a JSON array of listings.');return}
+
+  currentListings = listings.map((l,i)=>({...l, id: Date.now()+i}));
+  runAllMatching();
+}
+
+function addManualListing(){
+  const l = {
+    id: Date.now(),
+    address: document.getElementById('m-address').value.trim(),
+    price: document.getElementById('m-price').value,
+    priceNum: parseMoney(document.getElementById('m-price').value),
+    community: document.getElementById('m-community').value,
+    beds: parseInt(document.getElementById('m-beds').value)||0,
+    baths: parseFloat(document.getElementById('m-baths').value)||0,
+    sqft: parseInt((document.getElementById('m-sqft').value||'').replace(/[,]/g,''))||0,
+    hoa: parseMoney(document.getElementById('m-hoa').value),
+    pool: document.getElementById('m-pool').value||'no',
+    garage: parseInt(document.getElementById('m-garage').value)||0,
+    type: document.getElementById('m-type').value,
+    style: document.getElementById('m-style').value,
+    furnished: document.getElementById('m-furnished').value,
+    mls: document.getElementById('m-mls').value,
+    description: document.getElementById('m-notes').value,
   };
+  if(!l.address){alert('Address required.');return}
+  currentListings = [l];
+  hideManualAdd();
+  runAllMatching();
 }
 
-function addListing(){
-  const l=getListingForm();
-  if(!l.address){alert('Address is required.');return}
-  listings.push(l);
-  renderBatch();
-  clearListingForm();
+function runAllMatching(){
+  const active = clients.filter(c=>!['closed','cold'].includes(c.status));
+  if(!active.length){showError('No active clients found. Open the CRM in this browser first.');return}
+
+  allResults = currentListings.map(listing=>{
+    const matches = active
+      .map(c=>scoreClient(listing,c))
+      .filter(r=>r.score>=20)
+      .sort((a,b)=>b.score-a.score);
+    return{listing,matches};
+  });
+
+  document.getElementById('resultsSection').style.display='';
+  currentListingIdx=0;
+  renderListingTabs();
+  renderResults();
+  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function clearListingForm(){
-  ['l-address','l-price','l-community','l-sqft','l-hoa','l-mls','l-notes'].forEach(id=>document.getElementById(id).value='');
-  ['l-beds','l-baths','l-garage','l-type','l-pool','l-style','l-furnished'].forEach(id=>{const el=document.getElementById(id);el.selectedIndex=0});
-}
+// ── SCORING ENGINE ─────────────────────────────────────────────────────────
 
-function removeListing(id){listings=listings.filter(l=>l.id!==id);renderBatch()}
-
-function clearBatch(){
-  listings=[];renderBatch();
-  document.getElementById('resultsEmpty').style.display='';
-  document.getElementById('resultsWrap').style.display='none';
-}
-
-function renderBatch(){
-  const panel=document.getElementById('batchPanel');
-  const list=document.getElementById('listingsList');
-  document.getElementById('batchCount').textContent=listings.length;
-  if(!listings.length){panel.style.display='none';return}
-  panel.style.display='';
-  list.innerHTML=listings.map(l=>`
-    <div class="listing-chip">
-      <div style="flex:1;">
-        <div class="lc-addr">${l.address}</div>
-        <div class="lc-meta">${[l.beds?l.beds+'bd':'',l.baths?l.baths+'ba':'',l.sqft?l.sqft.toLocaleString()+'sqft':'',l.pool==='yes'?'Pool':''].filter(Boolean).join(' · ')}</div>
-      </div>
-      <div class="lc-price">${l.price||'POA'}</div>
-      <button class="lc-remove" onclick="removeListing(${l.id})">x</button>
-    </div>`).join('');
-}
-
-function scoreListingAgainstClient(listing,client){
-  let score=0,maxScore=0;
+function scoreClient(listing, client){
+  let score=0, maxScore=0;
   const reasons=[];
 
-  // BUDGET
+  // BUDGET (30 pts)
   const budgetMax=parseMoney(client.budget);
   const budgetMin=parseMoney(client.budgetMin);
+  const priceNum = listing.priceNum || parseMoney(listing.price);
   if(budgetMax>0){
     maxScore+=30;
-    if(listing.priceNum<=budgetMax){
-      if(budgetMin>0&&listing.priceNum>=budgetMin){score+=30;reasons.push({text:'Price within budget range',cls:'r-pass'})}
-      else{score+=30;reasons.push({text:'Price within budget',cls:'r-pass'})}
+    if(priceNum<=budgetMax){
+      if(budgetMin>0&&priceNum>=budgetMin){score+=30;reasons.push({text:'In budget range',cls:'r-pass'})}
+      else{score+=30;reasons.push({text:'Within budget',cls:'r-pass'})}
     } else {
-      const over=((listing.priceNum-budgetMax)/budgetMax*100).toFixed(0);
-      if(parseInt(over)<=10){score+=15;reasons.push({text:over+'% over budget',cls:'r-warn'})}
+      const over=((priceNum-budgetMax)/budgetMax*100).toFixed(0);
+      if(parseInt(over)<=8){score+=15;reasons.push({text:over+'% over budget',cls:'r-warn'})}
       else{reasons.push({text:over+'% over budget max',cls:'r-fail'})}
     }
   }
 
-  // AREA
+  // AREA (20 pts)
   maxScore+=20;
-  const clientArea=(client.area||'').toLowerCase();
-  const listingComm=(listing.community||'').toLowerCase();
-  const listingAddr=(listing.address||'').toLowerCase();
-  if(clientArea){
-    const baseArea=clientArea.split(',')[0].trim();
-    if(listingComm.includes(baseArea)||listingAddr.includes(baseArea)||baseArea.includes(listingComm)){
-      score+=20;reasons.push({text:'In target area/community',cls:'r-pass'})
+  const ca=(client.area||'').toLowerCase();
+  const lcomm=(listing.community||'').toLowerCase();
+  const laddr=(listing.address||'').toLowerCase();
+  if(ca){
+    const base=ca.split(',')[0].trim();
+    if(lcomm.includes(base)||laddr.includes(base)||base.includes(lcomm)){
+      score+=20;reasons.push({text:'In '+( listing.community||'target area'),cls:'r-pass'})
     } else {
-      const words=clientArea.split(/[\s,]+/).filter(w=>w.length>3);
-      if(words.some(w=>listingAddr.includes(w)||listingComm.includes(w))){
+      const words=ca.split(/[\s,]+/).filter(w=>w.length>3);
+      if(words.some(w=>laddr.includes(w)||lcomm.includes(w))){
         score+=10;reasons.push({text:'Partial area match',cls:'r-warn'})
       } else {
         reasons.push({text:'Outside target area',cls:'r-fail'})
@@ -393,111 +557,126 @@ function scoreListingAgainstClient(listing,client){
     }
   }
 
-  // PROPERTY TYPE
+  // PROPERTY TYPE (10 pts)
   if(client.proptype&&client.proptype!=='Any'&&client.proptype!==''){
     maxScore+=10;
-    if(!listing.type||listing.type===client.proptype){score+=10;reasons.push({text:'Type matches: '+client.proptype,cls:'r-pass'})}
-    else{reasons.push({text:'Type mismatch (wants '+client.proptype+')',cls:'r-fail'})}
+    if(!listing.type||listing.type===client.proptype){score+=10;reasons.push({text:listing.type||'Type matches',cls:'r-pass'})}
+    else{reasons.push({text:'Type: '+listing.type+' (wants '+client.proptype+')',cls:'r-fail'})}
   }
 
-  // BEDS
+  // BEDS (10 pts)
   if(client.bedsMin){
     maxScore+=10;
-    if(listing.beds>=parseInt(client.bedsMin)){score+=10;reasons.push({text:listing.beds+'bd (min '+client.bedsMin+')',cls:'r-pass'})}
-    else{reasons.push({text:'Only '+listing.beds+'bd (min '+client.bedsMin+')',cls:'r-fail'})}
+    const lb=parseInt(listing.beds)||0;
+    const cm=parseInt(client.bedsMin)||0;
+    if(lb>=cm){score+=10;reasons.push({text:lb+'bd (min '+cm+')',cls:'r-pass'})}
+    else{reasons.push({text:'Only '+lb+'bd (min '+cm+')',cls:'r-fail'})}
   }
-  if(client.bedsMax&&listing.beds>parseInt(client.bedsMax)){
-    reasons.push({text:'Too many beds (max '+client.bedsMax+')',cls:'r-warn'});score=Math.max(0,score-5)
+  if(client.bedsMax&&listing.beds>0){
+    const bmax=parseInt(client.bedsMax)||0;
+    if(bmax>0&&parseInt(listing.beds)>bmax){
+      score=Math.max(0,score-5);
+      reasons.push({text:'Too many beds (max '+bmax+')',cls:'r-warn'})
+    }
   }
 
-  // BATHS
+  // BATHS (5 pts)
   if(client.bathsMin){
     maxScore+=5;
-    if(listing.baths>=parseFloat(client.bathsMin)){score+=5;reasons.push({text:listing.baths+'ba',cls:'r-pass'})}
-    else{reasons.push({text:'Only '+listing.baths+'ba (min '+client.bathsMin+')',cls:'r-fail'})}
+    const lb=parseFloat(listing.baths)||0;
+    const cm=parseFloat(client.bathsMin)||0;
+    if(lb>=cm){score+=5;reasons.push({text:lb+'ba',cls:'r-pass'})}
+    else{reasons.push({text:lb+'ba (min '+cm+')',cls:'r-fail'})}
   }
 
-  // POOL
+  // POOL (15 pts if required, 7 if preferred)
+  const listingPool = listing.pool||'no';
   if(client.pool==='required'){
     maxScore+=15;
-    if(listing.pool==='yes'){score+=15;reasons.push({text:'Pool included (required)',cls:'r-pass'})}
-    else if(listing.pool==='optional'){score+=7;reasons.push({text:'Pool optional/can add',cls:'r-warn'})}
-    else{reasons.push({text:'No pool — client requires pool',cls:'r-fail'})}
+    if(listingPool==='yes'){score+=15;reasons.push({text:'Pool (required)',cls:'r-pass'})}
+    else if(listingPool==='optional'){score+=7;reasons.push({text:'Pool optional',cls:'r-warn'})}
+    else{reasons.push({text:'No pool — required',cls:'r-fail'})}
   } else if(client.pool==='preferred'){
     maxScore+=7;
-    if(listing.pool==='yes'){score+=7;reasons.push({text:'Pool included (preferred)',cls:'r-pass'})}
+    if(listingPool==='yes'){score+=7;reasons.push({text:'Pool (preferred)',cls:'r-pass'})}
   }
 
-  // GARAGE
+  // GARAGE (5 pts)
   if(client.garage){
     maxScore+=5;
-    if(listing.garage>=parseInt(client.garage)){score+=5;reasons.push({text:listing.garage+'-car garage',cls:'r-pass'})}
-    else if(listing.garage>0){reasons.push({text:listing.garage+' garage (wants '+client.garage+'+)',cls:'r-warn'})}
+    const lg=parseInt(listing.garage)||0;
+    const cg=parseInt(client.garage)||0;
+    if(lg>=cg){score+=5;reasons.push({text:lg+'-car garage',cls:'r-pass'})}
+    else{reasons.push({text:lg+' garage (wants '+cg+'+)',cls:'r-warn'})}
   }
 
-  // SQFT
+  // SQFT (5 pts)
   if(client.sqftMin&&listing.sqft>0){
     maxScore+=5;
     const minSq=parseInt((client.sqftMin||'').replace(/[,]/g,''))||0;
-    if(listing.sqft>=minSq){score+=5;reasons.push({text:listing.sqft.toLocaleString()+'sqft',cls:'r-pass'})}
-    else{reasons.push({text:'Too small: '+listing.sqft.toLocaleString()+'sqft',cls:'r-fail'})}
+    const lsq=parseInt(listing.sqft)||0;
+    if(lsq>=minSq){score+=5;reasons.push({text:lsq.toLocaleString()+'sqft',cls:'r-pass'})}
+    else{reasons.push({text:'Too small: '+lsq.toLocaleString()+'sqft',cls:'r-fail'})}
   }
   if(client.sqftMax&&listing.sqft>0){
     const maxSq=parseInt((client.sqftMax||'').replace(/[,]/g,''))||0;
-    if(maxSq>0&&listing.sqft>maxSq){reasons.push({text:'Too large: '+listing.sqft.toLocaleString()+'sqft',cls:'r-warn'});score=Math.max(0,score-3)}
+    if(maxSq>0&&parseInt(listing.sqft)>maxSq){
+      score=Math.max(0,score-3);
+      reasons.push({text:'Large: '+listing.sqft+'sqft (max '+maxSq+')',cls:'r-warn'})
+    }
   }
 
-  // HOA
+  // HOA (5 pts)
   if(client.maxHOA&&listing.hoa>0){
     maxScore+=5;
     const maxHoa=parseMoney(client.maxHOA);
-    if(listing.hoa<=maxHoa){score+=5;reasons.push({text:'HOA $'+listing.hoa+'/mo ok',cls:'r-pass'})}
+    if(listing.hoa<=maxHoa){score+=5;reasons.push({text:'HOA $'+listing.hoa+'/mo',cls:'r-pass'})}
     else{reasons.push({text:'HOA $'+listing.hoa+'/mo over limit',cls:'r-fail'})}
   }
 
-  // STYLE
+  // STYLE (5 pts)
   if(client.style&&client.style!==''&&listing.style&&client.style===listing.style){
-    maxScore+=5;score+=5;reasons.push({text:listing.style+' (preferred)',cls:'r-pass'})
+    maxScore+=5;score+=5;
+    reasons.push({text:listing.style,cls:'r-pass'})
   }
 
   // FURNISHED
-  if(client.furnished==='furnished-required'&&listing.furnished==='unfurnished'){
-    reasons.push({text:'Not furnished (required)',cls:'r-fail'})
-  } else if((client.furnished==='furnished'||client.furnished==='furnished-required')&&listing.furnished==='furnished'){
-    maxScore+=5;score+=5;reasons.push({text:'Furnished',cls:'r-pass'})
+  if(client.furnished==='furnished-required'){
+    if(listing.furnished==='unfurnished'){
+      reasons.push({text:'Not furnished (required)',cls:'r-fail'});
+      score=Math.max(0,score-10);
+    }
   }
 
-  const pct=maxScore>0?Math.min(100,Math.round(score/maxScore*100)):40;
-  return{client,score:pct,reasons,isHot:client.status==='hot',isActive:['hot','active'].includes(client.status)}
+  // BONUS: price reduced
+  if(listing.priceReduced){
+    reasons.push({text:'Price reduced',cls:'r-pass'})
+  }
+
+  const pct = maxScore>0 ? Math.min(100,Math.round(score/maxScore*100)) : 35;
+  return{client, score:pct, reasons, isHot:client.status==='hot', isActive:['hot','active'].includes(client.status)};
 }
 
-function runMatching(){
-  if(!listings.length){alert('Add at least one listing first.');return}
-  const active=clients.filter(c=>!['closed','cold'].includes(c.status));
-  if(!active.length){alert('No active clients found. Make sure you opened the CRM first in this browser.');return}
-  allResults=listings.map(listing=>{
-    const matches=active.map(c=>scoreListingAgainstClient(listing,c)).filter(r=>r.score>20).sort((a,b)=>b.score-a.score);
-    return{listing,matches}
-  });
-  document.getElementById('resultsEmpty').style.display='none';
-  document.getElementById('resultsWrap').style.display='';
-  currentListingTab=0;
+// ── RENDER ─────────────────────────────────────────────────────────────────
+
+function renderListingTabs(){
+  const wrap = document.getElementById('listingTabsWrap');
+  if(allResults.length<=1){wrap.innerHTML='';return}
+  wrap.innerHTML=`<div class="listing-tabs">${allResults.map((r,i)=>`
+    <button class="ltab ${i===currentListingIdx?'on':''}" onclick="switchListing(${i})">
+      ${r.listing.address.split(',')[0]}
+      <span style="color:${i===currentListingIdx?'rgba(15,15,26,.7)':'var(--gold)'};margin-left:5px">${r.matches.length} matches</span>
+    </button>`).join('')}</div>`;
+}
+
+function switchListing(i){
+  currentListingIdx=i;
   renderListingTabs();
   renderResults();
 }
 
-function renderListingTabs(){
-  const wrap=document.getElementById('listingTabsWrap');
-  if(allResults.length<=1){wrap.innerHTML='';return}
-  wrap.innerHTML='<div class="listing-tabs">'+allResults.map((r,i)=>
-    `<button class="ltab ${i===currentListingTab?'on':''}" onclick="switchListingTab(${i})">${r.listing.address.split(',')[0]}</button>`
-  ).join('')+'</div>'
-}
-
-function switchListingTab(i){currentListingTab=i;renderListingTabs();renderResults()}
-
 function filterResults(f,btn){
-  currentResultFilter=f;
+  currentFilter=f;
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   renderResults();
@@ -511,18 +690,35 @@ function scoreClass(s){
 }
 
 function renderResults(){
-  const data=allResults[currentListingTab];
+  const data=allResults[currentListingIdx];
   if(!data)return;
   const{listing,matches}=data;
-  document.getElementById('resultsTitle').textContent=matches.length+' client matches — '+listing.address.split(',')[0];
+
+  // Stats
+  const excellent=matches.filter(r=>r.score>=90).length;
+  const good=matches.filter(r=>r.score>=70).length;
+  const hot=matches.filter(r=>r.isHot).length;
+  document.getElementById('statPills').innerHTML=`
+    <div class="stat-pill"><strong>${matches.length}</strong> total matches</div>
+    <div class="stat-pill"><strong>${excellent}</strong> excellent (90%+)</div>
+    <div class="stat-pill"><strong>${good}</strong> good (70%+)</div>
+    <div class="stat-pill"><strong>${hot}</strong> hot clients matched</div>
+    <div class="stat-pill">${listing.price} · ${listing.beds||'?'}bd/${listing.baths||'?'}ba${listing.sqft?' · '+listing.sqft.toLocaleString()+'sqft':''}${listing.pool==='yes'?' · Pool':''}</div>
+  `;
+
+  document.getElementById('resultsLabel').textContent = 'Matches for '+listing.address.split(',')[0];
+
   let filtered=matches;
-  if(currentResultFilter==='excellent')filtered=matches.filter(r=>r.score>=90);
-  else if(currentResultFilter==='good')filtered=matches.filter(r=>r.score>=70);
-  else if(currentResultFilter==='hot')filtered=matches.filter(r=>r.isHot);
+  if(currentFilter==='excellent')filtered=matches.filter(r=>r.score>=90);
+  else if(currentFilter==='good')filtered=matches.filter(r=>r.score>=70);
+  else if(currentFilter==='hot')filtered=matches.filter(r=>r.isHot);
+  else if(currentFilter==='active')filtered=matches.filter(r=>r.isActive);
+
   if(!filtered.length){
     document.getElementById('matchResults').innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No matches for this filter.</div></div>';
     return;
   }
+
   document.getElementById('matchResults').innerHTML=filtered.map(r=>{
     const c=r.client;
     const col=avatarColor(c.name);
@@ -532,7 +728,7 @@ function renderResults(){
         <div class="match-avatar" style="background:${col}20;color:${col}">${initials(c.name)}</div>
         <div style="flex:1;">
           <div class="match-name">${c.name}</div>
-          <div class="match-meta">${ORIGIN_FLAGS[c.origin]||''} ${STATUS_LABELS[c.status]||c.status} &nbsp;·&nbsp; Budget: ${c.budget||'TBC'}</div>
+          <div class="match-meta">${ORIGIN_FLAGS[c.origin]||''} ${STATUS_LABELS[c.status]||c.status} &nbsp;·&nbsp; ${c.budget||'Budget TBC'}</div>
         </div>
         <div class="score-badge ${sc}">${r.score}%</div>
       </div>
@@ -545,46 +741,50 @@ function renderResults(){
         ${r.isActive?`<button class="btn btn-sm btn-whatsapp" onclick="doWhatsApp('${c.id}',${listing.id})">WhatsApp</button>`:''}
         ${r.isActive&&c.phone?`<button class="btn btn-sm btn-sms" onclick="doSMS('${c.id}',${listing.id})">SMS</button>`:''}
       </div>
-    </div>`
+    </div>`;
   }).join('');
 }
 
-function getClientById(id){return clients.find(c=>String(c.id)===String(id))}
-function getListingById(id){return listings.find(l=>l.id===parseInt(id))}
+// ── MESSAGES ───────────────────────────────────────────────────────────────
+
+function getClient(id){return clients.find(c=>String(c.id)===String(id))}
+function getListing(id){return currentListings.find(l=>l.id===parseInt(id))}
 
 function buildGmailBody(client,listing){
   const fn=client.name.split(' ')[0];
   const details=[
     listing.beds?listing.beds+'bd':'',
     listing.baths?listing.baths+'ba':'',
-    listing.sqft?listing.sqft.toLocaleString()+'sqft':'',
+    listing.sqft?parseInt(listing.sqft).toLocaleString()+'sqft':'',
     listing.pool==='yes'?'private pool':'',
     listing.garage?listing.garage+'-car garage':'',
     listing.furnished==='furnished'?'furnished':''
   ].filter(Boolean).join(' · ');
   const community=listing.community?' in '+listing.community:'';
   const mlsLine=listing.mls?'\nMLS: '+listing.mls:'';
+  const urlLine=listing.url?'\n'+listing.url:'';
   const pts=[];
   if(client.area)pts.push(client.area);
   if(client.bedsMin)pts.push(client.bedsMin+'+ beds');
   if(client.pool==='required'&&listing.pool==='yes')pts.push('pool');
   const matchSummary=pts.length?pts.join(', '):'your criteria';
+  const desc=listing.description?'\n\n'+listing.description:'';
   return`Hi ${fn},
 
 Just pulled something from the MLS I think is worth your attention.
 
 ${listing.address}${community}
-${listing.price}${details?' · '+details:''}${mlsLine}
+${listing.price}${details?' · '+details:''}${mlsLine}${urlLine}${desc}
 
-${listing.notes?listing.notes+'\n\n':''}This one fits closely with what you have described — ${matchSummary}.
+This fits closely with what you have described — ${matchSummary}.${listing.priceReduced?'\n\nAlso worth noting: the price has recently been reduced.':''}
 
-Happy to set up a showing at your convenience — just let me know and I will arrange it.
+Happy to set up a showing at your convenience — just say the word and I will arrange it.
 
 Best,
 Adam
 
 Adam Jacobs | Jacobs Relocation
-jacobsrelocation.com`
+jacobsrelocation.com`;
 }
 
 function buildWhatsAppBody(client,listing){
@@ -592,24 +792,26 @@ function buildWhatsAppBody(client,listing){
     listing.beds?listing.beds+'bd':'',
     listing.baths?listing.baths+'ba':'',
     listing.pool==='yes'?'pool':'',
-    listing.sqft?listing.sqft.toLocaleString()+'sqft':''
+    listing.sqft?parseInt(listing.sqft).toLocaleString()+'sqft':''
   ].filter(Boolean).join('/');
   return`Adam here — just pulled a listing I think fits exactly what you are after.
 
 ${listing.address}
 ${listing.price}${details?' · '+details:''}
-${listing.community||''}
+${listing.community?'Community: '+listing.community:''}${listing.priceReduced?'\n(Price recently reduced)':''}
 
-${listing.notes?listing.notes+' ':''}Worth a look? I can arrange a showing quickly.`
+${listing.description||''}
+
+Worth a look? I can arrange a showing quickly.`;
 }
 
 function buildSMSBody(client,listing){
-  return`Adam (Jacobs Relocation) — new listing: ${listing.address}, ${listing.price}${listing.beds?', '+listing.beds+'bd':''}${listing.pool==='yes'?', pool':''}.  Fits your criteria. Want a showing?`
+  return`Adam (Jacobs Relocation): New listing — ${listing.address}, ${listing.price}${listing.beds?', '+listing.beds+'bd':''}${listing.pool==='yes'?', pool':''}.${listing.priceReduced?' Price reduced.':''} Fits your criteria. Want a showing?`;
 }
 
 function doGmail(clientId,listingId){
-  const client=getClientById(clientId);
-  const listing=getListingById(listingId);
+  const client=getClient(clientId);
+  const listing=getListing(listingId);
   if(!client||!listing)return;
   const body=buildGmailBody(client,listing);
   const subject=encodeURIComponent('New listing for you — '+listing.address.split(',')[0]);
@@ -618,8 +820,8 @@ function doGmail(clientId,listingId){
 }
 
 function doWhatsApp(clientId,listingId){
-  const client=getClientById(clientId);
-  const listing=getListingById(listingId);
+  const client=getClient(clientId);
+  const listing=getListing(listingId);
   if(!client||!listing)return;
   const msg=buildWhatsAppBody(client,listing);
   const phone=(client.phone||'').replace(/[\s\-\(\)]/g,'');
@@ -631,8 +833,8 @@ function doWhatsApp(clientId,listingId){
 }
 
 function doSMS(clientId,listingId){
-  const client=getClientById(clientId);
-  const listing=getListingById(listingId);
+  const client=getClient(clientId);
+  const listing=getListing(listingId);
   if(!client||!listing)return;
   const msg=buildSMSBody(client,listing);
   const phone=(client.phone||'').replace(/[\s\-\(\)]/g,'');
@@ -651,14 +853,31 @@ function showMsgModal(title,msg){
 
 function copyMsgToClipboard(){
   const text=document.getElementById('msgPreview').textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    closeMsg();
-    alert('Message copied to clipboard.');
-  });
+  navigator.clipboard.writeText(text).then(()=>{closeMsg();alert('Copied to clipboard.')});
 }
 
 function closeMsg(){document.getElementById('msgOverlay').classList.remove('open')}
 function closeMsgOutside(e){if(e.target.id==='msgOverlay')closeMsg()}
+
+// ── MANUAL ADD PANEL ───────────────────────────────────────────────────────
+
+function showManualAdd(){document.getElementById('manualAddPanel').style.display=''}
+function hideManualAdd(){document.getElementById('manualAddPanel').style.display='none'}
+
+// ── UTILS ──────────────────────────────────────────────────────────────────
+
+function clearAll(){
+  document.getElementById('pasteArea').value='';
+  document.getElementById('resultsSection').style.display='none';
+  clearError();
+  currentListings=[];allResults=[];
+}
+
+function showError(msg){const el=document.getElementById('errorMsg');el.textContent=msg;el.classList.add('show')}
+function clearError(){document.getElementById('errorMsg').classList.remove('show')}
+
+// ── START ──────────────────────────────────────────────────────────────────
+init();
 </script>
 </body>
 </html>
