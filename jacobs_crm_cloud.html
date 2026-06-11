@@ -678,14 +678,98 @@ td.actions-cell { white-space: nowrap; }
         </div>
       </div>
       <div class="modal-section">
-        <div class="modal-section-title">Property</div>
+        <div class="modal-section-title">Contact details</div>
         <div class="fields-grid">
-          <div class="field-block"><label>Budget</label><input class="field-input" id="f-budget"></div>
-          <div class="field-block"><label>Target area</label><input class="field-input" id="f-area"></div>
-          <div class="field-block"><label>Property type</label><input class="field-input" id="f-proptype"></div>
-          <div class="field-block"><label>Timeline</label><input class="field-input" id="f-timeline"></div>
-          <div class="field-block"><label>Yield target</label><input class="field-input" id="f-yield"></div>
-          <div class="field-block"><label>Schools</label><input class="field-input" id="f-schools"></div>
+          <div class="field-block"><label>Email</label><input class="field-input" id="f-email" type="email" placeholder="email@example.com"></div>
+          <div class="field-block"><label>Phone</label><input class="field-input" id="f-phone" placeholder="+44 or +1..."></div>
+          <div class="field-block span-2"><label>Address / current location</label><input class="field-input" id="f-address" placeholder="e.g. 14 Kensington Gardens, London W8 4PT"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Property — budget & timeline</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Budget min</label><input class="field-input" id="f-budgetmin" placeholder="e.g. $1,200,000"></div>
+          <div class="field-block"><label>Budget max</label><input class="field-input" id="f-budget" placeholder="e.g. $2,000,000"></div>
+          <div class="field-block"><label>Timeline</label><input class="field-input" id="f-timeline" placeholder="e.g. August 2025"></div>
+          <div class="field-block"><label>Yield target (investors)</label><input class="field-input" id="f-yield" placeholder="e.g. 4% minimum"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Property — detailed preferences</div>
+        <div class="fields-grid">
+          <div class="field-block"><label>Property type</label>
+            <select class="field-select" id="f-proptype">
+              <option value="">Any</option>
+              <option value="Single Family">Single Family</option>
+              <option value="Condo">Condo</option>
+              <option value="Townhouse">Townhouse</option>
+              <option value="Villa">Villa</option>
+              <option value="Multi-Family">Multi-Family</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Target area / community</label><input class="field-input" id="f-area" placeholder="e.g. Lotus Edge, Boca Raton"></div>
+          <div class="field-block"><label>Beds (min)</label>
+            <select class="field-select" id="f-bedsmin">
+              <option value="">Any</option>
+              <option value="1">1+</option><option value="2">2+</option>
+              <option value="3">3+</option><option value="4">4+</option>
+              <option value="5">5+</option><option value="6">6+</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Beds (max)</label>
+            <select class="field-select" id="f-bedsmax">
+              <option value="">Any</option>
+              <option value="2">Up to 2</option><option value="3">Up to 3</option>
+              <option value="4">Up to 4</option><option value="5">Up to 5</option>
+              <option value="6">Up to 6</option><option value="7">Up to 7</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Baths (min)</label>
+            <select class="field-select" id="f-bathsmin">
+              <option value="">Any</option>
+              <option value="1">1+</option><option value="2">2+</option>
+              <option value="3">3+</option><option value="4">4+</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Pool</label>
+            <select class="field-select" id="f-pool">
+              <option value="">No preference</option>
+              <option value="required">Required</option>
+              <option value="preferred">Preferred</option>
+              <option value="no">Not needed</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Garage spaces (min)</label>
+            <select class="field-select" id="f-garage">
+              <option value="">Any</option>
+              <option value="1">1+</option><option value="2">2+</option>
+              <option value="3">3+</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Min sq ft</label><input class="field-input" id="f-sqftmin" placeholder="e.g. 2,500"></div>
+          <div class="field-block"><label>Max sq ft</label><input class="field-input" id="f-sqftmax" placeholder="e.g. 6,000"></div>
+          <div class="field-block"><label>Max HOA / month</label><input class="field-input" id="f-maxhoa" placeholder="e.g. $800"></div>
+          <div class="field-block"><label>Style preference</label>
+            <select class="field-select" id="f-style">
+              <option value="">No preference</option>
+              <option value="waterfront">Waterfront</option>
+              <option value="golf">Golf course</option>
+              <option value="gated">Gated community</option>
+              <option value="corner">Corner lot</option>
+              <option value="cul-de-sac">Cul-de-sac</option>
+            </select>
+          </div>
+          <div class="field-block"><label>Furnished</label>
+            <select class="field-select" id="f-furnished">
+              <option value="">No preference</option>
+              <option value="furnished">Furnished preferred</option>
+              <option value="unfurnished">Unfurnished preferred</option>
+              <option value="furnished-required">Furnished required</option>
+            </select>
+          </div>
+          <div class="field-block span-2"><label>Schools</label><input class="field-input" id="f-schools" placeholder="e.g. IB programme, ages 8 & 12, private preferred"></div>
+          <div class="field-block span-2"><label>Deal-breakers / must-haves</label><input class="field-input" id="f-dealbreakers" placeholder="e.g. Must have home office, no ground floor condo, min 3-car garage"></div>
         </div>
       </div>
       <div class="modal-section">
@@ -1115,9 +1199,11 @@ function openModal(id) {
   editingId = id;
   const c = id ? clients.find(x => x.id === id) : null;
   if (c) {
-    ['name','origin','status','type','budget','area','proptype','timeline','yield','schools','visa','visastatus','legal','commission','referral','history','notes'].forEach(f => {
-      const key = f === 'yield' ? 'yieldTarget' : f === 'visastatus' ? 'visaStatus' : f;
-      document.getElementById('f-'+f).value = c[key] || '';
+    ['name','origin','status','type','email','phone','address','budgetmin','budget','area','proptype','timeline','yield','bedsmin','bedsmax','bathsmin','pool','garage','sqftmin','sqftmax','maxhoa','style','furnished','schools','dealbreakers','visa','visastatus','legal','commission','referral','history','notes'].forEach(f => {
+      const el = document.getElementById('f-'+f);
+      if (!el) return;
+      const key = f === 'yield' ? 'yieldTarget' : f === 'visastatus' ? 'visaStatus' : f === 'budgetmin' ? 'budgetMin' : f === 'bedsmin' ? 'bedsMin' : f === 'bedsmax' ? 'bedsMax' : f === 'bathsmin' ? 'bathsMin' : f === 'sqftmin' ? 'sqftMin' : f === 'sqftmax' ? 'sqftMax' : f === 'maxhoa' ? 'maxHOA' : f === 'dealbreakers' ? 'dealBreakers' : f;
+      el.value = c[key] || '';
     });
     document.querySelectorAll('#relocNeeds input').forEach(cb => cb.checked = (c.relocNeeds||[]).includes(cb.value));
     renderCallLog(c);
@@ -1127,7 +1213,7 @@ function openModal(id) {
     document.getElementById('f-origin').value = 'uk';
     document.getElementById('f-status').value = 'warm';
     document.getElementById('f-type').value = 'buyer';
-    ['budget','area','proptype','timeline','yield','schools','visastatus','legal','commission','referral','history','notes'].forEach(f => document.getElementById('f-'+f).value = '');
+    ['budgetmin','budget','area','proptype','timeline','yield','bedsmin','bedsmax','bathsmin','pool','garage','sqftmin','sqftmax','maxhoa','style','furnished','schools','dealbreakers','visastatus','legal','commission','referral','history','notes','email','phone','address'].forEach(f => { const el = document.getElementById('f-'+f); if (el) el.value = ''; });
     document.getElementById('f-visa').value = '';
     document.querySelectorAll('#relocNeeds input').forEach(cb => cb.checked = false);
     document.getElementById('notesLog').innerHTML = '<p style="color:var(--muted);font-style:italic;">No notes yet.</p>';
@@ -1178,24 +1264,40 @@ function closeModalOutside(e) { if (e.target.id === 'modalOverlay') closeModal()
 function saveClient() {
   const needs = [];
   document.querySelectorAll('#relocNeeds input:checked').forEach(cb => needs.push(cb.value));
+  const gv = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
   const data = {
-    name: document.getElementById('f-name').value,
-    origin: document.getElementById('f-origin').value,
-    status: document.getElementById('f-status').value,
-    type: document.getElementById('f-type').value,
-    budget: document.getElementById('f-budget').value,
-    area: document.getElementById('f-area').value,
-    proptype: document.getElementById('f-proptype').value,
-    timeline: document.getElementById('f-timeline').value,
-    yieldTarget: document.getElementById('f-yield').value,
-    schools: document.getElementById('f-schools').value,
-    visa: document.getElementById('f-visa').value,
-    visaStatus: document.getElementById('f-visastatus').value,
-    legal: document.getElementById('f-legal').value,
-    commission: document.getElementById('f-commission').value,
-    referral: document.getElementById('f-referral').value,
-    history: document.getElementById('f-history').value,
-    notes: document.getElementById('f-notes').value,
+    name: gv('f-name'),
+    origin: gv('f-origin'),
+    status: gv('f-status'),
+    type: gv('f-type'),
+    email: gv('f-email'),
+    phone: gv('f-phone'),
+    address: gv('f-address'),
+    budgetMin: gv('f-budgetmin'),
+    budget: gv('f-budget'),
+    area: gv('f-area'),
+    proptype: gv('f-proptype'),
+    timeline: gv('f-timeline'),
+    yieldTarget: gv('f-yield'),
+    bedsMin: gv('f-bedsmin'),
+    bedsMax: gv('f-bedsmax'),
+    bathsMin: gv('f-bathsmin'),
+    pool: gv('f-pool'),
+    garage: gv('f-garage'),
+    sqftMin: gv('f-sqftmin'),
+    sqftMax: gv('f-sqftmax'),
+    maxHOA: gv('f-maxhoa'),
+    style: gv('f-style'),
+    furnished: gv('f-furnished'),
+    schools: gv('f-schools'),
+    dealBreakers: gv('f-dealbreakers'),
+    visa: gv('f-visa'),
+    visaStatus: gv('f-visastatus'),
+    legal: gv('f-legal'),
+    commission: gv('f-commission'),
+    referral: gv('f-referral'),
+    history: gv('f-history'),
+    notes: gv('f-notes'),
     relocNeeds: needs
   };
   if (editingId) {
